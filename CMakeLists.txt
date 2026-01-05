@@ -15,6 +15,8 @@ add_subdirectory(TrueEngine)
 ########## GAME ##########
 add_executable(${PROJECT_NAME}
     ${GAME_SRC_DIR}/main.cpp
+
+    ${GAME_SRC_DIR}/Game.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
