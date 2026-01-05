@@ -13,8 +13,6 @@
 static const std::vector<std::string> PLUGIN_SYSTEMS {
     "poll_event",
     "movement2",
-    "deal_damage",
-    "kill_timeout",
     "follow_player",
     "animate",
     "draw",

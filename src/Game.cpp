@@ -5,17 +5,14 @@
 ** Game.cpp
 */
 
-#include "ECS/Entity.hpp"
-#include "Game/components.hpp"
-#include "Game/signals.hpp"
-#include "Game/systems.hpp"
+#include <ECS/Entity.hpp>
+
 #include "configs.hpp"
 #include "entities.hpp"
 #include "Game.hpp"
 
 Game::Game() : _framelimit(FRAME_LIMIT) {
     loadPlugins();
-    _difficulty = 1.f;
     std::srand(std::time(0));
 
     for (auto& sys : PLUGIN_SYSTEMS)
