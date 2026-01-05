@@ -1,3 +1,11 @@
+# Build objects
+build/
+tek_league
+
+# IDE files
+.vscode/
+compile_flags.txt
+
 # Prerequisites
 *.d
 
