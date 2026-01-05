@@ -1,0 +1,31 @@
+/*
+** EPITECH PROJECT, 2025
+** GameTwo
+** File description:
+** Game.hpp
+*/
+
+#pragma once
+
+    #include <unordered_map>
+
+    #include <ECS/Entity.hpp>
+    #include <GameTool.hpp>
+    #include <clock.hpp>
+
+    #include "entities.hpp"
+
+    #define FRAME_LIMIT 1.0f / 60   // 60 fps
+
+class Game : public te::GameTool {
+ public:
+    Game();
+
+    ECS::Entity nextEntity(EntityType type);
+    void run();
+
+ private:
+    bool _running;
+    te::Timestamp _framelimit;
+    std::unordered_map<EntityType, ECS::Entity> _nextEntities;
+};
