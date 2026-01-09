@@ -1,0 +1,29 @@
+[ENTITIES.ethan]
+position2 = true
+drawable = true
+
+    [ENTITIES.ethan.velocity2]
+    x = 0
+    y = 0
+
+    [ENTITIES.ethan.sprite]
+    path = "assets/images/ethan/ethan.png"
+    size = [433, 577]
+    scale = [433, 577]
+    origin = [216, 577]
+    layer = 1
+
+    [ENTITIES.ethan.animation]
+    frames = [
+        [[0, 0], 1, 0.3, true],
+        [[0, 1], 1, 0.3, true],
+        [[0, 2], 1, 0.3, true],
+        [[0, 3], 1, 0.3, true],
+        [[0, 4], 1, 0.3, true],
+        [[0, 5], 1, 0.3, true],
+        [[0, 6], 1, 0.3, true],
+        [[0, 7], 1, 0.3, true],
+        [[0, 8], 1, 0.3, true],
+        [[0, 9], 1, 0.3, true],
+        [[0, 10], 1, 0.3, true],
+    ]
