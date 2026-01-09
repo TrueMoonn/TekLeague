@@ -20,14 +20,8 @@ static const std::vector<std::string> PLUGIN_SYSTEMS {
 };
 
 static const std::vector<std::string> CONFIG_PATHS {
-    "assets/configs/tiles.toml",
-    "assets/configs/player.toml",
-    "assets/configs/xp.toml",
-    "assets/configs/monsters/fire_skull.toml",
-    "assets/configs/weapons/sword.toml",
-    "assets/configs/weapons/bow.toml",
+    "assets/configs/champions/ethan.toml"
 };
 
 static const std::vector<std::string> MAP_PATHS {
-    "assets/maps/basic.txt"
 };
