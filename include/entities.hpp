@@ -10,6 +10,7 @@
     #include <unordered_map>
     #include <ECS/Entity.hpp>
 
+    #define CHAMPION_FIELD_SIZE 6
     #define MENU_FIELD_SIZE 100
     #define HUD_FIELD_SIZE 100
     #define WEAPON_FIELD_SIZE 1000
@@ -17,9 +18,9 @@
     #define MOB_FIELD_SIZE 4000
     #define XP_FIELD_SIZE 4000
 
-enum EntityType {
+enum class eType {
     SYSTEM = 0,
-    PLAYER,
+    CHAMPION,
     MENU,
     HUD,
     WEAPON,
@@ -30,8 +31,9 @@ enum EntityType {
 
 enum eField {
     SYSTEM_F = 0,
-    PLAYER_F = SYSTEM_F + 1,
-    MENU_BEGIN = PLAYER_F + 1,
+    CHAMPION_BEGIN = SYSTEM_F + 1,
+    CHAMPION_END = CHAMPION_BEGIN + CHAMPION_FIELD_SIZE,
+    MENU_BEGIN = CHAMPION_BEGIN + 1,
     MENU_END = MENU_BEGIN + MENU_FIELD_SIZE,
     HUD_BEGIN = MENU_END + 1,
     HUD_END = HUD_BEGIN + HUD_FIELD_SIZE,
@@ -50,36 +52,36 @@ struct EntityFieldLink {
     std::size_t max;
 };
 
-static const std::unordered_map<EntityType, EntityFieldLink> ENTITY_FIELDS {
-    {SYSTEM, {
+static const std::unordered_map<eType, EntityFieldLink> ENTITY_FIELDS {
+    {eType::SYSTEM, {
         static_cast<std::size_t>(SYSTEM_F),
         static_cast<std::size_t>(SYSTEM_F)
     }},
-    {PLAYER, {
-        static_cast<std::size_t>(PLAYER_F),
-        static_cast<std::size_t>(PLAYER_F)
+    {eType::CHAMPION, {
+        static_cast<std::size_t>(CHAMPION_BEGIN),
+        static_cast<std::size_t>(CHAMPION_END)
     }},
-    {MENU, {
+    {eType::MENU, {
         static_cast<std::size_t>(MENU_BEGIN),
         static_cast<std::size_t>(MENU_END)
     }},
-    {HUD, {
+    {eType::HUD, {
         static_cast<std::size_t>(HUD_BEGIN),
         static_cast<std::size_t>(HUD_END)
     }},
-    {WEAPON, {
+    {eType::WEAPON, {
         static_cast<std::size_t>(WEAPON_BEGIN),
         static_cast<std::size_t>(WEAPON_END)
     }},
-    {MAP, {
+    {eType::MAP, {
         static_cast<std::size_t>(MAP_BEGIN),
         static_cast<std::size_t>(MAP_END)
     }},
-    {MOB, {
+    {eType::MOB, {
         static_cast<std::size_t>(MOB_BEGIN),
         static_cast<std::size_t>(MOB_END)
     }},
-    {XP, {
+    {eType::XP, {
         static_cast<std::size_t>(XP_BEGIN),
         static_cast<std::size_t>(XP_END)
     }}

@@ -21,11 +21,11 @@ class Game : public te::GameTool {
  public:
     Game();
 
-    ECS::Entity nextEntity(EntityType type);
+    ECS::Entity nextEntity(eType type);
     void run();
 
  private:
     bool _running;
     te::Timestamp _framelimit;
-    std::unordered_map<EntityType, ECS::Entity> _nextEntities;
+    std::unordered_map<eType, ECS::Entity> _nextEntities;
 };
