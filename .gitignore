@@ -5,6 +5,7 @@ tek_league
 # IDE files
 .vscode/
 compile_flags.txt
+.cache/
 
 # Prerequisites
 *.d

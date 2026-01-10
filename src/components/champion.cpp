@@ -6,10 +6,11 @@
 */
 
 #include "components/champion.hpp"
+#include "ECS/Entity.hpp"
 
 void registerChampion(Game& game) {
-    game.registerComponent("champion",
-        [&game](ECS::Entity e, const toml::table&) {
+    game.registerComponent<Champion>("champion",
+        [&game](ECS::Entity e, const toml::table &) {
         game.createComponent<Champion>(e);
     });
 }

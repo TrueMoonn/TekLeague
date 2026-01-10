@@ -20,7 +20,7 @@ static const std::vector<std::string> PLUGIN_SYSTEMS {
 };
 
 static const std::vector<std::string> CONFIG_PATHS {
-    "assets/configs/champions/ethan.toml"
+    "assets/config/champions/ethan.toml"
 };
 
 static const std::vector<std::string> MAP_PATHS {

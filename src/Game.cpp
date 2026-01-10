@@ -7,6 +7,9 @@
 
 #include <ECS/Entity.hpp>
 
+#include "components/champion.hpp"
+#include "components/stat_pool.hpp"
+
 #include "configs.hpp"
 #include "entities.hpp"
 #include "Game.hpp"
