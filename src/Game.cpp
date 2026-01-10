@@ -26,21 +26,21 @@ Game::Game() : _framelimit(FRAME_LIMIT) {
     for (auto& map : MAP_PATHS)
         addMap(map);
 
-    _nextEntities[EntityType::SYSTEM] = eField::SYSTEM_F;
-    _nextEntities[EntityType::PLAYER] = eField::PLAYER_F;
-    _nextEntities[EntityType::MENU] = eField::MENU_BEGIN;
-    _nextEntities[EntityType::HUD] = eField::HUD_BEGIN;
-    _nextEntities[EntityType::WEAPON] = eField::WEAPON_BEGIN;
-    _nextEntities[EntityType::MAP] = eField::MAP_BEGIN;
-    _nextEntities[EntityType::MOB] = eField::MOB_BEGIN;
-    _nextEntities[EntityType::XP] = eField::XP_BEGIN;
+    _nextEntities[eType::SYSTEM] = eField::SYSTEM_F;
+    _nextEntities[eType::CHAMPION] = eField::CHAMPION_BEGIN;
+    _nextEntities[eType::MENU] = eField::MENU_BEGIN;
+    _nextEntities[eType::HUD] = eField::HUD_BEGIN;
+    _nextEntities[eType::WEAPON] = eField::WEAPON_BEGIN;
+    _nextEntities[eType::MAP] = eField::MAP_BEGIN;
+    _nextEntities[eType::MOB] = eField::MOB_BEGIN;
+    _nextEntities[eType::XP] = eField::XP_BEGIN;
 
-    createComponent("window", nextEntity(SYSTEM));
+    createComponent("window", nextEntity(eType::SYSTEM));
     sub("closed", [this]() {_running = false;});
     _running = true;
 }
 
-ECS::Entity Game::nextEntity(EntityType type) {
+ECS::Entity Game::nextEntity(eType type) {
     if (_nextEntities.at(type) > ENTITY_FIELDS.at(type).max) {
         _nextEntities.at(type) = ENTITY_FIELDS.at(type).min;
     } else {

@@ -9,7 +9,7 @@
 
     #include "Game.hpp"
 
-enum ChampionFrames {
+enum class ChampionState {
     IDLE_BOT = 0,
     IDLE_BOT_SIDE,
     IDLE_SIDE,
@@ -22,7 +22,26 @@ enum ChampionFrames {
     MOV_TOP,
 };
 
+// enum class DamageType {
+//     PHYSIC = 0,
+//     MAGICAL,
+//     LIMIT,
+// };
+
+// struct Spell {
+//     std::string name;
+//     DamageType dmgType;
+//     std::size_t cooldown;
+//     std::size_t castTime;
+//     std::array<std::size_t,
+//         static_cast<std::size_t>(DamageType::LIMIT)> ratios;
+// };
+
 struct Champion {
+    // std::string name;
+    // ChampionState state;
+    // Spell Aspell;
+    // Spell Zspell;
     short champion = 0;
 };
 

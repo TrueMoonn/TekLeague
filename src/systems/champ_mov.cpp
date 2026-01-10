@@ -25,7 +25,7 @@ void championMovement(Game &game) {
         for (auto&& [_, vel, sp, anim] :
             ECS::DenseZipper(champs, vels, sprites, anims)) {
             int cframe = 0;
-            if (vel.x != 0 && vel.y != 0)
+            if (vel.x != 0 || vel.y != 0)
                 cframe = 5;
             auto scale = sp.sp.getScale();
             if (vel.x > 0 && scale.x > 0) {
