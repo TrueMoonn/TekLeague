@@ -11,8 +11,8 @@ y = 0
 [ENTITIES.ethan.sprite]
 path = "assets/images/champions/ethan/ethan.png"
 size = [433, 577]
-scale = [433, 577]
-origin = [216, 577]
+scale = [144.3, 192.3]
+origin = [216, 480]
 layer = 1
 
 [ENTITIES.ethan.animation]

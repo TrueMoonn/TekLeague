@@ -19,9 +19,16 @@ add_executable(${PROJECT_NAME}
 
     ${GAME_SRC_DIR}/Game.cpp
 
+    # SCENES
+    ${GAME_SRC_DIR}/scenes/InGame.cpp
+    ${GAME_SRC_DIR}/scenes/Menu.cpp
+
     # COMPONENTS
     ${GAME_SRC_DIR}/components/champion.cpp
     ${GAME_SRC_DIR}/components/stat_pool.cpp
+
+    # SYSTEMS
+    ${GAME_SRC_DIR}/systems/champ_mov.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
