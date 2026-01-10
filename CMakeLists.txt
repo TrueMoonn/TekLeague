@@ -4,6 +4,7 @@ project(tek_league)
 ########## SETUP ##########
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 set(GAME_SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 set(GAME_HDR_DIR "${PROJECT_SOURCE_DIR}/include")
@@ -17,6 +18,10 @@ add_executable(${PROJECT_NAME}
     ${GAME_SRC_DIR}/main.cpp
 
     ${GAME_SRC_DIR}/Game.cpp
+
+    # COMPONENTS
+    ${GAME_SRC_DIR}/components/champion.cpp
+    ${GAME_SRC_DIR}/components/stat_pool.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
