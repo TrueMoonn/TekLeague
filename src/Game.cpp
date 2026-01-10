@@ -7,10 +7,9 @@
 
 #include <ECS/Entity.hpp>
 
-#include "components/champion.hpp"
-#include "components/stat_pool.hpp"
-
-#include "configs.hpp"
+#include "configs/entities.hpp"
+#include "configs/components.hpp"
+#include "configs/systems.hpp"
 #include "entities.hpp"
 #include "Game.hpp"
 
@@ -18,8 +17,10 @@ Game::Game() : _framelimit(FRAME_LIMIT) {
     loadPlugins();
     std::srand(std::time(0));
 
-    for (auto& sys : PLUGIN_SYSTEMS)
-        createSystem(sys);
+    for (auto& cmpt : LOCAL_COMPONENTS)
+        cmpt(*this);
+    for (auto& sys : LOCAL_SYSTEMS)
+        sys(*this);
     for (auto& conf : CONFIG_PATHS)
         addConfig(conf);
     for (auto& map : MAP_PATHS)
