@@ -35,13 +35,12 @@ Game::Game() : _framelimit(FRAME_LIMIT) {
     _nextEntities[eType::MOB] = eField::MOB_BEGIN;
     _nextEntities[eType::XP] = eField::XP_BEGIN;
 
-    createComponent("window", nextEntity(eType::SYSTEM));
     sub("closed", [this]() {_running = false;});
     _running = true;
 }
 
 ECS::Entity Game::nextEntity(eType type) {
-    if (_nextEntities.at(type) > ENTITY_FIELDS.at(type).max) {
+    if (_nextEntities.at(type) >= ENTITY_FIELDS.at(type).max) {
         _nextEntities.at(type) = ENTITY_FIELDS.at(type).min;
     } else {
         _nextEntities.at(type) += 1;
