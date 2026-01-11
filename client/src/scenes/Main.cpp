@@ -2,16 +2,16 @@
 ** EPITECH PROJECT, 2025
 ** GameTwo
 ** File description:
-** Client.cpp
+** Main.cpp
 */
 
 #include <events.hpp>
 
 #include "scenes.hpp"
 
-void setClientScene(Game& game) {
-    te::Scene client;
-    client.systems = {{
+void setMainScene(Game& game) {
+    te::Scene main;
+    main.systems = {{
         {"poll_event"},  // INPUT
         {},  // PRE UPDATE
         {"animate"},  // UPDATE
@@ -19,14 +19,14 @@ void setClientScene(Game& game) {
         {"draw", "display"}  // RENDER
     }};
 
-    client.entities = {};
+    main.entities = {};
 
-    std::size_t idx = game.addScene(client);
+    std::size_t idx = game.addScene(main);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape])
             game.emit("closed");
         if (keys[te::Key::P]) {
-            game.deactivateScene(SCAST(SCENES::CLIENT));
+            game.deactivateScene(SCAST(SCENES::MAIN));
             game.activateScene(SCAST(SCENES::INGAME));
         }
     });

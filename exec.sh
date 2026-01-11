@@ -13,7 +13,7 @@ display_helper() {
 }
 
 clear_project() {
-    rm -rf ./build/ tek_league
+    rm -rf ./build/ tek_league_client tek_league_server
     rm -rf ./TrueEngine/*.a ./TrueEngine/plugins/*.so
 }
 
