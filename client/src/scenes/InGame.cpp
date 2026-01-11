@@ -25,28 +25,19 @@ void setInGameScene(Game& game) {
     ingame.systems = {{
         {"poll_event"},  // INPUT
         {},  // PRE UPDATE
-        {"animate", "entity_direction", "movement2"},  // UPDATE
+        {"animate"},  // UPDATE
         {"follow_player", "champion_movement"},  // POST UPDATE
         {"draw", "display"}  // RENDER
     }};
 
-    ingame.entities = {
-        {game.nextEntity(eType::MAP), "sumoners_rift"},
-        {game.nextEntity(eType::CHAMPION), "ethan", {150, 7100}}
-    };
+    ingame.entities = {};
 
     std::size_t idx = game.addScene(ingame);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape]) {
             game.deactivateScene(SCAST(SCENES::INGAME));
-            game.activateScene(SCAST(SCENES::CLIENT));
+            game.activateScene(SCAST(SCENES::MAIN));
         }
-        // if (keys[te::Key::A]) {
-        //     auto& players = game.getComponent<addon::intact::Player>();
-        //     auto& stats = game.getComponent<StatPool>();
-        //     // static te::Timestamp();
-
-        // }
     });
     game.subForScene<te::Mouse>(idx, "mouse_input", [&game](te::Mouse mouse) {
         if (mouse.type[te::MouseEvent::MouseRight]) {
