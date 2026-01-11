@@ -2,16 +2,16 @@
 ** EPITECH PROJECT, 2025
 ** GameTwo
 ** File description:
-** Menu.cpp
+** Client.cpp
 */
 
 #include <events.hpp>
 
 #include "scenes.hpp"
 
-void setMenuScene(Game& game) {
-    te::Scene menu;
-    menu.systems = {{
+void setClientScene(Game& game) {
+    te::Scene client;
+    client.systems = {{
         {"poll_event"},  // INPUT
         {},  // PRE UPDATE
         {"animate"},  // UPDATE
@@ -19,13 +19,14 @@ void setMenuScene(Game& game) {
         {"draw", "display"}  // RENDER
     }};
 
-    menu.entities = {};
+    client.entities = {
+        {game.nextEntity(eType::SYSTEM), "client_window"},
+    };
 
-    std::size_t idx = game.addScene(menu);
+    std::size_t idx = game.addScene(client);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::P]) {
-            std::cout << "GO TO INGAME\n";
-            game.deactivateScene(SCAST(SCENES::MENU));
+            game.deactivateScene(SCAST(SCENES::CLIENT));
             game.activateScene(SCAST(SCENES::INGAME));
         }
     });

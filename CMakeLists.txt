@@ -20,8 +20,8 @@ add_executable(${PROJECT_NAME}
     ${GAME_SRC_DIR}/Game.cpp
 
     # SCENES
+    ${GAME_SRC_DIR}/scenes/Client.cpp
     ${GAME_SRC_DIR}/scenes/InGame.cpp
-    ${GAME_SRC_DIR}/scenes/Menu.cpp
 
     # COMPONENTS
     ${GAME_SRC_DIR}/components/champion.cpp
