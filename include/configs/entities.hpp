@@ -11,9 +11,13 @@
     #include <vector>
 
 static const std::vector<std::string> CONFIG_PATHS {
-    "assets/config/windows.toml",
-    "assets/config/map.toml",
-    "assets/config/champions/ethan.toml",
+    "assets/configs/champions/ethan.toml",
+};
+
+static const std::vector<std::string> CLIENT_CONFIG_PATHS {
+    "client/assets/configs/windows.toml",
+    "client/assets/configs/map.toml",
+    "client/assets/configs/champions/ethan.toml",
 };
 
 static const std::vector<std::string> MAP_PATHS {

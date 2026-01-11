@@ -9,11 +9,3 @@
         name = "TekLeague"
         framelimit = 60
         fullscreen = true
-
-
-[ENTITIES.button]
-drawable = true
-position2 = true
-clickable = true
-[ENTITIES.button.sprite]
-[ENTITIES.button.hitbox]
