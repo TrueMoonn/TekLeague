@@ -7,6 +7,7 @@
 
 #include <events.hpp>
 
+#include "entities.hpp"
 #include "scenes.hpp"
 
 void setMainScene(Game& game) {
@@ -19,7 +20,9 @@ void setMainScene(Game& game) {
         {"draw", "display"}  // RENDER
     }};
 
-    main.entities = {};
+    main.entities = {
+        {game.nextEntity(eType::MENU), "play_button", {800, 800}}
+    };
 
     std::size_t idx = game.addScene(main);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {

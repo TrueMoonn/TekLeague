@@ -6,7 +6,7 @@ clickable = true
     [ENTITIES.play_button.sprite]
     path = "client/assets/images/ui/buttons/panel-transparent-center-005.png"
     size = [96, 96]
-    scale = [100, 20]
+    scale = [100, 30]
     layer = 1
 
     [ENTITIES.play_button.hitbox]

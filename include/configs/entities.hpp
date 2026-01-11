@@ -18,6 +18,7 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     "client/assets/configs/windows.toml",
     "client/assets/configs/map.toml",
     "client/assets/configs/champions/ethan.toml",
+    "client/assets/configs/buttons.toml",
 };
 
 static const std::vector<std::string> MAP_PATHS {
