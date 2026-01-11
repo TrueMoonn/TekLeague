@@ -31,7 +31,6 @@ void setInGameScene(Game& game) {
     }};
 
     ingame.entities = {
-        {game.nextEntity(eType::SYSTEM), "ig_window"},
         {game.nextEntity(eType::MAP), "sumoners_rift"},
         {game.nextEntity(eType::CHAMPION), "ethan", {150, 7100}}
     };

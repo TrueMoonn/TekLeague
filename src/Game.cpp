@@ -37,6 +37,7 @@ Game::Game() : _framelimit(FRAME_LIMIT) {
 
     sub("closed", [this]() {_running = false;});
     _running = true;
+    createEntity(nextEntity(eType::SYSTEM), "ig_window");
 }
 
 ECS::Entity Game::nextEntity(eType type) {
