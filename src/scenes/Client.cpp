@@ -19,12 +19,12 @@ void setClientScene(Game& game) {
         {"draw", "display"}  // RENDER
     }};
 
-    client.entities = {
-        {game.nextEntity(eType::SYSTEM), "client_window"},
-    };
+    client.entities = {};
 
     std::size_t idx = game.addScene(client);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
+        if (keys[te::Key::Escape])
+            game.emit("closed");
         if (keys[te::Key::P]) {
             game.deactivateScene(SCAST(SCENES::CLIENT));
             game.activateScene(SCAST(SCENES::INGAME));
