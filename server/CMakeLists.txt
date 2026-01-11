@@ -20,6 +20,7 @@ add_executable(${PROJECT_NAME}
 
     ########## LOCAL ##########
     ${GAME_SERVER_SRC_DIR}/main.cpp
+    ${GAME_SERVER_SRC_DIR}/Server.cpp
 
     # SCENES
     ${GAME_SERVER_SRC_DIR}/scenes/Wait.cpp

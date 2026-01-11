@@ -3,7 +3,7 @@ drawable = true
 position2 = true
 
 [ENTITIES.sumoners_rift.sprite]
-path = "assets/images/map/map.png"
+path = "client/assets/images/map/map.png"
 size = [512, 512]
 scale = [7680, 7680]
 origin = [0, 0]

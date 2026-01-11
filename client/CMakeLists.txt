@@ -21,6 +21,8 @@ add_executable(${PROJECT_NAME}
     ########## LOCAL ##########
     ${GAME_CLIENT_SRC_DIR}/main.cpp
 
+    ${GAME_CLIENT_SRC_DIR}/Client.cpp
+
     # SCENES
     ${GAME_CLIENT_SRC_DIR}/scenes/Main.cpp
     ${GAME_CLIENT_SRC_DIR}/scenes/InGame.cpp

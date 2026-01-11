@@ -5,11 +5,11 @@
 ** main.cpp
 */
 
-#include "Game.hpp"
+#include "Client.hpp"
 #include "scenes.hpp"
 
 int main() {
-    Game game;
+    Client game;
     for (std::size_t i = 0; i < SCAST(SCENES::LIMITSCENE); ++i)
         SCENES_SETUPS.at(static_cast<SCENES>(i))(game);
 

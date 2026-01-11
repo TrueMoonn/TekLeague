@@ -13,8 +13,8 @@
 #include "entities.hpp"
 #include "Game.hpp"
 
-Game::Game() : _framelimit(FRAME_LIMIT) {
-    loadPlugins();
+Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
+    loadPlugins(ppath);
     std::srand(std::time(0));
 
     for (auto& cmpt : LOCAL_COMPONENTS)
