@@ -15,7 +15,7 @@
 
 class Server : public te::network::GameServer, public Game {
  public:
-    Server(uint16_t port, const std::string& protocol = "UDP");
+    Server(uint32_t port = 6767, const std::string& protocol = "UDP");
 
  private:
     net::ProtocolManager _protocol;

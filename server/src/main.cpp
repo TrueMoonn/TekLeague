@@ -9,12 +9,11 @@
 #include "scenes.hpp"
 
 int main(int ac, char **av) {
-    uint16_t port = 8080;
+    uint32_t port = 6767;
     std::string protocol = "UDP";
-    size_t max_clients = 4;
 
     if (ac > 1) {
-        port = static_cast<uint16_t>(std::stoi(av[1]));
+        port = static_cast<uint32_t>(std::stoi(av[1]));
     }
     if (ac > 2) {
         protocol = av[2];
