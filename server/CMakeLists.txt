@@ -13,6 +13,7 @@ add_executable(${PROJECT_NAME}
     ${GAME_SRC_DIR}/components/champion.cpp
     ${GAME_SRC_DIR}/components/stat_pool.cpp
     ${GAME_SRC_DIR}/components/directed.cpp
+    ${GAME_SRC_DIR}/components/button.cpp
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp

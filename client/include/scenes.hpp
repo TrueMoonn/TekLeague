@@ -10,12 +10,12 @@
     #include <functional>
     #include <unordered_map>
 
-    #include "Game.hpp"
+    #include "Client.hpp"
 
     #define SCAST(s) static_cast<std::size_t>(s)
 
-void setMainScene(Game& game);
-void setInGameScene(Game& game);
+void setMainScene(Client& game);
+void setInGameScene(Client& game);
 
 enum class SCENES {
     MAIN = 0,
@@ -24,7 +24,7 @@ enum class SCENES {
 };
 
 static const std::unordered_map<SCENES,
-    std::function<void(Game&)>> SCENES_SETUPS = {
+    std::function<void(Client&)>> SCENES_SETUPS = {
     {SCENES::MAIN, &setMainScene},
     {SCENES::INGAME, &setInGameScene},
 };
