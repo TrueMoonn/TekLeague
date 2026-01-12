@@ -8,7 +8,7 @@
 #include <events.hpp>
 #include <display/components/animation.hpp>
 
-#include "entities.hpp"
+#include "scenes/main.hpp"
 #include "scenes.hpp"
 
 void setMainScene(Client& game) {
@@ -22,21 +22,28 @@ void setMainScene(Client& game) {
     }};
 
     main.entities = {
-        {SCAST(MENU_BEGIN + 0), "button", {760.f, 550.f}},
-        {SCAST(MENU_BEGIN + 1), "button", {760.f, 700.f}},
-        {SCAST(MENU_BEGIN + 2), "button", {760.f, 850.f}},
+        {MAIN_BUTTON_PLAY, "button", {760.f, 550.f}},
+        {MAIN_BUTTON_SETTINGS, "button", {760.f, 700.f}},
+        {MAIN_BUTTON_QUIT, "button", {760.f, 850.f}},
+        {MAIN_LOGO, "logo", {30.f, 30.f}},
+        {MAIN_BACKGROUND, "main_bg"},
     };
 
     std::size_t idx = game.addScene(main);
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
-        if (e == SCAST(MENU_BEGIN + 0)) {
-            // Search for lobby (connect to a server)
-            // game.activateScene(SCAST(SCENES::SEARCH_SERVER));
-            // game.pauseScene(SCAST(SCENES::MAIN));
+        switch (e) {
+            case MAIN_BUTTON_PLAY:
+                // Search for lobby (connect to a server)
+                // game.activateScene(SCAST(SCENES::SEARCH_SERVER));
+                // game.pauseScene(SCAST(SCENES::MAIN));
+                break;
+            case MAIN_BUTTON_SETTINGS:
+                // game.activateScene(SCAST(SCENES::SETTINGS));
+                // game.pauseScene(SCAST(SCENES::MAIN));
+                break;
+            case MAIN_BUTTON_QUIT:
+                game.emit("closed");
+                break;
         }
-    });
-    game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
-        if (keys[te::Key::Escape])
-            game.emit("closed");
     });
 }

@@ -11,7 +11,7 @@
 #include <interaction/components/clickable.hpp>
 
 #include "components/button.hpp"
-#include "ui/button_status.hpp"
+#include "ui/buttons.hpp"
 #include "client_systems.hpp"
 
 void changeButtonState(addon::display::Animation& anim, bStatus status) {
