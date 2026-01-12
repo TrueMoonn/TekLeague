@@ -24,13 +24,18 @@ add_executable(${PROJECT_NAME}
     ${GAME_SRC_DIR}/scenes/InGame.cpp
 
     # COMPONENTS
+    ${GAME_SRC_DIR}/components/zone_ranged.cpp
     ${GAME_SRC_DIR}/components/champion.cpp
     ${GAME_SRC_DIR}/components/stat_pool.cpp
-    ${GAME_SRC_DIR}/components/directed.cpp
+    ${GAME_SRC_DIR}/components/target.cpp
+    ${GAME_SRC_DIR}/components/auto_track.cpp
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp
     ${GAME_SRC_DIR}/systems/entity_direction.cpp
+    ${GAME_SRC_DIR}/systems/target_player.cpp
+    ${GAME_SRC_DIR}/systems/track_target.cpp
+
 )
 
 target_include_directories(${PROJECT_NAME}

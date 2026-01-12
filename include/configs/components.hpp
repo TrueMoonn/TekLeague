@@ -12,12 +12,16 @@
 
     #include "Game.hpp"
 
+#include "components/auto_track.hpp"
     #include "components/champion.hpp"
     #include "components/stat_pool.hpp"
-    #include "components/directed.hpp"
+    #include "components/target.hpp"
+    #include "components/ranged_zone.hpp"
 
 static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerChampion,
     &registerStatPool,
-    &registerDirected,
+    &registerTarget,
+    &registerRangedZone,
+    &registerAutoTrack,
 };

@@ -24,7 +24,7 @@ speed = 300
 path = "client/assets/images/buildings/tower_projectile.png"
 size = [16, 16]
 origin = [8, 8]
-layer = 3
+layer = 1
 
 [ENTITIES.tower_projectiles.animation]
 frames = [
