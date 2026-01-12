@@ -12,7 +12,6 @@
 
 Server::Server(uint16_t port, const std::string& protocol) :
     te::network::GameServer(port, protocol),
-    Game("server/plugins"),
-    _protocol("./config/protocol.json") {
+    Game("server/plugins") {
     start();
 }
