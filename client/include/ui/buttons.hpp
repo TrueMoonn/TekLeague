@@ -7,6 +7,8 @@
 
 #pragma once
 
+    #include "entities.hpp"
+
 enum class bStatus {
     DEFAULT = 0,
     CLICKED,
