@@ -20,7 +20,7 @@
 #include "components/directed.hpp"
 
 
-void setInGameScene(Game& game) {
+void setInGameScene(Client& game) {
     te::Scene ingame;
     ingame.systems = {{
         {"poll_event"},  // INPUT

@@ -6,40 +6,37 @@
 */
 
 #include <events.hpp>
+#include <display/components/animation.hpp>
 
 #include "entities.hpp"
 #include "scenes.hpp"
 
-void setMainScene(Game& game) {
+void setMainScene(Client& game) {
     te::Scene main;
     main.systems = {{
         {"poll_event"},  // INPUT
-        {},  // PRE UPDATE
+        {"button_states"},  // PRE UPDATE
         {"animate"},  // UPDATE
         {},  // POST UPDATE
         {"draw", "display"}  // RENDER
     }};
 
     main.entities = {
-        {MENU_BEGIN + 0, "play_button", {800, 800}}
+        {SCAST(MENU_BEGIN + 0), "button", {760.f, 550.f}},
+        {SCAST(MENU_BEGIN + 1), "button", {760.f, 700.f}},
+        {SCAST(MENU_BEGIN + 2), "button", {760.f, 850.f}},
     };
 
     std::size_t idx = game.addScene(main);
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
-        if (e == MENU_BEGIN + 0) {
+        if (e == SCAST(MENU_BEGIN + 0)) {
             // Search for lobby (connect to a server)
             // game.activateScene(SCAST(SCENES::SEARCH_SERVER));
             // game.pauseScene(SCAST(SCENES::MAIN));
-            std::cout << "clicked\n";
         }
     });
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape])
             game.emit("closed");
-    });
-    game.subForScene<te::Mouse>(idx, "mouse_input", [&game](te::Mouse keys) {
-        if (keys.type[te::MouseEvent::MouseLeft]) {
-            std::cout << keys.position.x << " " << keys.position.y << std::endl;
-        }
     });
 }

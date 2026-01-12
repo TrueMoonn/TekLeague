@@ -15,9 +15,11 @@
     #include "components/champion.hpp"
     #include "components/stat_pool.hpp"
     #include "components/directed.hpp"
+    #include "components/button.hpp"
 
 static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerChampion,
     &registerStatPool,
     &registerDirected,
+    &registerButton,
 };

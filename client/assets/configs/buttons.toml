@@ -1,16 +1,28 @@
-[ENTITIES.play_button]
+[ENTITIES.button]
 drawable = true
 position2 = true
 clickable = true
+hoverable = true
+button = true
 
-    [ENTITIES.play_button.sprite]
-    path = "client/assets/images/ui/buttons/panel-transparent-center-005.png"
-    size = [96, 96]
-    scale = [200, 30]
+    [ENTITIES.button.sprite]
+    path = "client/assets/images/ui/buttons/button.png"
+    size = [30, 31]
+    scale = [400, 100]
     layer = 1
 
-    [ENTITIES.play_button.hitbox]
+    [ENTITIES.button.hitbox]
     top = 0
     left = 0
-    width = 200
-    height = 20
+    width = 400
+    height = 100
+
+    [ENTITIES.button.animation]
+    frames = [
+        # DEFAULT
+        [[3, 0], 1, 0.0, false],
+        # CLICKED
+        [[1, 0], 1, 0.0, false],
+        # HOVER
+        [[0, 0], 1, 0.0, false],
+    ]
