@@ -6,5 +6,11 @@
 */
 
 #include "Server.hpp"
+#include "Network/Server.hpp"
 
-Server::Server() : Game("server/plugins") {}
+Server::Server() :
+    Game("server/plugins"),
+    _protocol("./config/protocol.json"),
+    _server("UDP", 4242, _protocol) {
+    _server.start();
+}

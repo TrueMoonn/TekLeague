@@ -7,6 +7,8 @@
 
 #pragma once
 
+    #include <Network/Server.hpp>
+    #include <Network/ProtocolManager.hpp>
     #include "Game.hpp"
 
 class Server : public Game {
@@ -14,4 +16,6 @@ class Server : public Game {
     Server();
 
  private:
+    net::ProtocolManager _protocol;
+    net::Server _server;
 };
