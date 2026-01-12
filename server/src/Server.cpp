@@ -5,12 +5,14 @@
 ** Server.cpp
 */
 
-#include "Server.hpp"
-#include "Network/Server.hpp"
+#include <string>
 
-Server::Server() :
+#include <network/GameServer.hpp>
+#include "Server.hpp"
+
+Server::Server(uint16_t port, const std::string& protocol) :
+    te::network::GameServer(port, protocol),
     Game("server/plugins"),
-    _protocol("./config/protocol.json"),
-    _server("UDP", 4242, _protocol) {
-    _server.start();
+    _protocol("./config/protocol.json") {
+    start();
 }

@@ -7,15 +7,16 @@
 
 #pragma once
 
-    #include <Network/Server.hpp>
+    #include <string>
+
+    #include <network/GameServer.hpp>
     #include <Network/ProtocolManager.hpp>
     #include "Game.hpp"
 
-class Server : public Game {
+class Server : public te::network::GameServer, public Game {
  public:
-    Server();
+    Server(uint16_t port, const std::string& protocol = "UDP");
 
  private:
     net::ProtocolManager _protocol;
-    net::Server _server;
 };
