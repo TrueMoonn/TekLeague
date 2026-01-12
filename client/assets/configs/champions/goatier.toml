@@ -1,0 +1,35 @@
+[ENTITIES.goatier]
+drawable = true
+player = true
+
+[ENTITIES.goatier.sprite]
+path = "client/assets/images/champions/goatier/Goatier.png"
+size = [386, 646]
+scale = [144.3, 192.3]
+origin = [193, 646]
+layer = 1
+
+[ENTITIES.goatier.animation]
+frames = [
+    [[0, 0], 4, 0.4, true],
+    [[0, 1], 4, 0.4, true],
+    [[0, 2], 4, 0.4, true],
+    [[0, 3], 4, 0.4, true],
+    [[0, 4], 4, 0.4, true],
+    [[0, 5], 4, 0.4, true],
+    [[0, 6], 4, 0.4, true],
+    [[0, 7], 4, 0.4, true],
+    [[0, 8], 4, 0.4, true],
+    [[0, 9], 4, 0.4, true],
+    [[0, 10], 4, 0.4, false],
+    [[0, 11], 4, 0.4, false],
+    [[0, 12], 5, 0.4, false],
+    [[0, 13], 4, 0.4, false],
+    [[0, 14], 4, 0.4, false],
+    [[0, 15], 5, 0.4, false],
+    [[0, 16], 5, 0.4, false],
+    [[0, 17], 5, 0.4, false],
+    [[0, 18], 5, 0.4, false],
+    [[0, 19], 5, 0.4, false],
+    [[0, 20], 6, 0.4, false],
+]
