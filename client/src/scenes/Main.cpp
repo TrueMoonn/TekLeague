@@ -21,24 +21,25 @@ void setMainScene(Game& game) {
     }};
 
     main.entities = {
-        {game.nextEntity(eType::MENU), "play_button", {800, 800}}
+        {MENU_BEGIN + 0, "play_button", {800, 800}}
     };
 
     std::size_t idx = game.addScene(main);
+    game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
+        if (e == MENU_BEGIN + 0) {
+            // Search for lobby (connect to a server)
+            // game.activateScene(SCAST(SCENES::SEARCH_SERVER));
+            // game.pauseScene(SCAST(SCENES::MAIN));
+            std::cout << "clicked\n";
+        }
+    });
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape])
             game.emit("closed");
-        if (keys[te::Key::P]) {
-            game.deactivateScene(SCAST(SCENES::MAIN));
-            game.activateScene(SCAST(SCENES::INGAME));
-        }
     });
-    game.subForScene<te::Mouse>(idx, "mouse_input", [&game](te::Mouse mouse) {
-        for (auto& ev : mouse.type) {
-            if (ev) {
-                std::cout << "click IN MENU\n";
-                std::cout << mouse.position.x << " " << mouse.position.y << std::endl;
-            }
+    game.subForScene<te::Mouse>(idx, "mouse_input", [&game](te::Mouse keys) {
+        if (keys.type[te::MouseEvent::MouseLeft]) {
+            std::cout << keys.position.x << " " << keys.position.y << std::endl;
         }
     });
 }

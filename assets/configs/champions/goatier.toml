@@ -1,0 +1,16 @@
+[ENTITIES.goatier]
+position2 = true
+champion = true
+directed = true
+
+[ENTITIES.goatier.velocity2]
+x = 0
+y = 0
+
+[ENTITIES.goatier.stat_pool]
+ad = 10
+ap = 0
+atk_speed = 1.0
+armor = 20
+magic_resist = 20
+mov_speed = 300
