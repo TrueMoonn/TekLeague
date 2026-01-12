@@ -11,19 +11,19 @@
 #include <display/components/animation.hpp>
 #include <sfml/components/sprite.hpp>
 
-#include "components/directed.hpp"
+#include "components/target.hpp"
 #include "components/stat_pool.hpp"
 #include "configs/systems.hpp"
 
 void entityDirection(Game& game) {
     game.createSystem("entity_direction", [&game](ECS::Registry&) {
-        auto& directeds = game.getComponent<Directed>();
+        auto& targets = game.getComponent<Target>();
         auto& stats = game.getComponent<StatPool>();
         auto& posis = game.getComponent<addon::physic::Position2>();
         auto& vels = game.getComponent<addon::physic::Velocity2>();
 
         for (auto&& [goTo, pos, vel, stat] :
-            ECS::DenseZipper(directeds, posis, vels, stats)) {
+            ECS::DenseZipper(targets, posis, vels, stats)) {
             float dist = std::sqrt(std::pow(pos.x - goTo.x, 2) +
                 std::pow(pos.y - goTo.y, 2));
             if (dist < 10) {

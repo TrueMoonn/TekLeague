@@ -30,10 +30,11 @@ Game::Game() : _framelimit(FRAME_LIMIT) {
     _nextEntities[eType::CHAMPION] = eField::CHAMPION_BEGIN;
     _nextEntities[eType::MENU] = eField::MENU_BEGIN;
     _nextEntities[eType::HUD] = eField::HUD_BEGIN;
-    _nextEntities[eType::WEAPON] = eField::WEAPON_BEGIN;
     _nextEntities[eType::MAP] = eField::MAP_BEGIN;
     _nextEntities[eType::MOB] = eField::MOB_BEGIN;
-    _nextEntities[eType::XP] = eField::XP_BEGIN;
+    _nextEntities[eType::BUILDINGS] = eField::BUILDINGS_BEGIN;
+    _nextEntities[eType::PROJECTILES] = eField::PROJECTILES_BEGIN;
+
 
     sub("closed", [this]() {_running = false;});
     _running = true;
