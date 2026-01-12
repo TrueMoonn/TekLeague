@@ -10,6 +10,20 @@ set(GAME_SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 set(GAME_HDR_DIR "${PROJECT_SOURCE_DIR}/include")
 set(TE_PLUGIN_PATH "${PROJECT_SOURCE_DIR}/TrueEngine/plugins")
 
+########## PROTOCOL GENERATION ##########
+message(STATUS "Generating protocol files...")
+execute_process(
+    COMMAND python3 ${PROJECT_SOURCE_DIR}/TrueEngine/Network/tools/generate_protocol.py ${PROJECT_SOURCE_DIR}/config/protocol.json
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/TrueEngine/Network
+    RESULT_VARIABLE PROTOCOL_RESULT
+)
+
+if(NOT PROTOCOL_RESULT EQUAL 0)
+    message(WARNING "Protocol generation failed, but continuing build...")
+else()
+    message(STATUS "Protocol files generated successfully!")
+endif()
+
 ########## TRUE ENGINE ##########
 add_subdirectory(TrueEngine)
 
