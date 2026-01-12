@@ -1,0 +1,4 @@
+[ENTITIES.tower]
+position2 = true
+
+[ENTITIES.tower.proc]
