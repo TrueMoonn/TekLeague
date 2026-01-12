@@ -1,0 +1,32 @@
+[ENTITIES.tower]
+drawable = true
+position2 = true
+
+[ENTITIES.tower.sprite]
+path = "client/assets/images/buildings/tower.png"
+size = [401, 622]
+scale = [200, 311]
+origin = [200, 311]
+layer = 1
+
+[ENTITIES.tower_projectiles]
+drawable = true
+position2 = true
+
+[ENTITIES.tower_projectiles.velocity2]
+x = 0
+y = 0
+
+[ENTITIES.tower_projectiles.auto_track]
+speed = 300
+
+[ENTITIES.tower_projectiles.sprite]
+path = "client/assets/images/buildings/tower_projectile.png"
+size = [16, 16]
+origin = [8, 8]
+layer = 3
+
+[ENTITIES.tower_projectiles.animation]
+frames = [
+    [[0, 0], 3, 0.4, true]
+]
