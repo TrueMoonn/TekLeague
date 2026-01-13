@@ -1,0 +1,28 @@
+[ENTITIES.param_button]
+drawable = true
+position2 = true
+clickable = true
+hoverable = true
+button = true
+
+    [ENTITIES.param_button.sprite]
+    path = "client/assets/images/ui/parameters/button1.png"
+    size = [30, 31]
+    scale = [300, 100]
+    layer = 21
+
+    [ENTITIES.param_button.hitbox]
+    top = 20
+    left = 0
+    width = 300
+    height = 100
+
+    [ENTITIES.param_button.animation]
+    frames = [
+        # DEFAULT
+        [[3, 0], 1, 0.0, false],
+        # CLICKED
+        [[1, 0], 1, 0.0, false],
+        # HOVER
+        [[0, 0], 1, 0.0, false],
+    ]

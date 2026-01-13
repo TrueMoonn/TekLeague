@@ -9,7 +9,7 @@
 
     #include "entities.hpp"
 
-    #define TEMP_SCENE 1000 +
+    #define TEMP_SCENE 500 +
 
     #define SEARCH_BOOKCOVER static_cast<std::size_t>(TEMP_SCENE\
         MENU_BEGIN + 0)
