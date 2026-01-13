@@ -8,6 +8,7 @@
 #pragma once
 
     #include <string>
+    #include <vector>
 
     #include <network/GameServer.hpp>
     #include <Network/ProtocolManager.hpp>
@@ -15,7 +16,13 @@
 
 class Server : public te::network::GameServer, public Game {
  public:
-    Server(uint16_t port = 6767, const std::string& protocol = "UDP");
+    explicit Server(uint16_t port = 6767, const std::string& protocol = "UDP");
+
+    int runServer();
 
  private:
+    bool setPacketsHandlers();
+
+    void handleConnectionRequest(const std::vector<uint8_t>& data,
+        const net::Address& sender);
 };

@@ -24,8 +24,9 @@ class Game : public te::GameTool {
     ECS::Entity nextEntity(eType type);
     void run();
 
- private:
+ protected:
     bool _running;
     te::Timestamp _framelimit;
+ private:
     std::unordered_map<eType, ECS::Entity> _nextEntities;
 };
