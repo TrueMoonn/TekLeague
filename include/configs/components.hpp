@@ -18,6 +18,7 @@
     #include "components/button.hpp"
     #include "components/inventory.hpp"
     #include "components/item.hpp"
+    #include "components/xp.hpp"
 
 static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerChampion,
@@ -26,4 +27,5 @@ static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerButton,
     &registerInventory,
     &registerItem,
+    &registerXp,
 };

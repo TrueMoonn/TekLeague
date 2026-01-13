@@ -38,6 +38,7 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/components/button.cpp
     ${GAME_SRC_DIR}/components/inventory.cpp
     ${GAME_SRC_DIR}/components/item.cpp
+    ${GAME_SRC_DIR}/components/xp.cpp
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp
