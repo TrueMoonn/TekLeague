@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <random>
 
 #include <ECS/DenseSA.hpp>
 #include <ECS/DenseZipper.hpp>
@@ -22,12 +23,9 @@
 #include <network/GameServer.hpp>
 
 #include "Server.hpp"
-#include "ECS/Registry.hpp"
 
 Server::Server(uint16_t port, const std::string& protocol) :
-    te::network::GameServer(port, protocol)
-    , Game("server/plugins")
-    , next_player_id(2) {
+    te::network::GameServer(port, protocol) {
     start();
     startNetworkThread();
     setPacketsHandlers();
@@ -41,49 +39,83 @@ bool Server::setPacketsHandlers() {
     return true;
 }
 
+void Server::createLobby(uint max_clients) {
+    std::string code = generateUniqueLobbyCode();
+    lobby_codes[code] = next_lobby_id;
+    lobbies.try_emplace(next_lobby_id, max_clients, code);
+    next_lobby_id++;
+}
+
+void Server::destroyLobby(uint lobby_id) {
+    if (lobbies.find(lobby_id) != lobbies.end()) {
+        std::string code = lobbies.at(lobby_id).getCode();
+        lobby_codes.erase(code);
+        lobbies.erase(lobby_id);
+    }
+}
+
+void Server::broadcastToLobby(uint lobby_id, const std::vector<uint8_t>& data) {
+    if (lobbies.find(lobby_id) == lobbies.end()) return;
+
+    for (const auto& [client_id, address] : lobbies.at(lobby_id).getClients()) {
+        sendTo(address, data);
+    }
+}
+
+std::string Server::generateUniqueLobbyCode() {
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    static const int alphanum_size = sizeof(alphanum) - 1;
+
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<> dis(0, alphanum_size - 1);
+
+    std::string code;
+    const int CODE_LENGTH = 6;
+
+    do {
+        code.clear();
+        for (int i = 0; i < CODE_LENGTH; ++i) {
+            code += alphanum[dis(gen)];
+        }
+    } while (lobby_codes.find(code) != lobby_codes.end());
+
+    return code;
+}
+
 void Server::handleConnectionRequest(const std::vector<uint8_t>& data,
     const net::Address& sender) {
 
 }
 
 void Server::sendAutomatic() {
-    if (players_update_timestamp.checkDelay()) {
-        sendPlayersUpdate();
+    for (auto& [id, ctx] : lobbies) {
+        if (auto msg = ctx.tryGetPlayerUpdates()) {
+            broadcastToLobby(id, msg->serialize());
+        }
     }
 }
 
 void Server::sendPlayersUpdate() {
-    ::net::PLAYERS_UPDATES msg;
-    ECS::Registry registry = getRegistry();
-
-    auto& positions = registry.getComponents<addon::physic::Position2>();
-    auto& healths = registry.getComponents<addon::eSpec::Health>();
-    auto& players = registry.getComponents<addon::intact::Player>();
-
-    for (auto&& [player, pos, health] :
-        ECS::DenseZipper(players, positions, healths)) {
-        ::net::PlayerUpdate state;
-        state.x = pos.x;
-        state.y = pos.y;
-        state.hp = static_cast<double>(health.amount);
-        state.id = 0;  // TODO(xxx): à voir comment on gère leur id
-        state.level = 0.0;  // TODO(xxx): implement later
-        state.mana = 0.0;    // TODO(xxx): implement later
-        state.direction = 0;  // TODO(xxx): implement later
-        std::memset(state.effects, 0, sizeof(state.effects));  // TODO(xxx): implement later
-
-        msg.players.push_back(state);
-    }
-
-    if (!msg.players.empty()) {
-        broadcastToAll(msg.serialize());
+    for (auto& [id, ctx] : lobbies) {
+        if (auto msg = ctx.tryGetPlayerUpdates()) {
+            if (!msg->players.empty()) {
+                broadcastToLobby(id, msg->serialize());
+            }
+        }
     }
 }
 
 void Server::run() {
     while (isRunning()) {
-        if (_framelimit.checkDelay())
-            runSystems();
+        // Run game logic for each lobby
+        for (auto& [id, ctx] : lobbies) {
+            ctx.run();
+        }
+
         update(0);
         sendAutomatic();
     }
