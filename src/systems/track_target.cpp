@@ -12,11 +12,8 @@
 #include <display/components/animation.hpp>
 #include <sfml/components/sprite.hpp>
 
-#include "ECS/DenseSA.hpp"
-#include "ECS/Registry.hpp"
-#include "components/auto_track.hpp"
+#include "components/competences/auto_track.hpp"
 #include "configs/systems.hpp"
-#include "maths/Vector.hpp"
 
 void trackTarget(Game& game) {
     game.createSystem("track_target", [&game](ECS::Registry&){

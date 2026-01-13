@@ -33,16 +33,21 @@ add_library(${PROJECT_NAME} STATIC
 
     # COMPONENTS
     ${GAME_SRC_DIR}/components/champion.cpp
-    ${GAME_SRC_DIR}/components/stat_pool.cpp
-    ${GAME_SRC_DIR}/components/button.cpp
-    ${GAME_SRC_DIR}/components/inventory.cpp
-    ${GAME_SRC_DIR}/components/item.cpp
-    ${GAME_SRC_DIR}/components/xp.cpp
-    ${GAME_SRC_DIR}/components/target.cpp
-    ${GAME_SRC_DIR}/components/auto_attack.cpp
-    ${GAME_SRC_DIR}/components/auto_track.cpp
-    ${GAME_SRC_DIR}/components/mana.cpp
-    ${GAME_SRC_DIR}/components/health.cpp
+
+    ${GAME_SRC_DIR}/components/competences/target.cpp
+    ${GAME_SRC_DIR}/components/competences/auto_attack.cpp
+    ${GAME_SRC_DIR}/components/competences/auto_track.cpp
+
+    ${GAME_SRC_DIR}/components/items/inventory.cpp
+    ${GAME_SRC_DIR}/components/items/item.cpp
+
+    ${GAME_SRC_DIR}/components/stats/stat_pool.cpp
+    ${GAME_SRC_DIR}/components/stats/xp.cpp
+    ${GAME_SRC_DIR}/components/stats/mana.cpp
+    ${GAME_SRC_DIR}/components/stats/health.cpp
+    ${GAME_SRC_DIR}/components/stats/gold.cpp
+
+    ${GAME_SRC_DIR}/components/ui/button.cpp
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp

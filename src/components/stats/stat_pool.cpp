@@ -5,7 +5,7 @@
 ** stat_pool.cpp
 */
 
-#include "components/stat_pool.hpp"
+#include "components/stats/stat_pool.hpp"
 
 void registerStatPool(Game& game) {
     game.registerComponent<StatPool>("stat_pool",

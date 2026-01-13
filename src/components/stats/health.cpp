@@ -5,14 +5,14 @@
 ** team.cpp
 */
 
-#include "components/mana.hpp"
+#include "components/stats/health.hpp"
 
-void registerMana(Game& game) {
-    game.registerComponent<Mana>("mana",
+void registerHealth(Game& game) {
+    game.registerComponent<Health>("health",
         [&game](ECS::Entity e, const toml::table& params) {
         int amount = params["amount"].value_or(0);
         int max = params["max"].value_or(0);
         int regen = params["regen"].value_or(0);
-        game.createComponent<Mana>(e, amount, max, regen);
+        game.createComponent<Health>(e, amount, max, regen);
     });
 }

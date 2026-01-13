@@ -13,9 +13,9 @@
 #include <entity_spec/components/team.hpp>
 #include <sfml/components/sprite.hpp>
 
-#include "components/auto_attack.hpp"
-#include "components/auto_track.hpp"
-#include "components/stat_pool.hpp"
+#include "components/competences/auto_attack.hpp"
+#include "components/competences/auto_track.hpp"
+#include "components/stats/stat_pool.hpp"
 #include "configs/systems.hpp"
 
 static void shootAt(Game &game, const addon::physic::Position2 &towerPos,

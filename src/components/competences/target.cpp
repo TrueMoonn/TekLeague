@@ -5,7 +5,7 @@
 ** target.cpp
 */
 
-#include "components/target.hpp"
+#include "components/competences/target.hpp"
 
 void registerTarget(Game& game) {
     game.registerComponent<Target>("target",

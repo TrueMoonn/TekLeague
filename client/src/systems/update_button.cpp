@@ -10,7 +10,7 @@
 #include <interaction/components/hoverable.hpp>
 #include <interaction/components/clickable.hpp>
 
-#include "components/button.hpp"
+#include "components/ui/button.hpp"
 #include "ui/buttons.hpp"
 #include "client_systems.hpp"
 

@@ -7,7 +7,7 @@
 
 #include <ECS/Entity.hpp>
 
-#include "components/xp.hpp"
+#include "components/stats/xp.hpp"
 
 void registerXp(Game& game) {
     game.registerComponent<Xp>("xp",
