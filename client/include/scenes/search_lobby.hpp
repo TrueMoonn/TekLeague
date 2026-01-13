@@ -17,3 +17,5 @@
         MENU_BEGIN + 1)
     #define SEARCH_BOOKRIGHT static_cast<std::size_t>(TEMP_SCENE\
         MENU_BEGIN + 2)
+    #define SEARCH_RETURN static_cast<std::size_t>(TEMP_SCENE\
+        MENU_BEGIN + 3)
