@@ -22,7 +22,7 @@ class Game : public te::GameTool {
     Game(const std::string& ppath);
 
     ECS::Entity nextEntity(eType type);
-    void run();
+    virtual void run();
 
  protected:
     bool _running;

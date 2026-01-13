@@ -18,7 +18,7 @@ class Server : public te::network::GameServer, public Game {
  public:
     explicit Server(uint16_t port = 6767, const std::string& protocol = "UDP");
 
-    int runServer();
+    void run() override;
 
  private:
     bool setPacketsHandlers();

@@ -25,6 +25,6 @@ int main(int ac, char **av) {
         SCENES_SETUPS.at(static_cast<SCENES>(i))(game);
 
     game.activateScene(SCAST(SCENES::WAIT));
-    game.runServer();
+    game.run();
     return 0;
 }
