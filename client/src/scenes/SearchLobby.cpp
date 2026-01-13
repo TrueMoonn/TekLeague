@@ -17,7 +17,7 @@ void setSearchLobbyScene(Client& game) {
         {"button_states"},  // PRE UPDATE
         {"animate"},  // UPDATE
         {},  // POST UPDATE
-        {"draw", "display"}  // RENDER
+        {"draw", "draw_text", "display"}  // RENDER
     }};
 
     slobby.entities = {
