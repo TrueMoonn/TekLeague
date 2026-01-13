@@ -5,9 +5,6 @@
 ** Main.cpp
 */
 
-#include <events.hpp>
-#include <display/components/animation.hpp>
-
 #include "scenes/main.hpp"
 #include "scenes.hpp"
 
@@ -34,8 +31,8 @@ void setMainScene(Client& game) {
         switch (e) {
             case MAIN_BUTTON_PLAY:
                 // Search for lobby (connect to a server)
-                // game.activateScene(SCAST(SCENES::SEARCH_SERVER));
-                // game.pauseScene(SCAST(SCENES::MAIN));
+                game.activateScene(SCAST(SCENES::SEARCH_LOBBY));
+                game.pauseScene(SCAST(SCENES::MAIN));
                 break;
             case MAIN_BUTTON_SETTINGS:
                 // game.activateScene(SCAST(SCENES::SETTINGS));
