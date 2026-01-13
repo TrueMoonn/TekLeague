@@ -34,8 +34,8 @@ void setMainScene(Client& game) {
                 game.pauseScene(SCAST(SCENES::MAIN));
                 break;
             case MAIN_BUTTON_SETTINGS:
-                // game.activateScene(SCAST(SCENES::SETTINGS));
-                // game.pauseScene(SCAST(SCENES::MAIN));
+                game.activateScene(SCAST(SCENES::PARAMETERS));
+                game.pauseScene(SCAST(SCENES::MAIN));
                 break;
             case MAIN_BUTTON_QUIT:
                 game.emit("closed");

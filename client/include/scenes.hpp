@@ -16,11 +16,13 @@
 
 void setMainScene(Client& game);
 void setSearchLobbyScene(Client& game);
+void setParametersScenes(Client& game);
 void setInGameScene(Client& game);
 
 enum class SCENES {
     MAIN = 0,
     SEARCH_LOBBY,
+    PARAMETERS,
     INGAME,
     LIMITSCENE,
 };
@@ -29,5 +31,6 @@ static const std::unordered_map<SCENES,
     std::function<void(Client&)>> SCENES_SETUPS = {
     {SCENES::MAIN, &setMainScene},
     {SCENES::SEARCH_LOBBY, &setSearchLobbyScene},
+    {SCENES::PARAMETERS, &setParametersScenes},
     {SCENES::INGAME, &setInGameScene},
 };
