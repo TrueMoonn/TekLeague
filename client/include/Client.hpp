@@ -13,5 +13,7 @@ class Client : public Game {
  public:
     Client();
 
+    void run() override;
+
  private:
 };

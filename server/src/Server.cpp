@@ -28,13 +28,12 @@ bool Server::setPacketsHandlers() {
 
 void Server::handleConnectionRequest(const std::vector<uint8_t>& data,
     const net::Address& sender) {
-        
+
 }
 
-int Server::runServer() {
+void Server::run() {
     while (isRunning()) {
         if (_framelimit.checkDelay())
             runSystems();
     }
-    return 0;
 }
