@@ -18,6 +18,10 @@ add_executable(${PROJECT_NAME}
     ${GAME_SRC_DIR}/systems/champ_mov.cpp
     ${GAME_SRC_DIR}/systems/entity_direction.cpp
 
+    # LOBBY
+    ${GAME_SRC_DIR}/Lobby/Lobby.cpp
+    ${GAME_SRC_DIR}/Lobby/LobbyContext.cpp
+
     ########## LOCAL ##########
     ${GAME_SERVER_SRC_DIR}/main.cpp
     ${GAME_SERVER_SRC_DIR}/Server.cpp

@@ -8,7 +8,6 @@
 #include <string>
 
 #include "Server.hpp"
-#include "scenes.hpp"
 
 int main(int ac, char **av) {
     uint16_t port = 6767;
@@ -21,10 +20,6 @@ int main(int ac, char **av) {
         protocol = av[2];
     }
     Server game(port, protocol);
-    for (std::size_t i = 0; i < SCAST(SCENES::LIMITSCENE); ++i)
-        SCENES_SETUPS.at(static_cast<SCENES>(i))(game);
-
-    game.activateScene(SCAST(SCENES::WAIT));
     game.run();
     return 0;
 }

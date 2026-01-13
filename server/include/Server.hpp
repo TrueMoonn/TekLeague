@@ -9,41 +9,44 @@
 
     #include <cstdint>
     #include <string>
+    #include <unordered_map>
     #include <vector>
 
     #include <network/GameServer.hpp>
     #include <Network/ProtocolManager.hpp>
-    #include "Game.hpp"
-    #include "clock.hpp"
+    #include "lobby/LobbyContext.hpp"
 
-class Server : public te::network::GameServer, public Game {
- public:
-    ////// Timestamp default latency in seconds //////
-    static constexpr float PLAYERS_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
-
+class Server : public te::network::GameServer {
  public:
     explicit Server(uint16_t port = 6767, const std::string& protocol = "UDP");
 
-    void run() override;
+    void run();
 
     void sendAutomatic();
 
     /**
      * @brief Set how often to send PLAYERS_UPDATES (in seconds)
      */
-    void setPlayersUpdateFrequency(float frequency) {
-        players_update_interval = frequency;
-        players_update_timestamp.delay = size_t(SEC_TO_MICRO(frequency));
+    void setPlayersUpdateFrequency(std::size_t lobby_id, float frequency) {
+        lobbies.at(lobby_id).setPlayersUpdateFrequency(frequency);
     }
 
  private:
     bool setPacketsHandlers();
 
-    std::uint32_t next_player_id;
+    ////// Lobbies //////
+    std::unordered_map<uint, LobbyContext> lobbies;
+    std::unordered_map<std::string, uint> lobby_codes;
+    uint next_lobby_id = 0;
+    void createLobby(uint max_clients);
+    void destroyLobby(uint lobby_id);
+    void broadcastToLobby(uint lobby_id, const std::vector<uint8_t>& data);
 
-    ////// Timestamp //////
-    te::Timestamp players_update_timestamp = te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);
-    float players_update_interval = PLAYERS_UPDATES_DEFAULT_LATENCY;
+    /**
+     * @brief Generate a unique 6-character alphanumeric lobby code
+     * @return A unique lobby code that doesn't exist yet
+     */
+    std::string generateUniqueLobbyCode();
 
     ////// Handlers //////
     void handleConnectionRequest(const std::vector<uint8_t>& data,
