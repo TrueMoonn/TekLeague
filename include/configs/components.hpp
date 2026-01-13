@@ -16,6 +16,7 @@
     #include "components/auto_track.hpp"
     #include "components/button.hpp"
     #include "components/champion.hpp"
+    #include "components/gold.hpp"
     #include "components/health.hpp"
     #include "components/inventory.hpp"
     #include "components/item.hpp"
@@ -29,6 +30,7 @@ static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerAutoTrack,
     &registerButton,
     &registerChampion,
+    &registerGold,
     &registerHealth,
     &registerInventory,
     &registerItem,
