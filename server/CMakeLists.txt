@@ -14,6 +14,8 @@ add_executable(${PROJECT_NAME}
     ${GAME_SRC_DIR}/components/stat_pool.cpp
     ${GAME_SRC_DIR}/components/directed.cpp
     ${GAME_SRC_DIR}/components/button.cpp
+    ${GAME_SRC_DIR}/components/inventory.cpp
+    ${GAME_SRC_DIR}/components/item.cpp
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp
