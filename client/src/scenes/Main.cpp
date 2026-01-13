@@ -30,7 +30,6 @@ void setMainScene(Client& game) {
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
         switch (e) {
             case MAIN_BUTTON_PLAY:
-                // Search for lobby (connect to a server)
                 game.activateScene(SCAST(SCENES::SEARCH_LOBBY));
                 game.pauseScene(SCAST(SCENES::MAIN));
                 break;

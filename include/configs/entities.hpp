@@ -23,6 +23,7 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     "client/assets/configs/ui/logo.toml",
     "client/assets/configs/ui/backgrounds.toml",
     "client/assets/configs/ui/search_lobby/book.toml",
+    "client/assets/configs/ui/search_lobby/button.toml",
 };
 
 static const std::vector<std::string> MAP_PATHS {

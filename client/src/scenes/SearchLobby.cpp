@@ -24,10 +24,17 @@ void setSearchLobbyScene(Client& game) {
         {SEARCH_BOOKCOVER, "bookcover", {512.f, 220.f}},
         {SEARCH_BOOKLEFT, "bookleft", {542.f, 250.f}},
         {SEARCH_BOOKRIGHT, "bookright", {958.f, 250.f}},
+        {SEARCH_RETURN, "sl_return_button", {562.f, 270.f}},
     };
 
     std::size_t idx = game.addScene(slobby);
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
+        switch (e) {
+            case SEARCH_RETURN:
+                game.resumeScene(SCAST(SCENES::MAIN));
+                game.deactivateScene(SCAST(SCENES::SEARCH_LOBBY));
+                break;
+        }
     });
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape]) {
