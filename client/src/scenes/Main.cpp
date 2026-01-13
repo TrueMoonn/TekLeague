@@ -5,6 +5,7 @@
 ** Main.cpp
 */
 
+#include <events.hpp>
 #include <sfml/components/text.hpp>
 
 #include "scenes/main.hpp"
@@ -28,15 +29,15 @@ void setMainScene(Client& game) {
         {MAIN_BACKGROUND, "main_bg"},
     };
 
-    toml::table table;
-    table.insert_or_assign("font", "client/assets/images/ui/main_font.otf");
-    table.insert_or_assign("string", "PLAY");
-    toml::array offset;
-    offset.push_back(150);
-    offset.push_back(5);
-    table.insert_or_assign("offset", offset);
-    table.insert_or_assign("size", 60);
-    game.createComponent("text", MAIN_BUTTON_PLAY, table);
+    // toml::table table;
+    // table.insert_or_assign("font", "client/assets/images/ui/main_font.otf");
+    // table.insert_or_assign("string", "PLAY");
+    // toml::array offset;
+    // offset.push_back(150);
+    // offset.push_back(5);
+    // table.insert_or_assign("offset", offset);
+    // table.insert_or_assign("size", 60);
+    // game.createComponent("text", MAIN_BUTTON_PLAY, table);
 
     // toml::table table1;
     // table1.insert_or_assign("font", "client/assets/images/ui/main_font.otf");
