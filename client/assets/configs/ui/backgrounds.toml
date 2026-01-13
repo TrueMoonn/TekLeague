@@ -5,4 +5,4 @@ position2 = true
     [ENTITIES.main_bg.sprite]
     path = "client/assets/images/ui/main_bg.jpg"
     scale = [1920, 1080]
-    layer = 1
+    layer = 0
