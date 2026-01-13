@@ -34,15 +34,22 @@ add_library(${PROJECT_NAME} STATIC
     # COMPONENTS
     ${GAME_SRC_DIR}/components/champion.cpp
     ${GAME_SRC_DIR}/components/stat_pool.cpp
-    ${GAME_SRC_DIR}/components/directed.cpp
     ${GAME_SRC_DIR}/components/button.cpp
     ${GAME_SRC_DIR}/components/inventory.cpp
     ${GAME_SRC_DIR}/components/item.cpp
     ${GAME_SRC_DIR}/components/xp.cpp
+    ${GAME_SRC_DIR}/components/target.cpp
+    ${GAME_SRC_DIR}/components/auto_attack.cpp
+    ${GAME_SRC_DIR}/components/auto_track.cpp
+    ${GAME_SRC_DIR}/components/mana.cpp
+    ${GAME_SRC_DIR}/components/health.cpp
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp
     ${GAME_SRC_DIR}/systems/entity_direction.cpp
+    ${GAME_SRC_DIR}/systems/auto_attacks.cpp
+    ${GAME_SRC_DIR}/systems/track_target.cpp
+
 )
 
 target_include_directories(${PROJECT_NAME}

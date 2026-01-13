@@ -12,20 +12,28 @@
 
     #include "Game.hpp"
 
-    #include "components/champion.hpp"
-    #include "components/stat_pool.hpp"
-    #include "components/directed.hpp"
+    #include "components/auto_attack.hpp"
+    #include "components/auto_track.hpp"
     #include "components/button.hpp"
+    #include "components/champion.hpp"
+    #include "components/health.hpp"
     #include "components/inventory.hpp"
     #include "components/item.hpp"
+    #include "components/mana.hpp"
+    #include "components/stat_pool.hpp"
+    #include "components/target.hpp"
     #include "components/xp.hpp"
 
 static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
-    &registerChampion,
-    &registerStatPool,
-    &registerDirected,
+    &registerAutoAttack,
+    &registerAutoTrack,
     &registerButton,
+    &registerChampion,
+    &registerHealth,
     &registerInventory,
     &registerItem,
+    &registerMana,
+    &registerStatPool,
+    &registerTarget,
     &registerXp,
 };
