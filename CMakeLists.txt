@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(tek_league)
+project(TekLeague)
 
 ########## SETUP ##########
 set(CMAKE_CXX_STANDARD 23)
@@ -26,6 +26,34 @@ endif()
 
 ########## TRUE ENGINE ##########
 add_subdirectory(TrueEngine)
+
+########## COMMUN ##########
+add_library(${PROJECT_NAME} STATIC
+    ${GAME_SRC_DIR}/Game.cpp
+
+    # COMPONENTS
+    ${GAME_SRC_DIR}/components/champion.cpp
+    ${GAME_SRC_DIR}/components/stat_pool.cpp
+    ${GAME_SRC_DIR}/components/directed.cpp
+    ${GAME_SRC_DIR}/components/button.cpp
+    ${GAME_SRC_DIR}/components/inventory.cpp
+    ${GAME_SRC_DIR}/components/item.cpp
+
+    # SYSTEMS
+    ${GAME_SRC_DIR}/systems/champ_mov.cpp
+    ${GAME_SRC_DIR}/systems/entity_direction.cpp
+)
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        ${GAME_HDR_DIR}
+        ${TE_HDR_DIR}
+)
+
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        TrueEngine
+)
 
 ########## BINARIES ##########
 add_subdirectory(client)
