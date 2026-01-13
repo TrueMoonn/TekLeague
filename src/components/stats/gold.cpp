@@ -5,7 +5,7 @@
 ** team.cpp
 */
 
-#include "components/gold.hpp"
+#include "components/stats/gold.hpp"
 
 void registerGold(Game& game) {
     game.registerComponent<Gold>("gold",

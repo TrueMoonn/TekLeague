@@ -11,8 +11,8 @@
 #include <display/components/animation.hpp>
 #include <sfml/components/sprite.hpp>
 
-#include "components/target.hpp"
-#include "components/stat_pool.hpp"
+#include "components/competences/target.hpp"
+#include "components/stats/stat_pool.hpp"
 #include "configs/systems.hpp"
 
 void entityDirection(Game& game) {

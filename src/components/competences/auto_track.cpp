@@ -5,7 +5,7 @@
 ** auto_track.cpp
 */
 
-#include "components/auto_track.hpp"
+#include "components/competences/auto_track.hpp"
 
 void registerAutoTrack(Game &game) {
     game.registerComponent<AutoTrack>("auto_track",

@@ -7,7 +7,7 @@
 
 #include <ECS/Entity.hpp>
 
-#include "components/inventory.hpp"
+#include "components/items/inventory.hpp"
 
 void registerInventory(Game& game) {
     game.registerComponent<Inventory>("inventory",

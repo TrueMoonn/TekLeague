@@ -5,7 +5,7 @@
 ** auto_attack.cpp
 */
 
-#include "components/auto_attack.hpp"
+#include "components/competences/auto_attack.hpp"
 
 void registerAutoAttack(Game& game) {
     game.registerComponent<AutoAttack>("auto_attack",

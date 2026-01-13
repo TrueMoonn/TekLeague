@@ -7,7 +7,7 @@
 
 #include <ECS/Entity.hpp>
 
-#include "components/item.hpp"
+#include "components/items/item.hpp"
 
 void registerItem(Game& game) {
     game.registerComponent<Item>("item",

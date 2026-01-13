@@ -12,18 +12,18 @@
 
     #include "Game.hpp"
 
-    #include "components/auto_attack.hpp"
-    #include "components/auto_track.hpp"
-    #include "components/button.hpp"
     #include "components/champion.hpp"
-    #include "components/gold.hpp"
-    #include "components/health.hpp"
-    #include "components/inventory.hpp"
-    #include "components/item.hpp"
-    #include "components/mana.hpp"
-    #include "components/stat_pool.hpp"
-    #include "components/target.hpp"
-    #include "components/xp.hpp"
+    #include "components/competences/auto_attack.hpp"
+    #include "components/competences/auto_track.hpp"
+    #include "components/competences/target.hpp"
+    #include "components/items/inventory.hpp"
+    #include "components/items/item.hpp"
+    #include "components/stats/gold.hpp"
+    #include "components/stats/health.hpp"
+    #include "components/stats/mana.hpp"
+    #include "components/stats/stat_pool.hpp"
+    #include "components/stats/xp.hpp"
+    #include "components/ui/button.hpp"
 
 static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerAutoAttack,

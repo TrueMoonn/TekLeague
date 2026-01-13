@@ -14,10 +14,9 @@
 #include <interaction/components/player.hpp>
 #include <sfml/components/window.hpp>
 
-#include "ECS/DenseSA.hpp"
 #include "entities.hpp"
 #include "scenes.hpp"
-#include "components/target.hpp"
+#include "components/competences/target.hpp"
 
 
 void setInGameScene(Client& game) {
