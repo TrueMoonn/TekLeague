@@ -5,6 +5,8 @@
 ** main.cpp
 */
 
+#include <string>
+
 #include "Server.hpp"
 #include "scenes.hpp"
 
@@ -23,6 +25,6 @@ int main(int ac, char **av) {
         SCENES_SETUPS.at(static_cast<SCENES>(i))(game);
 
     game.activateScene(SCAST(SCENES::WAIT));
-    game.run();
+    game.runServer();
     return 0;
 }
