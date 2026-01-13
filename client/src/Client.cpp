@@ -16,3 +16,10 @@ Client::Client() : Game("client/plugins") {
     for (auto& sys : CLIENT_SYSTEMS)
         sys(*this);
 }
+
+void Client::run() {
+    while (_running) {
+        if (_framelimit.checkDelay())
+            runSystems();
+    }
+}
