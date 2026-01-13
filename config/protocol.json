@@ -1,43 +1,367 @@
 {
-  "endianness": "little",
+  "endianness": "big",
   "preambule": {
     "active": true,
-    "characters": "\r\t\r\t"
+    "characters": "\\x00\\x00\\x00\\x00"
   },
   "packet_length": {
     "active": true,
     "length": 4
   },
   "datetime": {
-    "active": true,
-    "length": 8
+    "active": false
   },
   "end_of_packet": {
-    "active": true,
-    "characters": "\r\n"
+    "active": false
   },
+
+  "structs": {
+    "CodeTimestamp": {
+      "fields": [
+        { "name": "code", "type": "uint8" },
+        { "name": "timestamp", "type": "uint32" }
+      ]
+    },
+    "PlayerListEntry": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "username", "type": "string", "max_length": 32 }
+      ]
+    },
+    "PlayerInit": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "direction", "type": "uint8" },
+        { "name": "hp", "type": "double" },
+        { "name": "mana", "type": "double" },
+        { "name": "champ", "type": "uint8" }
+      ]
+    },
+    "BuildingInit": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "hp", "type": "double" },
+        { "name": "type", "type": "uint32" },
+        { "name": "range", "type": "uint32" }
+      ]
+    },
+    "TeamScore": {
+      "fields": [
+        { "name": "team_kills", "type": "uint32" },
+        { "name": "tower_taken", "type": "uint32" },
+        { "name": "major_mobs_killed", "type": "uint32" }
+      ]
+    },
+    "ScoreboardEntry": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "player_kills", "type": "uint32" },
+        { "name": "player_deaths", "type": "uint32" },
+        { "name": "player_assists", "type": "uint32" }
+      ]
+    },
+    "PlayerUpdate": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "direction", "type": "uint8" },
+        { "name": "hp", "type": "double" },
+        { "name": "mana", "type": "double" },
+        { "name": "level", "type": "uint8" },
+        {
+          "name": "effects",
+          "type": "fixed_array",
+          "element_type": "uint8",
+          "max_size": 16
+        }
+      ]
+    },
+    "BuildingUpdate": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "hp", "type": "double" }
+      ]
+    },
+    "CreatureUpdate": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "direction", "type": "uint8" },
+        { "name": "hp", "type": "double" },
+        { "name": "type", "type": "uint32" },
+        {
+          "name": "effects",
+          "type": "fixed_array",
+          "element_type": "uint8",
+          "max_size": 16
+        }
+      ]
+    },
+    "ProjectileUpdate": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "type", "type": "uint32" }
+      ]
+    }
+  },
+
   "messages": {
-    "LOGIN_REQUEST": {
+    "CONNECTED": {
       "id": 1,
       "fields": [
-        { "name": "username", "type": "string", "max_length": 32 },
-        { "name": "password", "type": "string", "max_length": 64 },
-        { "name": "client_version", "type": "uint16" }
+        {
+          "name": "entries",
+          "type": "dynamic_array",
+          "element_type": "CodeTimestamp"
+        }
       ]
     },
-    "CHAT_MESSAGE": {
-      "id": 10,
-      "fields": [
-        { "name": "content", "type": "string", "max_length": 128 },
-        { "name": "sender", "type": "string", "max_length": 32 }
-      ]
+    "DISCONNEXION": {
+      "id": 2,
+      "fields": []
     },
-    "LARGE_DATA": {
+    "ERROR_TOO_MANY_CLIENTS": {
+      "id": 3,
+      "fields": []
+    },
+    "PACKET_LOSS": {
+      "id": 4,
+      "fields": [{ "name": "code", "type": "uint8" }]
+    },
+    "I_MISSED_SOMETHING": {
+      "id": 5,
+      "fields": []
+    },
+    "PING": {
+      "id": 6,
+      "fields": []
+    },
+    "PONG": {
+      "id": 7,
+      "fields": []
+    },
+    "LOGIN": {
       "id": 20,
-      "compressed": true,
+      "fields": [{ "name": "username", "type": "string", "max_length": 32 }]
+    },
+    "LOGOUT": {
+      "id": 21,
+      "fields": []
+    },
+    "LOGGED_IN": {
+      "id": 22,
+      "fields": [{ "name": "id", "type": "uint32" }]
+    },
+    "LOGGED_OUT": {
+      "id": 23,
+      "fields": [{ "name": "id", "type": "uint32" }]
+    },
+    "USERNAME_ALREADY_TAKEN": {
+      "id": 25,
+      "fields": []
+    },
+    "JOIN_LOBBY": {
+      "id": 30,
+      "fields": [{ "name": "lobby_code", "type": "string", "max_length": 6 }]
+    },
+    "LOBBY_JOINED": {
+      "id": 31,
+      "fields": [{ "name": "id", "type": "uint32" }]
+    },
+    "CREATE_LOBBY": {
+      "id": 32,
+      "fields": []
+    },
+    "LOBBY_CREATED": {
+      "id": 33,
+      "fields": [{ "name": "lobby_code", "type": "string", "max_length": 6 }]
+    },
+    "GET_ALL_PUBLIC_LOBBIES": {
+      "id": 34,
+      "fields": []
+    },
+    "LOBBIES_LIST": {
+      "id": 35,
       "fields": [
-        { "name": "data_content", "type": "string", "max_length": 2048 }
+        {
+          "name": "lobby_codes",
+          "type": "dynamic_array",
+          "element_type": "string"
+        }
       ]
+    },
+    "ADMIN_START_GAME": {
+      "id": 36,
+      "fields": []
+    },
+    "GAME_STARTING": {
+      "id": 37,
+      "fields": []
+    },
+    "TOGGLE_LOBBY_PRIVATE_PUBLIC": {
+      "id": 46,
+      "fields": []
+    },
+    "PLAYERS_LIST": {
+      "id": 38,
+      "fields": [
+        {
+          "name": "players",
+          "type": "dynamic_array",
+          "element_type": "PlayerListEntry"
+        }
+      ]
+    },
+    "LOBBY_VISIBILITY_CHANGED": {
+      "id": 39,
+      "fields": [{ "name": "is_public", "type": "uint8" }]
+    },
+    "LEAVE_LOBBY": {
+      "id": 40,
+      "fields": []
+    },
+    "LOBBY_DESTROYED": {
+      "id": 42,
+      "fields": []
+    },
+    "BAD_LOBBY_CODE": {
+      "id": 44,
+      "fields": []
+    },
+    "NOT_ADMIN": {
+      "id": 45,
+      "fields": []
+    },
+    "CLIENT_INPUTS": {
+      "id": 50,
+      "fields": [
+        { "name": "keyboard_input_count", "type": "uint8" },
+        {
+          "name": "keyboard_inputs",
+          "type": "fixed_array",
+          "element_type": "uint8",
+          "max_size": 102
+        },
+        { "name": "mouse_input_count", "type": "uint8" },
+        {
+          "name": "mouse_inputs",
+          "type": "fixed_array",
+          "element_type": "uint8",
+          "max_size": 3
+        },
+        { "name": "mouse_x", "type": "uint32" },
+        { "name": "mouse_y", "type": "uint32" }
+      ]
+    },
+    "PLAYERS_INIT": {
+      "id": 51,
+      "fields": [
+        {
+          "name": "players",
+          "type": "dynamic_array",
+          "element_type": "PlayerInit"
+        }
+      ]
+    },
+    "BUILDINGS_INIT": {
+      "id": 52,
+      "fields": [
+        {
+          "name": "buildings",
+          "type": "dynamic_array",
+          "element_type": "BuildingInit"
+        }
+      ]
+    },
+    "SCORE": {
+      "id": 54,
+      "fields": [
+        { "name": "team_count", "type": "uint8" },
+        {
+          "name": "teams",
+          "type": "fixed_array",
+          "element_type": "TeamScore",
+          "max_size": 2
+        }
+      ]
+    },
+    "GAME_DURATION": {
+      "id": 55,
+      "fields": [{ "name": "duration", "type": "uint32" }]
+    },
+    "PLAYER_DEAD": {
+      "id": 56,
+      "fields": []
+    },
+    "SCOREBOARD": {
+      "id": 57,
+      "fields": [
+        {
+          "name": "entries",
+          "type": "dynamic_array",
+          "element_type": "ScoreboardEntry"
+        }
+      ]
+    },
+    "PLAYERS_UPDATES": {
+      "id": 61,
+      "fields": [
+        {
+          "name": "players",
+          "type": "dynamic_array",
+          "element_type": "PlayerUpdate"
+        }
+      ]
+    },
+    "BUILDING_UPDATES": {
+      "id": 62,
+      "fields": [
+        {
+          "name": "buildings",
+          "type": "dynamic_array",
+          "element_type": "BuildingUpdate"
+        }
+      ]
+    },
+    "CREATURES_UPDATES": {
+      "id": 63,
+      "fields": [
+        {
+          "name": "creatures",
+          "type": "dynamic_array",
+          "element_type": "CreatureUpdate"
+        }
+      ]
+    },
+    "PROJECTILES_UPDATES": {
+      "id": 64,
+      "fields": [
+        {
+          "name": "projectiles",
+          "type": "dynamic_array",
+          "element_type": "ProjectileUpdate"
+        }
+      ]
+    },
+    "ADMIN_PAUSE_GAME": {
+      "id": 67,
+      "fields": []
+    },
+    "ADMIN_GAME_PAUSED": {
+      "id": 68,
+      "fields": []
+    },
+    "GAME_END": {
+      "id": 69,
+      "fields": [{ "name": "winning_team", "type": "uint8" }]
     }
   }
 }
