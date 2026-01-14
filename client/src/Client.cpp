@@ -6,9 +6,20 @@
 */
 
 #include "configs/entities.hpp"
+#include "client_systems.hpp"
+
 #include "Client.hpp"
 
 Client::Client() : Game("client/plugins") {
     for (auto& conf : CLIENT_CONFIG_PATHS)
         addConfig(conf);
+    for (auto& sys : CLIENT_SYSTEMS)
+        sys(*this);
+}
+
+void Client::run() {
+    while (_running) {
+        if (_framelimit.checkDelay())
+            runSystems();
+    }
 }

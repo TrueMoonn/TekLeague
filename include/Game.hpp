@@ -22,10 +22,11 @@ class Game : public te::GameTool {
     Game(const std::string& ppath);
 
     ECS::Entity nextEntity(eType type);
-    void run();
+    virtual void run();
 
- private:
+ protected:
     bool _running;
     te::Timestamp _framelimit;
+ private:
     std::unordered_map<eType, ECS::Entity> _nextEntities;
 };
