@@ -144,7 +144,7 @@ void Client::registerMessageHandlers() {
 
         _lobby_data.handlePlayersList(msg);
 
-        emit("lobby:players_updated", _lobby_data.getPlayersInLobby());
+        emit("lobby:players_updated");
     });
 
     registerPacketHandler(39, [this](const std::vector<uint8_t>& data) {
