@@ -8,7 +8,7 @@
 #pragma once
 
     #include "Game.hpp"
-    #include "LobbyManager.hpp"
+    #include "LobbyManager.hpp"  // LobbyDataManager
     #include <network/GameClient.hpp>
 
 class Client : public Game, public te::network::GameClient {
@@ -40,7 +40,7 @@ class Client : public Game, public te::network::GameClient {
     /**
      * @brief Check if in game (not in lobby)
      */
-    bool isInGame() const { return _lobby_manager.isInGame(); }
+    bool isInGame() const { return _lobby_data.isInGame(); }
 
     /**
      * @brief Receive messages from server
@@ -48,22 +48,17 @@ class Client : public Game, public te::network::GameClient {
     void receiveMessages();
 
     /**
-     * @brief Update lobby manager
-     */
-    void updateLobby();
-
-    /**
      * @brief Update game logic
      */
     void updateGame();
 
     /**
-     * @brief Get lobby manager
+     * @brief Get lobby data manager
      */
-    LobbyManager& getLobbyManager() { return _lobby_manager; }
+    LobbyDataManager& getLobbyData() { return _lobby_data; }
 
  private:
-    LobbyManager _lobby_manager;
+    LobbyDataManager _lobby_data;
 
     void registerMessageHandlers();
 };

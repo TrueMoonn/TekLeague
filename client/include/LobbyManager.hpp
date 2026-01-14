@@ -2,61 +2,82 @@
 ** EPITECH PROJECT, 2025
 ** TekLeague
 ** File description:
-** LobbyManager.hpp
+** LobbyDataManager.hpp
 */
 
 #pragma once
 
 #include <string>
 #include <cstdint>
+#include <vector>
 
 #include <Network/Address.hpp>
 #include <Network/generated_messages.hpp>
 #include <network/GameClient.hpp>
 
 /**
- * @brief Manages lobby interaction on the client side
- * Handles CLI-based lobby creation, joining, and management
+ * @brief Manages lobby data and network communication on the client side
+ * Provides data storage and network helpers for lobby operations
+ * Does NOT handle UI - signals are emitted by the Client for UI updates
  */
-class LobbyManager {
+class LobbyDataManager {
  public:
-    enum class State {
-        DISCONNECTED,           // Not connected to server
-        LOGGING_IN,             // Waiting for login response
-        LOBBY_MENU,             // Main menu: create/join/list lobbies
-        CREATING_LOBBY,         // Waiting for lobby creation response
-        JOINING_LOBBY,          // Waiting for join response
-        FETCHING_LOBBIES,       // Waiting for public lobbies list
-        IN_LOBBY,               // Inside a lobby, waiting for game start
-        WAITING_GAME_START,     // Waiting for game start response
-        WAITING_VISIBILITY,     // Waiting for visibility change response
-        WAITING_PAUSE,          // Waiting for pause response
-        IN_GAME                 // Game is running
-    };
-
-    explicit LobbyManager(te::network::GameClient& network_client);
+    explicit LobbyDataManager(te::network::GameClient& network_client);
 
     /**
      * @brief Set the server address
      */
     void setServerAddress(const net::Address& address);
 
-    /**
-     * @brief Main update loop - handles CLI input and state
-     */
-    void update();
+    ////// Network //////
 
     /**
-     * @brief Get current state
+     * @brief Send login request to server
      */
-    State getState() const { return _state; }
+    void sendLogin(const std::string& username);
 
     /**
-     * @brief Check if in game
+     * @brief Send logout request
      */
-    bool isInGame() const { return _state == State::IN_GAME; }
+    void sendLogout();
 
-    // Message handlers (called when receiving messages from server)
+    /**
+     * @brief Send create lobby request
+     */
+    void sendCreateLobby();
+
+    /**
+     * @brief Send join lobby request
+     */
+    void sendJoinLobby(const std::string& code);
+
+    /**
+     * @brief Send request for public lobbies list
+     */
+    void sendGetPublicLobbies();
+
+    /**
+     * @brief Send leave lobby request
+     */
+    void sendLeaveLobby();
+
+    /**
+     * @brief Send start game request (admin only)
+     */
+    void sendStartGame();
+
+    /**
+     * @brief Send toggle visibility request (admin only)
+     */
+    void sendToggleVisibility();
+
+    /**
+     * @brief Send pause game request (admin only)
+     */
+    void sendPauseGame();
+
+    ////// MESSAGE HANDLERS (update data only) //////
+
     void handleLoggedIn(const net::LOGGED_IN& msg);
     void handleLoggedOut(const net::LOGGED_OUT& msg);
     void handleUsernameAlreadyTaken(const net::USERNAME_ALREADY_TAKEN& msg);
@@ -71,6 +92,8 @@ class LobbyManager {
     void handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg);
     void handleNotAdmin(const net::NOT_ADMIN& msg);
     void handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg);
+
+    ////// GETTERS //////
 
     /**
      * @brief Get current username
@@ -92,44 +115,53 @@ class LobbyManager {
      */
     bool isAdmin() const { return _is_admin; }
 
+    /**
+     * @brief Check if lobby is public
+     */
+    bool isLobbyPublic() const { return _lobby_is_public; }
+
+    /**
+     * @brief Get players in current lobby
+     */
+    const std::vector<net::PlayerListEntry>& getPlayersInLobby() const { return _players_in_lobby; }
+
+    /**
+     * @brief Get cached list of public lobbies
+     */
+    const std::vector<std::string>& getCachedLobbiesList() const { return _cached_lobbies_list; }
+
+    /**
+     * @brief Check if logged in
+     */
+    bool isLoggedIn() const { return !_username.empty(); }
+
+    /**
+     * @brief Check if in lobby
+     */
+    bool isInLobby() const { return !_lobby_code.empty(); }
+
+    /**
+     * @brief Check if in game
+     */
+    bool isInGame() const { return _in_game; }
+
  private:
-    // State management
-    State _state = State::DISCONNECTED;
     te::network::GameClient& _network_client;
     net::Address _server_address;
 
     // Client info
     std::string _username;
     uint32_t _client_id = 0;
+
+    // Lobby info
     std::string _lobby_code;
     bool _is_admin = false;
     bool _lobby_is_public = true;
+    bool _in_game = false;
 
     // Players in current lobby
     std::vector<net::PlayerListEntry> _players_in_lobby;
 
-    // CLI interaction
-    void showMainMenu();
-    void showLobbyMenu();
-    void promptLogin();
-    void promptCreateOrJoin();
-    void promptJoinLobby();
-    void promptLobbyCode();
-
-    // Send functions
-    void sendLogin(const std::string& username);
-    void sendLogout();
-    void sendCreateLobby();
-    void sendJoinLobby(const std::string& code);
-    void sendGetPublicLobbies();
-    void sendLeaveLobby();
-    void sendStartGame();
-    void sendToggleVisibility();
-    void sendPauseGame();
-
-    // Utility
-    void changeState(State new_state);
-    void displayPlayers();
-    std::string readLine();
-    void clearScreen();
+    // Cached list of public lobbies
+    std::vector<std::string> _cached_lobbies_list;
 };

@@ -7,6 +7,8 @@
 
 #include <events.hpp>
 #include <sfml/components/text.hpp>
+#include <Network/generated_messages.hpp>
+#include <print>
 
 #include "scenes/main.hpp"
 #include "scenes.hpp"
@@ -63,6 +65,11 @@ void setMainScene(Client& game) {
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
         switch (e) {
             case MAIN_BUTTON_PLAY:
+                {
+                    net::GET_ALL_PUBLIC_LOBBIES msg;
+                    game.sendToServer(msg.serialize());
+                    std::println("[Client] Requesting public lobbies list...");
+                }
                 game.activateScene(SCAST(SCENES::SEARCH_LOBBY));
                 game.pauseScene(SCAST(SCENES::MAIN));
                 break;
