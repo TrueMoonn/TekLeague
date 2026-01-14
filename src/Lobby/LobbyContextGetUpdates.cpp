@@ -106,7 +106,7 @@ net::PROJECTILES_UPDATES LobbyContext::getProjectilesUpdates() {
 
         // TODO(x): fill state with real all data
         net::ProjectileUpdate state {
-            .id = entity,
+            .id = static_cast<uint32_t>(entity),
             .x = position.x,
             .y = position.y,
             .type = 0
@@ -132,7 +132,7 @@ net::COLLECTIBLES_UPDATES LobbyContext::getCollectiblesUpdates() {
 
         // TODO(x): fill state with real all data
         net::CollectibleUpdate state {
-            .id = entity,
+            .id = static_cast<uint32_t>(entity),
             .x = position.x,
             .y = position.y,
             .type = 0
