@@ -4,6 +4,9 @@ player = true
 champion = true
 target = true
 
+[ENTITIES.ethan.team]
+name = "blue"
+
 [ENTITIES.ethan.velocity2]
 x = 0
 y = 0

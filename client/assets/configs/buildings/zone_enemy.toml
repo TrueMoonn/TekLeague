@@ -2,8 +2,8 @@
 drawable = true
 position2 = true
 
-[ENTITIES.zone_left_enemy.proc]
-radius = 200
+# [ENTITIES.zone_left_enemy.proc]
+# radius = 200
 
 [ENTITIES.zone_left_enemy.sprite]
 path = "client/assets/images/buildings/red_circle.png"

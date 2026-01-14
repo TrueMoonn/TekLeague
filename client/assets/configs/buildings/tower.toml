@@ -1,6 +1,10 @@
 [ENTITIES.tower]
 drawable = true
 position2 = true
+auto_attack = true
+
+[ENTITIES.tower.team]
+name = "red"
 
 [ENTITIES.tower.sprite]
 path = "client/assets/images/buildings/tower.png"
