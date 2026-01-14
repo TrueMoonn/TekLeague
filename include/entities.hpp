@@ -14,9 +14,10 @@
     #define MENU_FIELD_SIZE 1000
     #define HUD_FIELD_SIZE 100
     #define MAP_FIELD_SIZE 5000
-    #define MOB_FIELD_SIZE 4000
+    #define CREATURES_FIELD_SIZE 4000
     #define BUILDINGS_FIELD_SIZE 4000
     #define PROJECTILE_FIELD_SIZE 4000
+    #define COLLECTIBLE_FIELD_SIZE 4000
 
 enum class eType {
     SYSTEM = 0,
@@ -24,7 +25,7 @@ enum class eType {
     MENU,
     HUD,
     MAP,
-    MOB,
+    CREATURES,
     BUILDINGS,
     PROJECTILES,
 };
@@ -39,12 +40,14 @@ enum eField {
     HUD_END = HUD_BEGIN + HUD_FIELD_SIZE,
     MAP_BEGIN = HUD_END + 1,
     MAP_END = MAP_BEGIN + MAP_FIELD_SIZE,
-    MOB_BEGIN = MAP_END + 1,
-    MOB_END = MOB_BEGIN + MOB_FIELD_SIZE,
-    BUILDINGS_BEGIN = MOB_END + 1,
+    CREATURES_BEGIN = MAP_END + 1,
+    CREATURES_END = CREATURES_BEGIN + CREATURES_FIELD_SIZE,
+    BUILDINGS_BEGIN = CREATURES_END + 1,
     BUILDINGS_END = BUILDINGS_BEGIN + BUILDINGS_FIELD_SIZE,
     PROJECTILES_BEGIN = BUILDINGS_END + 1,
     PROJECTILES_END = PROJECTILES_BEGIN + PROJECTILE_FIELD_SIZE,
+    COLLECTIBLES_BEGIN = BUILDINGS_END + 1,
+    COLLECTIBLES_END = COLLECTIBLES_BEGIN + COLLECTIBLE_FIELD_SIZE,
 };
 
 struct EntityFieldLink {
@@ -73,9 +76,9 @@ static const std::unordered_map<eType, EntityFieldLink> ENTITY_FIELDS {
         static_cast<std::size_t>(MAP_BEGIN),
         static_cast<std::size_t>(MAP_END)
     }},
-    {eType::MOB, {
-        static_cast<std::size_t>(MOB_BEGIN),
-        static_cast<std::size_t>(MOB_END)
+    {eType::CREATURES, {
+        static_cast<std::size_t>(CREATURES_BEGIN),
+        static_cast<std::size_t>(CREATURES_END)
     }},
     {eType::BUILDINGS, {
         static_cast<std::size_t>(BUILDINGS_BEGIN),

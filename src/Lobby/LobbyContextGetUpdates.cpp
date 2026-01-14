@@ -22,6 +22,7 @@ net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
         if (entity < eField::CHAMPION_BEGIN || entity > eField::CHAMPION_END)
             continue;
 
+        // TODO(x): fill state with real all data
         net::PlayerUpdate state;
         state.id = static_cast<uint32_t>(entity),
         state.x = pos.x,
@@ -62,41 +63,198 @@ net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
     return msg;
 }
 
-// net::BUILDING_UPDATES LobbyContext::getProjectilesUpdates() {
-//     net::BUILDING_UPDATES msg;
+net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
+    net::CREATURES_UPDATES msg;
 
-//     auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
-//     auto& healths = registry.getComponents<addon::eSpec::Health>();
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& healths = registry.getComponents<addon::eSpec::Health>();
+    auto& positions = registry.getComponents<addon::physic::Position2>();
 
-//     for (auto&& [entity, health] :
-//         ECS::IndexedDenseZipper(healths)) {
-//         if (entity < eField::BUILDINGS_BEGIN ||
-//            entity > eField::BUILDINGS_END)
-//             continue;
+    for (auto&& [entity, position, health] :
+        ECS::IndexedDenseZipper(positions, healths)) {
+        if (entity < eField::CREATURES_BEGIN || entity > eField::CREATURES_END)
+            continue;
 
-//         net::BuildingUpdate state {
-//             .id = entity,
-//             .hp = static_cast<double>(health.amount)
-//         };
+        // TODO(x): fill state with real all data
+        net::CreatureUpdate state {
+            .id = static_cast<uint32_t>(entity),
+            .x = position.x,
+            .y = position.y,
+            .direction = 0,
+            .hp = static_cast<double>(health.amount),
+            .type = 0,
+            .effects = static_cast<uint8_t>(0)
+        };
 
-//         msg.buildings.push_back(state);
-//     }
+        msg.creatures.push_back(state);
+    }
 
-//     return msg;
-// }
+    return msg;
+}
+
+net::PROJECTILES_UPDATES LobbyContext::getProjectilesUpdates() {
+    net::PROJECTILES_UPDATES msg;
+
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& positions = registry.getComponents<addon::physic::Position2>();
+
+    for (auto&& [entity, position] :
+        ECS::IndexedDenseZipper(positions)) {
+        if (entity < eField::PROJECTILES_BEGIN ||
+           entity > eField::PROJECTILES_END)
+            continue;
+
+        // TODO(x): fill state with real all data
+        net::ProjectileUpdate state {
+            .id = static_cast<uint32_t>(entity),
+            .x = position.x,
+            .y = position.y,
+            .type = 0
+        };
+
+        msg.projectiles.push_back(state);
+    }
+
+    return msg;
+}
+
+net::COLLECTIBLES_UPDATES LobbyContext::getCollectiblesUpdates() {
+    net::COLLECTIBLES_UPDATES msg;
+
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& positions = registry.getComponents<addon::physic::Position2>();
+
+    for (auto&& [entity, position] :
+        ECS::IndexedDenseZipper(positions)) {
+        if (entity < eField::COLLECTIBLES_BEGIN ||
+           entity > eField::COLLECTIBLES_END)
+            continue;
+
+        // TODO(x): fill state with real all data
+        net::CollectibleUpdate state {
+            .id = static_cast<uint32_t>(entity),
+            .x = position.x,
+            .y = position.y,
+            .type = 0
+        };
+
+        msg.collectibles.push_back(state);
+    }
+
+    return msg;
+}
+
+net::INVENTORIES_UPDATES LobbyContext::getInventoriesUpdates() {
+    net::INVENTORIES_UPDATES msg;
+
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& players = registry.getComponents<addon::intact::Player>();
+
+    for (auto&& [entity, player] :
+        ECS::IndexedDenseZipper(players)) {
+        if (entity < eField::CHAMPION_BEGIN ||
+           entity > eField::CHAMPION_END)
+            continue;
+
+        // TODO(x): fill state with real all data
+        net::InventoryUpdate state {
+            .playerid = static_cast<uint32_t>(entity),
+            .items = 0,
+            .gold = 0
+        };
+
+        msg.inventories.push_back(state);
+    }
+
+    return msg;
+}
+
+net::STATS_UPDATES LobbyContext::getStatsUpdates() {
+    net::STATS_UPDATES msg;
+
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& players = registry.getComponents<addon::intact::Player>();
+
+    for (auto&& [entity, player] :
+        ECS::IndexedDenseZipper(players)) {
+        if (entity < eField::CHAMPION_BEGIN ||
+           entity > eField::CHAMPION_END)
+            continue;
+
+        // TODO(x): fill state with real all data
+        net::StatsUpdate state {
+            .playerid = static_cast<uint32_t>(entity),
+            .ad = 0,
+            .ap = 0,
+            .armor = 0,
+            .resist = 0,
+            .cdr_mov_speed = 0,
+            .atk_speed = 0,
+            .range = 0,
+        };
+
+        msg.stats.push_back(state);
+    }
+
+    return msg;
+}
 
 std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetPlayerUpdates() {
-    if (!players_update.checkDelay()) {
+    if (!players_update.checkDelay())
         return std::nullopt;
-    }
 
     return getPlayerUpdates();
 }
 
-// std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetBuildingsUpdates() {
-//     if (!buildings_updates.checkDelay()) {
-//         return std::nullopt;
-//     }
+std::optional<net::BUILDINGS_UPDATES> LobbyContext::tryGetBuildingsUpdates() {
+    if (!buildings_update.checkDelay())
+        return std::nullopt;
 
-//     return getBuildingsUpdates();
-// }
+    return getBuildingsUpdates();
+}
+
+std::optional<net::CREATURES_UPDATES> LobbyContext::tryGetCreaturesUpdates() {
+    if (!creatures_update.checkDelay())
+        return std::nullopt;
+
+    return getCreaturesUpdates();
+}
+
+std::optional<net::PROJECTILES_UPDATES>
+LobbyContext::tryGetProjectilesUpdates(
+) {
+    if (!creatures_update.checkDelay())
+        return std::nullopt;
+
+    return getProjectilesUpdates();
+}
+
+std::optional<net::COLLECTIBLES_UPDATES>
+LobbyContext::tryGetCollectiblesUpdates() {
+    if (!creatures_update.checkDelay())
+        return std::nullopt;
+
+    return getCollectiblesUpdates();
+}
+
+std::optional<net::INVENTORIES_UPDATES>
+LobbyContext::tryGetInventoriesUpdates() {
+    if (!creatures_update.checkDelay())
+        return std::nullopt;
+
+    return getInventoriesUpdates();
+}
+
+std::optional<net::STATS_UPDATES> LobbyContext::tryGetStatsUpdates() {
+    if (!creatures_update.checkDelay())
+        return std::nullopt;
+
+    return getStatsUpdates();
+}
+
+bool LobbyContext::shouldSendPlayersList() {
+    if (game_state != LobbyGameState::PRE_GAME)
+        return false;
+
+    return players_list_update.checkDelay();
+}
