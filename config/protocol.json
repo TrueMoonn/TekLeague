@@ -81,7 +81,7 @@
         }
       ]
     },
-    "BuildingUpdate": {
+    "BuildingsUpdate": {
       "fields": [
         { "name": "id", "type": "uint32" },
         { "name": "hp", "type": "double" }
@@ -328,13 +328,13 @@
         }
       ]
     },
-    "BUILDING_UPDATES": {
+    "BUILDINGS_UPDATES": {
       "id": 62,
       "fields": [
         {
           "name": "buildings",
           "type": "dynamic_array",
-          "element_type": "BuildingUpdate"
+          "element_type": "BuildingsUpdate"
         }
       ]
     },

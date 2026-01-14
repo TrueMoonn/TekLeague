@@ -37,6 +37,9 @@ void Server::sendAutomatic() {
                 if (auto msg = ctx.tryGetPlayerUpdates()) {
                     messages_to_send.emplace_back(id, msg->serialize());
                 }
+                if (auto msg = ctx.tryGetPlayerUpdates()) {
+                    messages_to_send.emplace_back(id, msg->serialize());
+                }
             }
         }
 
