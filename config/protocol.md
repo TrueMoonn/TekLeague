@@ -44,7 +44,7 @@ Every code (1 ... 255) is on ONE BYTE only
 ### 50 ... 69 → in game codes
 ```
 50  CLIENT INPUTS       [102 times (1B boolean) + 3 times (1B boolean) + 4B x + 4B y]    ->  Client inputs, just a list of booleans that correspond to keys pressed, then mouse event and mouse position
-67  ADMIN PAUSE GAME    [NO DATA]                   ->  Player asks to pause the game / Player asks to play the game, responded by 37 if you are not admin, 61 if ok
+87  ADMIN PAUSE GAME    [NO DATA]                   ->  Player asks to pause the game / Player asks to play the game, responded by 37 if you are not admin, 61 if ok
 ```
 
 
@@ -68,31 +68,39 @@ Every code (1 ... 255) is on ONE BYTE only
 
 ### 30 ... 49 → lobby codes
 ```
-31  LOBBY JOINED    [4B id]                                     ->  Giving id of the client that joined
-33  LOBBY CREATED   [6B lobby_code]                             ->  Response to 32, send the created lobby code
-35  LOBBIES LIST    [X times (6B lobby codes)]
-37  GAME STARTING   [NO DATA]                                   ->  Broadcast to all lobby clients
-38  PLAYERS LIST    [X times (4B id + 32B username)]            ->  Send all players names
-39  LOBBY VISIBILITY CHANGED [1B bool public]                   ->  
-42  LOBBY DESTROYED [NO DATA]                                   ->  Send to all clients in the destroyed lobby, sending them all back to main menu
-44  BAD LOBBY CODE  [NO DATA]                                   ->  Respond to 30 if invalid code given
-45  NOT ADMIN       [NO DATA]                                   ->  Send if client that sent 35 or 68 is not admin of the lobby
+31  LOBBY JOINED                [4B id]                                     ->  Giving id of the client that joined
+33  LOBBY CREATED               [6B lobby_code]                             ->  Response to 32, send the created lobby code
+35  LOBBIES LIST                [X times (6B lobby codes)]                  ->  Response to 34, send all public lobbies
+37  GAME STARTING               [NO DATA]                                   ->  Broadcast to all lobby clients
+38  PLAYERS LIST                [X times (4B id + 32B username)]            ->  Send all players names
+39  LOBBY VISIBILITY CHANGED    [1B bool public]                            ->  Send to clients in the lobby
+42  LOBBY DESTROYED             [NO DATA]                                   ->  Send to all clients in the destroyed lobby, sending them all back to main menu
+43  LOBBY FULL                  [NO DATA]                                   ->  Respond to 30 if lobby is full
+44  BAD LOBBY CODE              [NO DATA]                                   ->  Respond to 30 if invalid code given
+45  NOT ADMIN                   [NO DATA]                                   ->  Send if client that sent 35 or 68 is not admin of the lobby
 ```
 
-### 50 ... 69 → in game codes
+### 50 ... 89 → in game codes
 **these fields have fixed size, thus do not need parsing of any kind, and values are all packet together without separators**
 
 ```
-51  PLAYERS INIT        [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 8B mana + 1B champ)]
-52  BUILDINGS INIT      [X times (4B id + 4B x + 4B y + 8B hp + 4B type + 4B range)]
-54  SCORE               [2 times (4B team kills + 4B tower taken + 4B major mobs killed)]           ->  One for each team
-55  GAME DURATION       [4B duration]                                                               ->  Send game duration since started in seconds
-56  PLAYER DEAD         [NO DATA]                                                                   ->  Client's player is dead
-57  SCOREBOARD          [X times (4B id + 4B player kills + 4B player deaths + 4B player assists)]
-61  PLAYERS UPDATES     [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 8B mana + 1B level + 16 times (1B effect) )]
-62  BUILDING UPDATES    [X times (4B id + 8B hp)]
-63  CREATURES UPDATES   [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 4B type + 16 times (1B effect) )]
-64  PROJECTILES UPDATES [X times (4B id + 4B x + 4B y + 4B type)]
-68  ADMIN GAME PAUSED   [NO DATA]                                                               ->  A player has set the game on pause / play
-69  GAME END            [1B winning team]                                                       ->  Send when game finishes (0 or 1 based on team that won), send back all clients to lobby
+51  PLAYERS INIT            [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 8B mana + 1B champ)]
+52  BUILDINGS INIT          [X times (4B id + 4B x + 4B y + 8B hp + 4B type + 4B range)]
+
+61  PLAYERS UPDATES         [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 8B mana + 1B level + 16 times (1B effect) )]
+62  BUILDING UPDATES        [X times (4B id + 8B hp)]
+63  CREATURES UPDATES       [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 4B type + 16 times (1B effect) )]
+64  PROJECTILES UPDATES     [X times (4B id + 4B x + 4B y + 4B type)]
+65  COLLECTIBLES UPDATES    [X times (4B id + 4B x + 4B y + 4B type)]
+66  INVENTORIES UPDATES     [X times (4B playerid + 6 times (4B itemid) + 4B gold)]
+67  STATS UPDATES           [X times (4B playerid + 4B ad + 4B ap + 4B armor + 4B resist + 4B cdr mov speed + 4B atk speed + 4B range)]
+
+70  SCORE                   [2 times (4B team kills + 4B tower taken + 4B major mobs killed)]           ->  One for each team
+71  GAME DURATION           [4B duration]                                                               ->  Send game duration since started in seconds
+72  SCOREBOARD              [X times (4B id + 4B player kills + 4B player deaths + 4B player assists)]
+
+80  PLAYER DEAD             [NO DATA]                                                                   ->  Client's player is dead
+
+88  ADMIN GAME PAUSED       [NO DATA]                                                               ->  A player has set the game on pause / play
+89  GAME END                [1B winning team]                                                       ->  Send on game end (0 or 1 based on winner), send back all clients to main menu
 ```

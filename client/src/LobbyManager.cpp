@@ -6,19 +6,16 @@
 */
 
 #include "LobbyManager.hpp"
+#include <network/GameClient.hpp>
 #include <iostream>
 #include <cstring>
 #include <algorithm>
 #include <chrono>
 #include <thread>
-#include <limits>
 
-LobbyManager::LobbyManager() {
+LobbyManager::LobbyManager(te::network::GameClient& network_client)
+    : _network_client(network_client) {
     _state = State::DISCONNECTED;
-}
-
-void LobbyManager::setSendFunction(std::function<void(const std::vector<uint8_t>&)> sendFunc) {
-    _sendFunc = sendFunc;
 }
 
 void LobbyManager::setServerAddress(const net::Address& address) {
@@ -60,11 +57,9 @@ void LobbyManager::changeState(State new_state) {
     _state = new_state;
 }
 
-// ==================== CLI DISPLAY ====================
 
 void LobbyManager::clearScreen() {
-    // Temporarily disabled to see debug logs
-    // std::cout << "\033[2J\033[1;1H"; // ANSI escape codes
+    // std::cout << "\033[2J\033[1;1H";
 }
 
 void LobbyManager::showMainMenu() {
@@ -241,23 +236,17 @@ void LobbyManager::sendLogin(const std::string& username) {
     std::memset(msg.username, 0, 32);
     std::memcpy(msg.username, username.c_str(), std::min(username.size(), size_t(32)));
 
-    if (_sendFunc) {
-        _sendFunc(msg.serialize());
-    }
+    _network_client.sendToServer(msg.serialize());
 }
 
 void LobbyManager::sendLogout() {
     net::LOGOUT msg;
-    if (_sendFunc) {
-        _sendFunc(msg.serialize());
-    }
+    _network_client.sendToServer(msg.serialize());
 }
 
 void LobbyManager::sendCreateLobby() {
     net::CREATE_LOBBY msg;
-    if (_sendFunc) {
-        _sendFunc(msg.serialize());
-    }
+    _network_client.sendToServer(msg.serialize());
 }
 
 void LobbyManager::sendJoinLobby(const std::string& code) {
@@ -265,44 +254,32 @@ void LobbyManager::sendJoinLobby(const std::string& code) {
     std::memset(msg.lobby_code, 0, 6);
     std::memcpy(msg.lobby_code, code.c_str(), std::min(code.size(), size_t(6)));
 
-    if (_sendFunc) {
-        _sendFunc(msg.serialize());
-    }
+    _network_client.sendToServer(msg.serialize());
 }
 
 void LobbyManager::sendGetPublicLobbies() {
     net::GET_ALL_PUBLIC_LOBBIES msg;
-    if (_sendFunc) {
-        _sendFunc(msg.serialize());
-    }
+    _network_client.sendToServer(msg.serialize());
 }
 
 void LobbyManager::sendLeaveLobby() {
     net::LEAVE_LOBBY msg;
-    if (_sendFunc) {
-        _sendFunc(msg.serialize());
-    }
+    _network_client.sendToServer(msg.serialize());
 }
 
 void LobbyManager::sendStartGame() {
     net::ADMIN_START_GAME msg;
-    if (_sendFunc) {
-        _sendFunc(msg.serialize());
-    }
+    _network_client.sendToServer(msg.serialize());
 }
 
 void LobbyManager::sendToggleVisibility() {
     net::TOGGLE_LOBBY_PRIVATE_PUBLIC msg;
-    if (_sendFunc) {
-        _sendFunc(msg.serialize());
-    }
+    _network_client.sendToServer(msg.serialize());
 }
 
 void LobbyManager::sendPauseGame() {
     net::ADMIN_PAUSE_GAME msg;
-    if (_sendFunc) {
-        _sendFunc(msg.serialize());
-    }
+    _network_client.sendToServer(msg.serialize());
 }
 
 // ==================== MESSAGE HANDLERS ====================
@@ -370,7 +347,6 @@ void LobbyManager::handlePlayersList(const net::PLAYERS_LIST& msg) {
 
     std::cout << "[Y] Players list updated (" << _players_in_lobby.size() << " players)\n";
 
-    // Debug: print all players
     for (size_t i = 0; i < _players_in_lobby.size(); ++i) {
         const auto& player = _players_in_lobby[i];
         std::string name(player.username, strnlen(player.username, 32));
