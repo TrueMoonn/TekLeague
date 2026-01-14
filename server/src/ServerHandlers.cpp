@@ -47,6 +47,10 @@ bool Server::setPacketsHandlers() {
         const net::Address& sender) {
         handleLeaveLobby(data, sender);
     });
+    registerPacketHandler(41, [this](const std::vector<uint8_t>& data,
+        const net::Address& sender) {
+        handleWantThisTeam(data, sender);
+    });
     registerPacketHandler(46, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
         handleToggleLobbyVisibility(data, sender);
@@ -357,6 +361,64 @@ void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data,
     std::println("[Server] handleToggleLobbyVisibility: Lobby {} is now {}",
                  lobby_id, (is_public ? "PUBLIC" : "PRIVATE"));
     sendLobbyVisibilityChanged(lobby_id, is_public);
+}
+
+void Server::handleWantThisTeam(const std::vector<uint8_t>& data,
+    const net::Address& sender) {
+    std::println("[Server] handleWantThisTeam: Request from {}:{}",
+        sender.getIP(), sender.getPort());
+
+    auto client_opt = getClient(sender);
+    if (!client_opt) {
+        std::println("[Server] handleWantThisTeam: Client not found");
+        return;
+    }
+
+    auto& client = client_opt->get();
+    if (!client.in_lobby) {
+        std::println("[Server] handleWantThisTeam: Client not in lobby");
+        return;
+    }
+
+    net::WANT_THIS_TEAM msg = net::WANT_THIS_TEAM::deserialize(data);
+    uint8_t requested_team = msg.team;
+
+    std::println("[Server] handleWantThisTeam: Client {} wants team {}",
+        client.id, static_cast<int>(requested_team));
+
+    if (requested_team != 1 && requested_team != 2) {
+        std::println("[Server] handleWantThisTeam: Invalid team number");
+        return;
+    }
+
+    uint lobby_id = client.lobby_id;
+
+    int team_count = 0;
+    {
+        std::lock_guard<std::mutex> lock(lobbies_mutex);
+        for (const auto& [other_id, other_addr] : lobbies.at(lobby_id).getClients()) {
+            auto other_client_opt = getClient(other_addr);
+            if (other_client_opt) {
+                auto& other_client = other_client_opt->get();
+                if (other_client.team == requested_team) {
+                    team_count++;
+                }
+            }
+        }
+    }
+
+    if (team_count >= 3) {
+        std::println("[Server] handleWantThisTeam: Team {} is full",
+            static_cast<int>(requested_team));
+        sendTeamFull(sender);
+        return;
+    }
+
+    client.team = requested_team;
+    std::println("[Server] handleWantThisTeam: Client {} assigned to team {}",
+        client.id, static_cast<int>(requested_team));
+
+    sendPlayersList(lobby_id);
 }
 
 void Server::handleAdminPauseGame(
