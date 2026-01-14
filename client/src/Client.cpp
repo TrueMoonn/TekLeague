@@ -125,7 +125,7 @@ void Client::registerMessageHandlers() {
 
         _lobby_data.handleLobbiesList(msg);
 
-        emit("lobby:lobbies_list", _lobby_data.getCachedLobbiesList());
+        emit("lobby:lobbies_list");
     });
 
     registerPacketHandler(37, [this](const std::vector<uint8_t>& data) {
