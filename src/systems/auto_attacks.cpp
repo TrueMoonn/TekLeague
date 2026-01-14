@@ -23,7 +23,7 @@ static void shootAt(Game &game, const addon::physic::Position2 &towerPos,
 {
     auto e = game.nextEntity(eType::PROJECTILES);
     game.createEntity(e, "tower_projectiles", towerPos);
-    auto& track = GET_ENTITY_CMPT(game.getComponent<AutoTrack>(), e);
+    auto& track = game.getComponent<AutoTrack>().getComponent(e);
     track.toFollow = Player;
 }
 

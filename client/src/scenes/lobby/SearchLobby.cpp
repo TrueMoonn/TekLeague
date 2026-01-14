@@ -8,7 +8,8 @@
 #include <print>
 
 #include <events.hpp>
-
+#include <sfml/components/text.hpp>
+#include <sfml/components/drawable.hpp>
 
 #include "GameTool.hpp"
 #include "Network/generated_messages.hpp"
@@ -29,6 +30,11 @@ void setSearchLobbyScene(Client& game) {
         {SEARCH_CREATE_LOBBY, "create_lobby", {560.f, 700.f}},
     };
 
+    slobby.on_activate = [&game]() {
+        auto& texts = game.getComponent<addon::sfml::Text>();
+        texts.getComponent(SEARCH_CREATE_LOBBY).setString("CREATE");
+    };
+
     std::size_t idx = game.addScene(slobby);
     game.subForScene<std::vector<std::string>>(idx, "lobby:lobbies_list",
         [&game](const std::vector<std::string>& lobbies) {
@@ -38,9 +44,8 @@ void setSearchLobbyScene(Client& game) {
         }
         // TODO(Jules): Display lobbies as clickable buttons (if clicked, try to join (envoie au server SendJoinLobby(code du lobby)))
     });
-    game.subForScene<std::string>(idx, "lobby:joined",
-        [&game](const std::string& lobby_code) {
-        std::println("[SearchLobby] Successfully joined lobby: {}", lobby_code);
+    game.subForScene<std::string, bool>(idx, "lobby:created",
+        [&game](const std::string& lobby_code, bool) {
         game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::IN_LOBBY));
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SEARCH_LOBBY));
     });

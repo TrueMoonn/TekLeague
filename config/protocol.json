@@ -25,6 +25,7 @@
     "PlayerListEntry": {
       "fields": [
         { "name": "id", "type": "uint32" },
+        { "name": "team", "type": "uint8" },
         { "name": "username", "type": "string", "max_length": 32 }
       ]
     },
@@ -42,6 +43,7 @@
     "BuildingInit": {
       "fields": [
         { "name": "id", "type": "uint32" },
+        { "name": "team", "type": "uint8" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
         { "name": "hp", "type": "double" },
@@ -81,7 +83,7 @@
         }
       ]
     },
-    "BuildingUpdate": {
+    "BuildingsUpdate": {
       "fields": [
         { "name": "id", "type": "uint32" },
         { "name": "hp", "type": "double" }
@@ -90,6 +92,7 @@
     "CreatureUpdate": {
       "fields": [
         { "name": "id", "type": "uint32" },
+        { "name": "team", "type": "uint8" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
         { "name": "direction", "type": "uint8" },
@@ -256,6 +259,10 @@
       "id": 40,
       "fields": []
     },
+    "WANT_THIS_TEAM": {
+      "id": 41,
+      "fields": [{ "name": "team", "type": "uint8" }]
+    },
     "LOBBY_DESTROYED": {
       "id": 42,
       "fields": []
@@ -274,6 +281,10 @@
     },
     "TOGGLE_LOBBY_PRIVATE_PUBLIC": {
       "id": 46,
+      "fields": []
+    },
+    "TEAM_FULL": {
+      "id": 47,
       "fields": []
     },
     "CLIENT_INPUTS": {
@@ -328,13 +339,13 @@
         }
       ]
     },
-    "BUILDING_UPDATES": {
+    "BUILDINGS_UPDATES": {
       "id": 62,
       "fields": [
         {
           "name": "buildings",
           "type": "dynamic_array",
-          "element_type": "BuildingUpdate"
+          "element_type": "BuildingsUpdate"
         }
       ]
     },
