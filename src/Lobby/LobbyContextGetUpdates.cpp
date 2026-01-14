@@ -93,6 +93,13 @@ std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetPlayerUpdates() {
     return getPlayerUpdates();
 }
 
+bool LobbyContext::shouldSendPlayersList() {
+    if (game_state != LobbyGameState::PRE_GAME)
+        return false;
+
+    return players_list_update.checkDelay();
+}
+
 // std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetBuildingsUpdates() {
 //     if (!buildings_updates.checkDelay()) {
 //         return std::nullopt;
