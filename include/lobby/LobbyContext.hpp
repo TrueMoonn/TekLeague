@@ -9,6 +9,8 @@
 #pragma once
 
     #include <optional>
+    #include <string>
+    #include <unordered_map>
 
     #include <Network/generated_messages.hpp>
     #include <Network/Address.hpp>
@@ -25,7 +27,11 @@ enum class LobbyGameState {
 class LobbyContext {
  public:
     ////// Timestamp default latency in seconds //////
-    static constexpr float PLAYERS_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
+    static constexpr float PLAYERS_UPDATES_DEFAULT_LATENCY = 1.0f / 120.0f;
+    static constexpr float BUILDINGS_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
+    static constexpr float CREATURES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
+    static constexpr float PROJECTILES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
+    static constexpr float COLLECTIBLES_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
 
  public:
     LobbyContext(uint max_players, const std::string& code);
@@ -114,10 +120,38 @@ class LobbyContext {
     ////// setters //////
 
     /**
-     * @brief Set how often to send player updates (in seconds)
+     * @brief Set how often to send players updates (in seconds)
      */
     void setPlayersUpdateFrequency(float freq) {
         players_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send buildings updates (in seconds)
+     */
+    void setBuildingsUpdateFrequency(float freq) {
+        buildings_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send creatures updates (in seconds)
+     */
+    void setCreaturesUpdateFrequency(float freq) {
+        creatures_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send projectiles updates (in seconds)
+     */
+    void setProjectilesUpdateFrequency(float freq) {
+        projectiles_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send collectibles updates (in seconds)
+     */
+    void setCollectiblesUpdateFrequency(float freq) {
+        collectibles_update.delay = size_t(SEC_TO_MICRO(freq));
     }
 
  private:
@@ -130,7 +164,16 @@ class LobbyContext {
     std::unordered_map<uint32_t, net::Address> connected_players;
     uint max_clients;
 
-    te::Timestamp players_update = te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp players_update =
+        te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp buildings_update =
+        te::Timestamp(BUILDINGS_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp creatures_update =
+        te::Timestamp(CREATURES_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp projectiles_update =
+        te::Timestamp(PROJECTILES_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp collectibles_update =
+        te::Timestamp(COLLECTIBLES_UPDATES_DEFAULT_LATENCY);
 
     /**
      * @brief Build the PLAYERS_UPDATES message from the lobby's registry
