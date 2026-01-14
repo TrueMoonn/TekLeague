@@ -44,6 +44,8 @@ void Server::sendAutomatic() {
                     messages_to_send.emplace_back(id, msg->serialize());
                 if (auto msg = ctx.tryGetCreaturesUpdates())
                     messages_to_send.emplace_back(id, msg->serialize());
+                if (auto msg = ctx.tryGetProjectilesUpdates())
+                    messages_to_send.emplace_back(id, msg->serialize());
             }
         }
 
@@ -194,7 +196,7 @@ void Server::sendGameEnded(uint lobby_id) {
         "[Server] sendGameEnded: Broadcasting GAME_END to lobby {}",
         lobby_id);
     net::GAME_END msg;
-    msg.winning_team = 0;  // TODO: Determine winning team
+    msg.winning_team = 0;  // TODO(x): Determine winning team
     auto serialized = msg.serialize();
     broadcastToLobby(lobby_id, serialized);
     std::println("[Server] sendGameEnded: Broadcast complete");

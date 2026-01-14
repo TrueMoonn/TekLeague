@@ -90,28 +90,30 @@ net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
     return msg;
 }
 
-// net::BUILDING_UPDATES LobbyContext::getProjectilesUpdates() {
-//     net::BUILDING_UPDATES msg;
+net::PROJECTILES_UPDATES LobbyContext::getProjectilesUpdates() {
+    net::PROJECTILES_UPDATES msg;
 
-//     auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
-//     auto& healths = registry.getComponents<addon::eSpec::Health>();
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& positions = registry.getComponents<addon::physic::Position2>();
 
-//     for (auto&& [entity, health] :
-//         ECS::IndexedDenseZipper(healths)) {
-//         if (entity < eField::BUILDINGS_BEGIN ||
-//            entity > eField::BUILDINGS_END)
-//             continue;
+    for (auto&& [entity, position] :
+        ECS::IndexedDenseZipper(positions)) {
+        if (entity < eField::PROJECTILES_BEGIN ||
+           entity > eField::PROJECTILES_END)
+            continue;
 
-//         net::BuildingUpdate state {
-//             .id = entity,
-//             .hp = static_cast<double>(health.amount)
-//         };
+        net::ProjectileUpdate state {
+            .id = entity,
+            .x = position.x,
+            .y = position.y,
+            .type = 0
+        };
 
-//         msg.buildings.push_back(state);
-//     }
+        msg.projectiles.push_back(state);
+    }
 
-//     return msg;
-// }
+    return msg;
+}
 
 std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetPlayerUpdates() {
     if (!players_update.checkDelay())
@@ -132,4 +134,12 @@ std::optional<net::CREATURES_UPDATES> LobbyContext::tryGetCreaturesUpdates() {
         return std::nullopt;
 
     return getCreaturesUpdates();
+}
+
+std::optional<net::PROJECTILES_UPDATES> LobbyContext::tryGetProjectilesUpdates(
+) {
+    if (!creatures_update.checkDelay())
+        return std::nullopt;
+
+    return getProjectilesUpdates();
 }
