@@ -34,6 +34,8 @@ void Server::sendAutomatic() {
         std::vector<std::pair<uint, std::vector<uint8_t>>> ingame_updates;
         std::vector<uint> pre_game_lobbies;
 
+        bool should_send_lobbies_list = shouldSendLobbiesList();
+
         {
             std::lock_guard<std::mutex> lock(lobbies_mutex);
 
@@ -62,6 +64,10 @@ void Server::sendAutomatic() {
 
             for (uint lobby_id : pre_game_lobbies) {
                 sendPlayersListUnsafe(lobby_id);
+            }
+
+            if (should_send_lobbies_list) {
+                sendLobbiesListUnsafe();
             }
         }
 
@@ -132,6 +138,25 @@ void Server::sendLobbiesList(const net::Address& address) {
     }
 
     sendTo(address, msg.serialize());
+}
+
+void Server::sendLobbiesListUnsafe() {
+    net::LOBBIES_LIST msg;
+
+    for (uint lobby_id : public_lobbies) {
+        if (lobbies.find(lobby_id) != lobbies.end()) {
+            msg.lobby_codes.push_back(lobbies.at(lobby_id).getCode());
+        }
+    }
+
+    auto serialized = msg.serialize();
+    for (const auto& [address, client] : clients) {
+        if (!client.in_lobby) {
+            sendTo(address, serialized);
+        }
+    }
+
+    std::println("[Server::sendLobbiesListUnsafe] Sent to all non-lobby clients ({} lobbies)", msg.lobby_codes.size());
 }
 
 void Server::sendGameStarting(uint lobby_id) {

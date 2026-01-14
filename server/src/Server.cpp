@@ -241,6 +241,10 @@ std::optional<LobbyGameState> Server::getLobbyGameState(uint lobby_id) {
     return std::nullopt;
 }
 
+bool Server::shouldSendLobbiesList() {
+    return lobbies_list_timestamp.checkDelay();
+}
+
 bool Server::isLobbyPreGame(uint lobby_id) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     if (lobbies.find(lobby_id) != lobbies.end()) {
