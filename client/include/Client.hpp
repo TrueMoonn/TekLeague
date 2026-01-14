@@ -57,6 +57,7 @@ class Client : public Game, public te::network::GameClient {
      */
     LobbyDataManager& getLobbyData() { return _lobby_data; }
 
+    std::string client_name = "default";
  private:
     LobbyDataManager _lobby_data;
 

@@ -26,9 +26,10 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     "client/assets/configs/ui/buttons.toml",
     "client/assets/configs/ui/logo.toml",
     "client/assets/configs/ui/backgrounds.toml",
-    /* == Search == */
-    "client/assets/configs/ui/search_lobby/book.toml",
-    "client/assets/configs/ui/search_lobby/button.toml",
+    "client/assets/configs/ui/text_input.toml",
+    /* == Lobby == */
+    "client/assets/configs/ui/lobby/book.toml",
+    "client/assets/configs/ui/lobby/buttons.toml",
     /* == Parameters == */
     "client/assets/configs/ui/parameters/background.toml",
     "client/assets/configs/ui/parameters/button.toml",
