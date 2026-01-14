@@ -37,12 +37,13 @@ void Server::sendAutomatic() {
             for (auto& [id, ctx] : lobbies) {
                 if (ctx.getGameState() != LobbyGameState::IN_GAME)
                     continue;
-                if (auto msg = ctx.tryGetPlayerUpdates()) {
+
+                if (auto msg = ctx.tryGetPlayerUpdates())
                     messages_to_send.emplace_back(id, msg->serialize());
-                }
-                if (auto msg = ctx.tryGetPlayerUpdates()) {
+                if (auto msg = ctx.tryGetBuildingsUpdates())
                     messages_to_send.emplace_back(id, msg->serialize());
-                }
+                if (auto msg = ctx.tryGetCreaturesUpdates())
+                    messages_to_send.emplace_back(id, msg->serialize());
             }
         }
 
