@@ -7,7 +7,7 @@
 
 #include <string>
 #include <csignal>
-#include <iostream>
+#include <print>
 #include <unistd.h>
 #include <cstring>
 #include <optional>
@@ -47,11 +47,11 @@ int main(int ac, char **av) {
         protocol = av[2];
     }
 
-    std::cout << "╔════════════════════════════════════════╗\n";
-    std::cout << "║         TekLeague Server               ║\n";
-    std::cout << "╚════════════════════════════════════════╝\n\n";
-    std::cout << "[SERVER] Starting on port " << port << " with protocol " << protocol << std::endl;
-    std::cout << "[SERVER] Press Ctrl+C to stop gracefully\n" << std::endl;
+    std::print("╔════════════════════════════════════════╗\n");
+    std::print("║         TekLeague Server               ║\n");
+    std::print("╚════════════════════════════════════════╝\n\n");
+    std::println("[SERVER] Starting on port {} with protocol {}", port, protocol);
+    std::println("[SERVER] Press Ctrl+C to stop gracefully\n");
 
     try {
         Server game(port, protocol);
@@ -64,13 +64,13 @@ int main(int ac, char **av) {
         game.run();
 
     } catch (const std::exception& e) {
-        std::cerr << "[SERVER] Fatal error: " << e.what() << std::endl;
+        std::println(stderr, "[SERVER] Fatal error: {}", e.what());
         g_server.reset();
         return 1;
     }
 
     g_server.reset();
-    std::cout << "[SERVER] Server stopped cleanly. All destructors called." << std::endl;
-    std::cout << "[SERVER] Resources freed properly. Goodbye!" << std::endl;
+    std::println("[SERVER] Server stopped cleanly. All destructors called.");
+    std::println("[SERVER] Resources freed properly. Goodbye!");
     return 0;
 }

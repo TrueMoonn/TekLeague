@@ -11,6 +11,7 @@
 #include <random>
 #include <thread>
 #include <chrono>
+#include <print>
 
 #include <ECS/DenseSA.hpp>
 #include <ECS/DenseZipper.hpp>
@@ -103,17 +104,15 @@ uint Server::createLobby(uint max_clients, const net::Address& admin) {
     std::string code = generateUniqueLobbyCode();
     uint lobby_id = next_lobby_id++;
 
-    std::cout << "[Server::createLobby] Creating lobby " << lobby_id
-              << " with code " << code
-              << " for admin " << admin.getIP() << ":" << admin.getPort() << std::endl;
+    std::println("[Server::createLobby] Creating lobby {} with code {} for admin {}:{}",
+                 lobby_id, code, admin.getIP(), admin.getPort());
 
     lobby_codes[code] = lobby_id;
     lobbies.try_emplace(lobby_id, max_clients, code);
     lobby_admins[lobby_id] = admin;
     public_lobbies.insert(lobby_id);  // Default to public
 
-    std::cout << "[Server::createLobby] Lobby created successfully. Total lobbies: "
-              << lobbies.size() << std::endl;
+    std::println("[Server::createLobby] Lobby created successfully. Total lobbies: {}", lobbies.size());
 
     return lobby_id;
 }
@@ -145,9 +144,8 @@ void Server::broadcastToLobby(uint lobby_id, const std::vector<uint8_t>& data) {
 }
 
 void Server::broadcastToLobbyUnsafe(uint lobby_id, const std::vector<uint8_t>& data) {
-    // NOTE: This function assumes lobbies_mutex is already locked!
     if (lobbies.find(lobby_id) == lobbies.end()) {
-        std::cout << "[Server] broadcastToLobby: Lobby " << lobby_id << " not found!" << std::endl;
+        std::println("[Server] broadcastToLobby: Lobby {} not found!", lobby_id);
         return;
     }
 
@@ -261,70 +259,70 @@ void Server::handleJoinLobby(const std::vector<uint8_t>& data, const net::Addres
     auto msg = net::JOIN_LOBBY::deserialize(data);
     std::string lobby_code(msg.lobby_code, 6);
 
-    std::cout << "[Server::handleJoinLobby] Request from " << sender.getIP() << ":" << sender.getPort() << std::endl;
-    std::cout << "[Server::handleJoinLobby] Lobby code: '" << lobby_code << "'" << std::endl;
+    std::println("[Server::handleJoinLobby] Request from {}:{}", sender.getIP(), sender.getPort());
+    std::println("[Server::handleJoinLobby] Lobby code: '{}'", lobby_code);
 
     auto client_opt = getClient(sender);
     if (!client_opt) {
-        std::cout << "[Server::handleJoinLobby] Client not found" << std::endl;
+        std::println("[Server::handleJoinLobby] Client not found");
         return;
     }
 
     auto& client = client_opt->get();
-    std::cout << "[Server::handleJoinLobby] Client " << client.id << " (" << client.username << ") joining lobby" << std::endl;
+    std::println("[Server::handleJoinLobby] Client {} ({}) joining lobby", client.id, client.username);
 
     uint lobby_id;
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         auto it = lobby_codes.find(lobby_code);
         if (it == lobby_codes.end()) {
-            std::cout << "[Server::handleJoinLobby] Lobby code not found" << std::endl;
+            std::println("[Server::handleJoinLobby] Lobby code not found");
             sendBadLobbyCode(sender);
             return;
         }
 
         lobby_id = it->second;
-        std::cout << "[Server::handleJoinLobby] Found lobby ID: " << lobby_id << std::endl;
+        std::println("[Server::handleJoinLobby] Found lobby ID: {}", lobby_id);
 
         auto& lobby_ctx = lobbies.at(lobby_id);
 
         if (lobby_ctx.isFull()) {
-            std::cout << "[Server::handleJoinLobby] Lobby is full" << std::endl;
+            std::println("[Server::handleJoinLobby] Lobby is full");
             sendLobbyFull(sender);
             return;
         }
 
         if (!lobby_ctx.addClient(sender, client.id)) {
-            std::cout << "[Server::handleJoinLobby] Failed to add client to lobby" << std::endl;
+            std::println("[Server::handleJoinLobby] Failed to add client to lobby");
             sendBadLobbyCode(sender);
             return;
         }
 
-        std::cout << "[Server::handleJoinLobby] Client added to lobby successfully" << std::endl;
+        std::println("[Server::handleJoinLobby] Client added to lobby successfully");
     }
 
     client.in_lobby = true;
     client.lobby_id = lobby_id;
 
-    std::cout << "[Server::handleJoinLobby] Sending LOBBY_JOINED to client..." << std::endl;
+    std::println("[Server::handleJoinLobby] Sending LOBBY_JOINED to client...");
     sendLobbyJoined(sender, client.id);
 
-    std::cout << "[Server::handleJoinLobby] Sending PLAYERS_LIST to all clients in lobby..." << std::endl;
+    std::println("[Server::handleJoinLobby] Sending PLAYERS_LIST to all clients in lobby...");
     sendPlayersList(lobby_id);
-    std::cout << "[Server::handleJoinLobby] Completed for lobby " << lobby_id << std::endl;
+    std::println("[Server::handleJoinLobby] Completed for lobby {}", lobby_id);
 }
 
 void Server::handleCreateLobby(const std::vector<uint8_t>& data, const net::Address& sender) {
-    std::cout << "[Server::handleCreateLobby] Request from " << sender.getIP() << ":" << sender.getPort() << std::endl;
+    std::println("[Server::handleCreateLobby] Request from {}:{}", sender.getIP(), sender.getPort());
 
     auto client_opt = getClient(sender);
     if (!client_opt) {
-        std::cout << "[Server::handleCreateLobby] Client not found" << std::endl;
+        std::println("[Server::handleCreateLobby] Client not found");
         return;
     }
 
     auto& client = client_opt->get();
-    std::cout << "[Server::handleCreateLobby] Client " << client.id << " (" << client.username << ") creating lobby" << std::endl;
+    std::println("[Server::handleCreateLobby] Client {} ({}) creating lobby", client.id, client.username);
 
     uint lobby_id = createLobby(10, sender);
 
@@ -340,11 +338,11 @@ void Server::handleCreateLobby(const std::vector<uint8_t>& data, const net::Addr
         lobby_code = lobby_ctx.getCode();
     }
 
-    std::cout << "[Server::handleCreateLobby] Sending LOBBY_CREATED..." << std::endl;
+    std::println("[Server::handleCreateLobby] Sending LOBBY_CREATED...");
     sendLobbyCreated(sender, lobby_code);
-    std::cout << "[Server::handleCreateLobby] Sending PLAYERS_LIST..." << std::endl;
+    std::println("[Server::handleCreateLobby] Sending PLAYERS_LIST...");
     sendPlayersList(lobby_id);
-    std::cout << "[Server::handleCreateLobby] Completed for lobby " << lobby_id << std::endl;
+    std::println("[Server::handleCreateLobby] Completed for lobby {}", lobby_id);
 }
 
 void Server::handleGetAllPublicLobbies(const std::vector<uint8_t>& data, const net::Address& sender) {
@@ -352,32 +350,32 @@ void Server::handleGetAllPublicLobbies(const std::vector<uint8_t>& data, const n
 }
 
 void Server::handleAdminStartGame(const std::vector<uint8_t>& data, const net::Address& sender) {
-    std::cout << "[Server] handleAdminStartGame: Request from " << sender.getIP() << ":" << sender.getPort() << std::endl;
+    std::println("[Server] handleAdminStartGame: Request from {}:{}", sender.getIP(), sender.getPort());
 
     auto client_opt = getClient(sender);
     if (!client_opt) {
-        std::cout << "[Server] handleAdminStartGame: Client not found" << std::endl;
+        std::println("[Server] handleAdminStartGame: Client not found");
         return;
     }
 
     auto& client = client_opt->get();
     if (!client.in_lobby) {
-        std::cout << "[Server] handleAdminStartGame: Client not in lobby" << std::endl;
+        std::println("[Server] handleAdminStartGame: Client not in lobby");
         return;
     }
 
     uint lobby_id = client.lobby_id;
-    std::cout << "[Server] handleAdminStartGame: Client " << client.id << " is in lobby " << lobby_id << std::endl;
+    std::println("[Server] handleAdminStartGame: Client {} is in lobby {}", client.id, lobby_id);
 
     if (!isAdmin(sender, lobby_id)) {
-        std::cout << "[Server] handleAdminStartGame: User is not admin" << std::endl;
+        std::println("[Server] handleAdminStartGame: User is not admin");
         sendNotAdmin(sender);
         return;
     }
 
-    std::cout << "[Server] handleAdminStartGame: Starting game for lobby " << lobby_id << std::endl;
+    std::println("[Server] handleAdminStartGame: Starting game for lobby {}", lobby_id);
     sendGameStarting(lobby_id);
-    std::cout << "[Server] handleAdminStartGame: sendGameStarting completed" << std::endl;
+    std::println("[Server] handleAdminStartGame: sendGameStarting completed");
 
     // TODO(Pierre): Initialize game state in lobby
     // std::lock_guard<std::mutex> lock(lobbies_mutex);
@@ -424,7 +422,7 @@ void Server::handleLeaveLobby(const std::vector<uint8_t>& data, const net::Addre
 }
 
 void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data, const net::Address& sender) {
-    std::cout << "[Server] handleToggleLobbyVisibility: Request from " << sender.getIP() << ":" << sender.getPort() << std::endl;
+    std::println("[Server] handleToggleLobbyVisibility: Request from {}:{}", sender.getIP(), sender.getPort());
 
     auto client_opt = getClient(sender);
     if (!client_opt)
@@ -437,7 +435,7 @@ void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data, const
     uint lobby_id = client.lobby_id;
 
     if (!isAdmin(sender, lobby_id)) {
-        std::cout << "[Server] handleToggleLobbyVisibility: User is not admin" << std::endl;
+        std::println("[Server] handleToggleLobbyVisibility: User is not admin");
         sendNotAdmin(sender);
         return;
     }
@@ -454,13 +452,13 @@ void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data, const
         }
     }
 
-    std::cout << "[Server] handleToggleLobbyVisibility: Lobby " << lobby_id << " is now "
-              << (is_public ? "PUBLIC" : "PRIVATE") << std::endl;
+    std::println("[Server] handleToggleLobbyVisibility: Lobby {} is now {}",
+                 lobby_id, (is_public ? "PUBLIC" : "PRIVATE"));
     sendLobbyVisibilityChanged(lobby_id, is_public);
 }
 
 void Server::handleAdminPauseGame(const std::vector<uint8_t>& data, const net::Address& sender) {
-    std::cout << "[Server] handleAdminPauseGame: Request from " << sender.getIP() << ":" << sender.getPort() << std::endl;
+    std::println("[Server] handleAdminPauseGame: Request from {}:{}", sender.getIP(), sender.getPort());
 
     auto client_opt = getClient(sender);
     if (!client_opt)
@@ -473,7 +471,7 @@ void Server::handleAdminPauseGame(const std::vector<uint8_t>& data, const net::A
     uint lobby_id = client.lobby_id;
 
     if (!isAdmin(sender, lobby_id)) {
-        std::cout << "[Server] handleAdminPauseGame: User is not admin" << std::endl;
+        std::println("[Server] handleAdminPauseGame: User is not admin");
         sendNotAdmin(sender);
         return;
     }
@@ -481,7 +479,7 @@ void Server::handleAdminPauseGame(const std::vector<uint8_t>& data, const net::A
     // TODO(Pierre): Toggle pause state in lobby
     // lobbies.at(lobby_id).getLobby().togglePause();
 
-    std::cout << "[Server] handleAdminPauseGame: Toggling pause for lobby " << lobby_id << std::endl;
+    std::println("[Server] handleAdminPauseGame: Toggling pause for lobby {}", lobby_id);
     sendAdminGamePaused(lobby_id);
 }
 
@@ -501,7 +499,7 @@ void Server::sendAutomatic() {
             broadcastToLobby(id, data);
         }
     } catch (const std::exception& e) {
-        std::cerr << "[Server::sendAutomatic] ERROR: " << e.what() << std::endl;
+        std::println(stderr, "[Server::sendAutomatic] ERROR: {}", e.what());
     }
 }
 
@@ -516,7 +514,7 @@ void Server::sendPlayersUpdate() {
             }
         }
     } catch (const std::exception& e) {
-        std::cerr << "[Server::sendPlayersUpdate] ERROR: " << e.what() << std::endl;
+        std::println(stderr, "[Server::sendPlayersUpdate] ERROR: {}", e.what());
     }
 }
 
@@ -565,20 +563,20 @@ void Server::sendLobbiesList(const net::Address& address) {
 }
 
 void Server::sendGameStarting(uint lobby_id) {
-    std::cout << "[Server] sendGameStarting: Broadcasting GAME_STARTING to lobby " << lobby_id << std::endl;
+    std::println("[Server] sendGameStarting: Broadcasting GAME_STARTING to lobby {}", lobby_id);
     net::GAME_STARTING msg;
     auto serialized = msg.serialize();
     broadcastToLobby(lobby_id, serialized);
-    std::cout << "[Server] sendGameStarting: Broadcast complete" << std::endl;
+    std::println("[Server] sendGameStarting: Broadcast complete");
 }
 
 void Server::sendPlayersList(uint lobby_id) {
-    std::cout << "[Server::sendPlayersList] Entering for lobby " << lobby_id << std::endl;
+    std::println("[Server::sendPlayersList] Entering for lobby {}", lobby_id);
     std::lock_guard<std::mutex> lock(lobbies_mutex);
-    std::cout << "[Server::sendPlayersList] Lock acquired" << std::endl;
+    std::println("[Server::sendPlayersList] Lock acquired");
 
     if (lobbies.find(lobby_id) == lobbies.end()) {
-        std::cout << "[Server::sendPlayersList] Lobby not found" << std::endl;
+        std::println("[Server::sendPlayersList] Lobby not found");
         return;
     }
 
@@ -597,9 +595,9 @@ void Server::sendPlayersList(uint lobby_id) {
         }
     }
 
-    std::cout << "[Server::sendPlayersList] Broadcasting to lobby with " << msg.players.size() << " players" << std::endl;
+    std::println("[Server::sendPlayersList] Broadcasting to lobby with {} players", msg.players.size());
     broadcastToLobbyUnsafe(lobby_id, msg.serialize());
-    std::cout << "[Server::sendPlayersList] Completed" << std::endl;
+    std::println("[Server::sendPlayersList] Completed");
 }
 
 void Server::sendLobbyVisibilityChanged(uint lobby_id, bool is_public) {
@@ -634,13 +632,13 @@ void Server::sendAdminGamePaused(uint lobby_id) {
 }
 
 void Server::run() {
-    std::cout << "[Server::run] Starting main loop" << std::endl;
+    std::println("[Server::run] Starting main loop");
     int loop_count = 0;
 
     try {
         while (isRunning() && _should_run.load()) {
             if (!_should_run.load()) {
-                std::cout << "[Server::run] Shutdown signal received, exiting loop" << std::endl;
+                std::println("[Server::run] Shutdown signal received, exiting loop");
                 break;
             }
 
@@ -650,7 +648,7 @@ void Server::run() {
                 if (!lobbies.empty()) {
                     // Only log every 1000 iterations to reduce spam
                     if (loop_count % 1000 == 0) {
-                        std::cout << "[Server::run] Running " << lobbies.size() << " lobby contexts" << std::endl;
+                        std::println("[Server::run] Running {} lobby contexts", lobbies.size());
                     }
                     for (auto& [id, ctx] : lobbies) {
                         // TODO(PIERRE): Uncomment when Lobby scenes/systems are properly initialized
@@ -658,21 +656,21 @@ void Server::run() {
                     }
                 }
             } catch (const std::exception& e) {
-                std::cerr << "[Server::run] ERROR in lobby loop: " << e.what() << std::endl;
+                std::println(stderr, "[Server::run] ERROR in lobby loop: {}", e.what());
                 throw;
             }
 
             try {
                 update(0);
             } catch (const std::exception& e) {
-                std::cerr << "[Server::run] ERROR in update: " << e.what() << std::endl;
+                std::println(stderr, "[Server::run] ERROR in update: {}", e.what());
                 throw;
             }
 
             try {
                 sendAutomatic();
             } catch (const std::exception& e) {
-                std::cerr << "[Server::run] ERROR in sendAutomatic: " << e.what() << std::endl;
+                std::println(stderr, "[Server::run] ERROR in sendAutomatic: {}", e.what());
                 throw;
             }
 
@@ -681,15 +679,15 @@ void Server::run() {
             loop_count++;
         }
     } catch (const std::exception& e) {
-        std::cerr << "[Server::run] FATAL ERROR in main loop: " << e.what() << std::endl;
+        std::println(stderr, "[Server::run] FATAL ERROR in main loop: {}", e.what());
         throw;
     }
 
-    std::cout << "[Server::run] Exited main loop after " << loop_count << " iterations" << std::endl;
+    std::println("[Server::run] Exited main loop after {} iterations", loop_count);
 }
 
 void Server::stop() {
-    std::cout << "[Server] Stopping server..." << std::endl;
+    std::println("[Server] Stopping server...");
     _should_run.store(false);
     stopGameServer();
 }
