@@ -22,6 +22,7 @@ add_executable(${PROJECT_NAME}
     ${GAME_CLIENT_SRC_DIR}/main.cpp
 
     ${GAME_CLIENT_SRC_DIR}/Client.cpp
+    ${GAME_CLIENT_SRC_DIR}/LobbyManager.cpp
 
     # SCENES
     ${GAME_CLIENT_SRC_DIR}/scenes/Main.cpp
