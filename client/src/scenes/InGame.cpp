@@ -39,8 +39,8 @@ void setInGameScene(Client& game) {
     std::size_t idx = game.addScene(ingame);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape]) {
-            game.deactivateScene(SCAST(SCENES::INGAME));
-            game.activateScene(SCAST(SCENES::MAIN));
+            game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::MAIN));
+            game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::INGAME));
         }
 
         // if (keys[te::Key::A]) {

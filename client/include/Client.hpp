@@ -15,5 +15,6 @@ class Client : public Game {
 
     void run() override;
 
+    std::string client_name = "default";
  private:
 };

@@ -14,3 +14,4 @@
     #define MAIN_BUTTON_QUIT static_cast<std::size_t>(MENU_BEGIN + 2)
     #define MAIN_LOGO static_cast<std::size_t>(MENU_BEGIN + 3)
     #define MAIN_BACKGROUND static_cast<std::size_t>(MENU_BEGIN + 4)
+    #define MAIN_USERNAME static_cast<std::size_t>(MENU_BEGIN + 5)
