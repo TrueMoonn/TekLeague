@@ -181,3 +181,14 @@ void Server::sendAdminGamePaused(uint lobby_id) {
     net::ADMIN_GAME_PAUSED msg;
     broadcastToLobby(lobby_id, msg.serialize());
 }
+
+void Server::sendGameEnded(uint lobby_id) {
+    std::println(
+        "[Server] sendGameEnded: Broadcasting GAME_END to lobby {}",
+        lobby_id);
+    net::GAME_END msg;
+    msg.winning_team = 0;  // TODO: Determine winning team
+    auto serialized = msg.serialize();
+    broadcastToLobby(lobby_id, serialized);
+    std::println("[Server] sendGameEnded: Broadcast complete");
+}

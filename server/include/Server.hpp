@@ -122,6 +122,8 @@ class Server : public te::network::GameServer {
         const net::Address& sender);
     void handleAdminPauseGame(const std::vector<uint8_t>& data,
         const net::Address& sender);
+    void handleAdminEndGame(const std::vector<uint8_t>& data,
+        const net::Address& sender);
     void handleDisconnection(const std::vector<uint8_t>& data,
         const net::Address& sender);
 
@@ -142,4 +144,29 @@ class Server : public te::network::GameServer {
     void sendBadLobbyCode(const net::Address& address);
     void sendNotAdmin(const net::Address& address);
     void sendAdminGamePaused(uint lobby_id);
+    void sendGameEnded(uint lobby_id);
+    
+    ////// Lobby State Queries //////
+    
+    /**
+     * @brief Get the game state of a specific lobby
+     * @param lobby_id The lobby ID to query
+     * @return Optional LobbyGameState if lobby exists
+     */
+    std::optional<LobbyGameState> getLobbyGameState(uint lobby_id);
+    
+    /**
+     * @brief Check if a lobby is in pre-game state
+     */
+    bool isLobbyPreGame(uint lobby_id);
+    
+    /**
+     * @brief Check if a lobby is in game
+     */
+    bool isLobbyInGame(uint lobby_id);
+    
+    /**
+     * @brief Check if a lobby game has ended
+     */
+    bool isLobbyEndGame(uint lobby_id);
 };
