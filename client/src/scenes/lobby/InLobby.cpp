@@ -29,7 +29,6 @@ void setInLobbyScene(Client& game) {
         {LOBBY_USER_RED_1, "user_red_side_lobby", {980.f, 400.f}},
         {LOBBY_USER_RED_2, "user_red_side_lobby", {980.f, 510.f}},
         {LOBBY_USER_RED_3, "user_red_side_lobby", {980.f, 620.f}},
-        // {LOBBY_LAUNCH_GAME, "launch_game", {}},
     };
 
     inlobby.on_activate = [&game]() {
@@ -38,7 +37,23 @@ void setInLobbyScene(Client& game) {
             game.getComponent<addon::sfml::Text>().getComponent(
                 i + LOBBY_USER_BLUE_1).setString(lobby_names[i].username);
         }
+        if (game.getLobbyData().isAdmin())
+            game.createEntity(LOBBY_LAUNCH_GAME, "launch_game", {1100.f, 750.f});
+    };
+
+    inlobby.on_deactivate = [&game]() {
+        game.removeEntity(LOBBY_LAUNCH_GAME);
     };
 
     std::size_t idx = game.addScene(inlobby);
+    game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
+        switch (e) {
+            case LOBBY_LAUNCH_GAME:
+                game.deactivateAllScenes();
+                // net::LEAVE_LOBBY msg;
+                // game.sendToServer(msg.serialize());
+                game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
+                break;
+        }
+    });
 }

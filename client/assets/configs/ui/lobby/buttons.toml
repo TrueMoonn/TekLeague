@@ -1,23 +1,23 @@
-[ENTITIES.sl_return_button]
+[ENTITIES.lobby_return_button]
 drawable = true
 position2 = true
 clickable = true
 hoverable = true
 button = true
 
-    [ENTITIES.sl_return_button.sprite]
+    [ENTITIES.lobby_return_button.sprite]
     path = "client/assets/images/ui/buttons/button.png"
     size = [30, 31]
     scale = [80, 40]
     layer = 11
 
-    [ENTITIES.sl_return_button.hitbox]
-    top = 10
+    [ENTITIES.lobby_return_button.hitbox]
+    top = 0
     left = 0
     width = 80
     height = 40
 
-    [ENTITIES.sl_return_button.animation]
+    [ENTITIES.lobby_return_button.animation]
     frames = [
         # DEFAULT
         [[3, 0], 1, 0.0, false],
@@ -26,6 +26,14 @@ button = true
         # HOVER
         [[0, 0], 1, 0.0, false],
     ]
+
+    [ENTITIES.lobby_return_button.text]
+    string = ""
+    font = "client/assets/images/ui/main_font.otf"
+    offset = [40, 12]
+    size = 20
+    center = true
+    color = [255, 255, 255, 255]
 
 [ENTITIES.create_lobby]
 drawable = true
@@ -41,7 +49,7 @@ button = true
     layer = 11
 
     [ENTITIES.create_lobby.hitbox]
-    top = 10
+    top = 0
     left = 0
     width = 380
     height = 100
@@ -55,3 +63,48 @@ button = true
         # HOVER
         [[0, 0], 1, 0.0, false],
     ]
+
+    [ENTITIES.create_lobby.text]
+    string = ""
+    font = "client/assets/images/ui/main_font.otf"
+    offset = [190, 45]
+    size = 40
+    center = true
+    color = [255, 255, 255, 255]
+
+[ENTITIES.launch_game]
+drawable = true
+position2 = true
+clickable = true
+hoverable = true
+button = true
+
+    [ENTITIES.launch_game.sprite]
+    path = "client/assets/images/ui/buttons/button.png"
+    size = [30, 31]
+    scale = [200, 50]
+    layer = 11
+
+    [ENTITIES.launch_game.hitbox]
+    top = 0
+    left = 0
+    width = 200
+    height = 50
+
+    [ENTITIES.launch_game.animation]
+    frames = [
+        # DEFAULT
+        [[3, 0], 1, 0.0, false],
+        # CLICKED
+        [[1, 0], 1, 0.0, false],
+        # HOVER
+        [[0, 0], 1, 0.0, false],
+    ]
+
+    [ENTITIES.launch_game.text]
+    string = "START"
+    font = "client/assets/images/ui/main_font.otf"
+    offset = [100, 20]
+    size = 20
+    center = true
+    color = [255, 255, 255, 255]
