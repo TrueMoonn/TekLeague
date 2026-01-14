@@ -58,7 +58,7 @@ void setInGameScene(Client& game) {
             auto& posis = game.getComponent<addon::physic::Position2>();
             auto& players = game.getComponent<addon::intact::Player>();
             auto& wins = game.getComponent<addon::sfml::Window>();
-            const auto& winSize = GET_ENTITY_CMPT(wins,
+            const auto& winSize = wins.getComponent(
                 static_cast<std::size_t>(SYSTEM_F)).win->getSize();
 
             for (auto&& [_, dir, pos] :

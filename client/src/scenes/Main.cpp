@@ -42,12 +42,12 @@ void setMainScene(Client& game) {
     });
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Enter]) {
-            GET_ENTITY_CMPT(
-                game.getComponent<addon::sfml::Focus>(),
-                MAIN_USERNAME).focus = false;
-            game.client_name = GET_ENTITY_CMPT(
-                game.getComponent<addon::sfml::Text>(), MAIN_USERNAME).str;
+            game.getComponent<addon::sfml::Focus>().
+                getComponent(MAIN_USERNAME).focus = false;
+            game.client_name = game.getComponent<addon::sfml::Text>()
+                .getComponent(MAIN_USERNAME).getString();
             net::LOGIN msg;
+            memset(msg.username, 0, sizeof(msg.username));
             for (std::size_t i = 0; i < game.client_name.size(); ++i)
                 msg.username[i] = game.client_name[i];
             game.sendToServer(msg.serialize());
@@ -60,24 +60,28 @@ void setMainScene(Client& game) {
         for (auto&& [txt, focus] : ECS::DenseZipper(text, focuss)) {
             if (!focus.focus)
                 continue;
-            if (keys[te::Backspace] && !txt.str.empty())
-                txt.str.pop_back();
-            if (txt.str.size() >= 20)
+            std::string str = txt.getString();
+            if (keys[te::Backspace] && !str.empty())
+                str.pop_back();
+            if (str.size() >= 20) {
+                txt.setString(str);
                 continue;
+            }
             for (int key = te::A; key <= te::Z; key += 1)
                 if (keys[key])
-                    txt.str.push_back(keys[te::LeftShift] ? 'A' : 'a' + key);
+                    str.push_back(keys[te::LeftShift] ? 'A' : 'a' + key);
 
             for (int key = te::num0; key <= te::num9; key += 1)
                     if (keys[key])
-                        txt.str.push_back('0' + key - te::num0);
+                        str.push_back('0' + key - te::num0);
 
-            if (keys[te::Slash]) txt.str.push_back('/');
-            if (keys[te::Add]) txt.str.push_back('+');
-            if (keys[te::Multiply]) txt.str.push_back('*');
-            if (keys[te::Period]) txt.str.push_back('.');
-            if (keys[te::Comma]) txt.str.push_back(',');
-            if (keys[te::Space]) txt.str.push_back(' ');
+            if (keys[te::Slash]) str.push_back('/');
+            if (keys[te::Add]) str.push_back('+');
+            if (keys[te::Multiply]) str.push_back('*');
+            if (keys[te::Period]) str.push_back('.');
+            if (keys[te::Comma]) str.push_back(',');
+            if (keys[te::Space]) str.push_back(' ');
+            txt.setString(str);
         }
     });
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
@@ -97,8 +101,8 @@ void setMainScene(Client& game) {
                 game.emit("closed");
                 break;
             case MAIN_USERNAME:
-                auto& focus = GET_ENTITY_CMPT(
-                    game.getComponent<addon::sfml::Focus>(), MAIN_USERNAME);
+                auto& focus = game.getComponent<addon::sfml::Focus>()
+                    .getComponent(MAIN_USERNAME);
                 focus.focus = true;
                 break;
         }
