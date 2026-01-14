@@ -27,6 +27,7 @@
 #include <network/GameServer.hpp>
 
 #include "Server.hpp"
+#include "lobby/LobbyContext.hpp"
 
 void Server::sendAutomatic() {
     try {
@@ -34,6 +35,8 @@ void Server::sendAutomatic() {
         {
             std::lock_guard<std::mutex> lock(lobbies_mutex);
             for (auto& [id, ctx] : lobbies) {
+                if (ctx.getGameState() != LobbyGameState::IN_GAME)
+                    continue;
                 if (auto msg = ctx.tryGetPlayerUpdates()) {
                     messages_to_send.emplace_back(id, msg->serialize());
                 }
