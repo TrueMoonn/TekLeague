@@ -1,5 +1,6 @@
 # Build objects
 build/
+tek_league
 tek_league_client
 tek_league_server
 

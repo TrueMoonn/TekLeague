@@ -1,0 +1,9 @@
+[ENTITIES.param_bg]
+drawable = true
+position2 = true
+
+    [ENTITIES.param_bg.sprite]
+    path = "client/assets/images/ui/parameters/background.png"
+    size = [96, 64]
+    scale = [600, 400]
+    layer = 20
