@@ -6,20 +6,6 @@ set(GAME_CLIENT_HDR_DIR "${PROJECT_SOURCE_DIR}/include")
 
 ########## GAME ##########
 add_executable(${PROJECT_NAME}
-    ########## GLOBAL ##########
-    ${GAME_SRC_DIR}/Game.cpp
-
-    # COMPONENTS
-    ${GAME_SRC_DIR}/components/champion.cpp
-    ${GAME_SRC_DIR}/components/stat_pool.cpp
-    ${GAME_SRC_DIR}/components/directed.cpp
-    ${GAME_SRC_DIR}/components/button.cpp
-
-    # SYSTEMS
-    ${GAME_SRC_DIR}/systems/champ_mov.cpp
-    ${GAME_SRC_DIR}/systems/entity_direction.cpp
-
-    ########## LOCAL ##########
     ${GAME_CLIENT_SRC_DIR}/main.cpp
     ${GAME_CLIENT_SRC_DIR}/Client.cpp
     ${GAME_CLIENT_SRC_DIR}/LobbyManager.cpp
@@ -43,6 +29,7 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
+        TekLeague
         TrueEngine
 )
 
