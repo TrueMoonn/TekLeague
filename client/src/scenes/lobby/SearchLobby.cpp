@@ -38,9 +38,8 @@ void setSearchLobbyScene(Client& game) {
         }
         // TODO(Jules): Display lobbies as clickable buttons (if clicked, try to join (envoie au server SendJoinLobby(code du lobby)))
     });
-    game.subForScene<std::string>(idx, "lobby:joined",
-        [&game](const std::string& lobby_code) {
-        std::println("[SearchLobby] Successfully joined lobby: {}", lobby_code);
+    game.subForScene<std::string, bool>(idx, "lobby:created",
+        [&game](const std::string& lobby_code, bool) {
         game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::IN_LOBBY));
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SEARCH_LOBBY));
     });

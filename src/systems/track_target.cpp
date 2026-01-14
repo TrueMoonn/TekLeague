@@ -26,7 +26,7 @@ void trackTarget(Game& game) {
             if (track.toFollow == 0 || !track.track ||
                 !positions.hasComponent(track.toFollow))
                 continue;
-            auto& Tpos = GET_ENTITY_CMPT(positions, track.toFollow);
+            auto& Tpos = positions.getComponent(track.toFollow);
             vel.x = Tpos.x - pos.x;
             vel.y = Tpos.y - pos.y;
             vel.normalize();
