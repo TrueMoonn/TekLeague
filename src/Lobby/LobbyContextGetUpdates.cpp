@@ -114,7 +114,7 @@ net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
 // }
 
 std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetPlayerUpdates() {
-    if (!players_update.checkDelay()) {
+    if (!isInGame() || !players_update.checkDelay()) {
         return std::nullopt;
     }
 
