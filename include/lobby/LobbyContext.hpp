@@ -32,6 +32,8 @@ class LobbyContext {
     static constexpr float CREATURES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
     static constexpr float PROJECTILES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
     static constexpr float COLLECTIBLES_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
+    static constexpr float INVENTORIES_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
+    static constexpr float STATS_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
 
  public:
     LobbyContext(uint max_players, const std::string& code);
@@ -117,6 +119,18 @@ class LobbyContext {
      */
     std::optional<net::COLLECTIBLES_UPDATES> tryGetCollectiblesUpdates();
 
+    /**
+     * @brief Try to get inventories updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::INVENTORIES_UPDATES> tryGetInventoriesUpdates();
+
+    /**
+     * @brief Try to get stats updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::STATS_UPDATES> tryGetStatsUpdates();
+
     ////// setters //////
 
     /**
@@ -154,6 +168,20 @@ class LobbyContext {
         collectibles_update.delay = size_t(SEC_TO_MICRO(freq));
     }
 
+    /**
+     * @brief Set how often to send inventories updates (in seconds)
+     */
+    void setInventoriesUpdateFrequency(float freq) {
+        inventories_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send stats updates (in seconds)
+     */
+    void setStatsUpdateFrequency(float freq) {
+        stats_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
  private:
     Lobby lobby;
 
@@ -174,6 +202,10 @@ class LobbyContext {
         te::Timestamp(PROJECTILES_UPDATES_DEFAULT_LATENCY);
     te::Timestamp collectibles_update =
         te::Timestamp(COLLECTIBLES_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp inventories_update =
+        te::Timestamp(INVENTORIES_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp stats_update =
+        te::Timestamp(STATS_UPDATES_DEFAULT_LATENCY);
 
     /**
      * @brief Build the PLAYERS_UPDATES message from the lobby's registry
@@ -204,4 +236,16 @@ class LobbyContext {
      * @return The constructed message
      */
     net::COLLECTIBLES_UPDATES getCollectiblesUpdates();
+
+    /**
+     * @brief Build the INVENTORIES_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::INVENTORIES_UPDATES getInventoriesUpdates();
+
+    /**
+     * @brief Build the STATS_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::STATS_UPDATES getStatsUpdates();
 };

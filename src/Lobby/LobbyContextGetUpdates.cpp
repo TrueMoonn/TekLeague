@@ -144,6 +144,61 @@ net::COLLECTIBLES_UPDATES LobbyContext::getCollectiblesUpdates() {
     return msg;
 }
 
+net::INVENTORIES_UPDATES LobbyContext::getInventoriesUpdates() {
+    net::INVENTORIES_UPDATES msg;
+
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& players = registry.getComponents<addon::intact::Player>();
+
+    for (auto&& [entity, player] :
+        ECS::IndexedDenseZipper(players)) {
+        if (entity < eField::CHAMPION_BEGIN ||
+           entity > eField::CHAMPION_END)
+            continue;
+
+        // TODO(x): fill state with real all data
+        net::InventoryUpdate state {
+            .playerid = static_cast<uint32_t>(entity),
+            .items = 0,
+            .gold = 0
+        };
+
+        msg.inventories.push_back(state);
+    }
+
+    return msg;
+}
+
+net::STATS_UPDATES LobbyContext::getStatsUpdates() {
+    net::STATS_UPDATES msg;
+
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& players = registry.getComponents<addon::intact::Player>();
+
+    for (auto&& [entity, player] :
+        ECS::IndexedDenseZipper(players)) {
+        if (entity < eField::CHAMPION_BEGIN ||
+           entity > eField::CHAMPION_END)
+            continue;
+
+        // TODO(x): fill state with real all data
+        net::StatsUpdate state {
+            .playerid = static_cast<uint32_t>(entity),
+            .ad = 0,
+            .ap = 0,
+            .armor = 0,
+            .resist = 0,
+            .cdr_mov_speed = 0,
+            .atk_speed = 0,
+            .range = 0,
+        };
+
+        msg.stats.push_back(state);
+    }
+
+    return msg;
+}
+
 std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetPlayerUpdates() {
     if (!players_update.checkDelay())
         return std::nullopt;
@@ -180,4 +235,19 @@ LobbyContext::tryGetCollectiblesUpdates() {
         return std::nullopt;
 
     return getCollectiblesUpdates();
+}
+
+std::optional<net::INVENTORIES_UPDATES>
+LobbyContext::tryGetInventoriesUpdates() {
+    if (!creatures_update.checkDelay())
+        return std::nullopt;
+
+    return getInventoriesUpdates();
+}
+
+std::optional<net::STATS_UPDATES> LobbyContext::tryGetStatsUpdates() {
+    if (!creatures_update.checkDelay())
+        return std::nullopt;
+
+    return getStatsUpdates();
 }
