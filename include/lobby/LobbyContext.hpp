@@ -87,6 +87,29 @@ class LobbyContext {
      */
     std::optional<net::PLAYERS_UPDATES> tryGetPlayerUpdates();
 
+    /**
+     * @brief Try to get buildings updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::BUILDINGS_UPDATES> tryGetBuildingsUpdates();
+
+    /**
+     * @brief Try to get creatures updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::CREATURES_UPDATES> tryGetCreaturesUpdates();
+
+    /**
+     * @brief Try to get projectiles updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::PROJECTILES_UPDATES> tryGetProjectilesUpdates();
+
+    /**
+     * @brief Try to get collectibles updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::COLLECTIBLES_UPDATES> tryGetCollectiblesUpdates();
 
     ////// setters //////
 

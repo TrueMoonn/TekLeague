@@ -62,6 +62,34 @@ net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
     return msg;
 }
 
+net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
+    net::CREATURES_UPDATES msg;
+
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& healths = registry.getComponents<addon::eSpec::Health>();
+    auto& positions = registry.getComponents<addon::physic::Position2>();
+
+    for (auto&& [entity, health] :
+        ECS::IndexedDenseZipper(healths)) {
+        if (entity < eField::BUILDINGS_BEGIN || entity > eField::BUILDINGS_END)
+            continue;
+
+        net::CreatureUpdate state {
+            .id = static_cast<uint32_t>(entity),
+            .x = 0,
+            .y = 0,
+            .direction = 0,
+            .hp = static_cast<double>(health.amount),
+            .type = 0,
+            .effects = static_cast<uint8_t>(0)
+        };
+
+        msg.creatures.push_back(state);
+    }
+
+    return msg;
+}
+
 // net::BUILDING_UPDATES LobbyContext::getProjectilesUpdates() {
 //     net::BUILDING_UPDATES msg;
 
