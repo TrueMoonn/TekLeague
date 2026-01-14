@@ -16,6 +16,7 @@ static const std::vector<std::string> CONFIG_PATHS {
 };
 
 static const std::vector<std::string> CLIENT_CONFIG_PATHS {
+    /* == System == */
     "client/assets/configs/windows.toml",
     "client/assets/configs/map.toml",
 
@@ -33,7 +34,7 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     /* == Parameters == */
     "client/assets/configs/ui/parameters/background.toml",
     "client/assets/configs/ui/parameters/button.toml",
-
+    /* == Tower Interaction == */
     "assets/config/buildings/tower.toml",
     "assets/config/buildings/zone_enemy.toml",
 };

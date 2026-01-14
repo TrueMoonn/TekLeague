@@ -13,6 +13,7 @@ struct Health {
     Health(int hp, int hp_max, int hp_regen) :
     amount(hp), max(hp_max), regen(hp_regen) {}
 
+    void reduceSafely(const std::int64_t &);
     int amount;
     int max;
     int regen;
