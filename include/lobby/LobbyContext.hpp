@@ -66,4 +66,28 @@ class LobbyContext {
      * @return The constructed message
      */
     net::PLAYERS_UPDATES getPlayerUpdates();
+
+    /**
+     * @brief Build the BUILDING_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::BUILDINGS_UPDATES getBuildingsUpdates();
+
+    /**
+     * @brief Build the CREATURES_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::CREATURES_UPDATES getCreaturesUpdates();
+
+    /**
+     * @brief Build the PROJECTILES_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::PROJECTILES_UPDATES getProjectilesUpdates();
+
+    /**
+     * @brief Build the COLLECTIBLES_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::COLLECTIBLES_UPDATES getCollectiblesUpdates();
 };
