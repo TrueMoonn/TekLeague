@@ -17,6 +17,7 @@
     #include <mutex>
     #include <atomic>
 
+    #include <clock.hpp>
     #include <network/GameServer.hpp>
     #include <Network/ProtocolManager.hpp>
     #include <Network/Address.hpp>
@@ -48,6 +49,12 @@ class Server : public te::network::GameServer {
     bool shouldRun() const { return _should_run; }
 
     void sendAutomatic();
+
+    /**
+     * @brief Check if it's time to send LOBBIES_LIST to non-lobby clients
+     * @return true if lobbies list should be sent, false otherwise
+     */
+    bool shouldSendLobbiesList();
 
     /**
      * @brief Set how often to send PLAYERS_UPDATES (in seconds)
@@ -85,6 +92,7 @@ class Server : public te::network::GameServer {
 
     ////// Server Control //////
     std::atomic<bool> _should_run{true};
+    te::Timestamp lobbies_list_timestamp{1.0f};
 
     uint createLobby(uint max_clients, const net::Address& admin);
     void destroyLobby(uint lobby_id);
@@ -139,6 +147,8 @@ class Server : public te::network::GameServer {
     void sendLobbyCreated(const net::Address& address,
         const std::string& lobby_code);
     void sendLobbiesList(const net::Address& address);
+    // NOTE: Assumes lobbies_mutex is already locked! Broadcasts to all non-lobby clients
+    void sendLobbiesListUnsafe();
     void sendGameStarting(uint lobby_id);
     void sendPlayersList(uint lobby_id);
       // NOTE: Assumes lobbies_mutex is already locked!
