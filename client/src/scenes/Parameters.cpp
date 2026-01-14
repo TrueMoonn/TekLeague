@@ -6,6 +6,8 @@
 */
 
 #include <events.hpp>
+#include <sfml/components/text.hpp>
+#include <sfml/components/drawable.hpp>
 
 #include "scenes/parameters.hpp"
 #include "scenes.hpp"
@@ -25,6 +27,34 @@ void setParametersScenes(Client& game) {
         {PARAM_BUTTON_BACK, "param_button", {810.f, 380.f}},
         {PARAM_BUTTON_KEYS, "param_button", {810.f, 490.f}},
         {PARAM_BUTTON_QUIT, "param_button", {810.f, 600.f}},
+    };
+
+    slobby.on_activate = [&game]() {
+        auto& texts = game.getComponent<addon::sfml::Text>();
+        texts.getComponent(PARAM_BUTTON_BACK).setString("RESUME");
+        texts.getComponent(PARAM_BUTTON_KEYS).setString("KEYBOARD");
+        texts.getComponent(PARAM_BUTTON_QUIT).setString("QUIT");
+    };
+
+    slobby.on_pause = [&game] {
+        auto& texts = game.getComponent<addon::sfml::Text>();
+        auto& draws = game.getComponent<addon::sfml::Drawable>();
+        texts.getComponent(PARAM_BUTTON_BACK).setString("");
+        texts.getComponent(PARAM_BUTTON_KEYS).setString("");
+        texts.getComponent(PARAM_BUTTON_QUIT).setString("");
+        draws.removeComponent(PARAM_BUTTON_BACK);
+        draws.removeComponent(PARAM_BUTTON_KEYS);
+        draws.removeComponent(PARAM_BUTTON_QUIT);
+    };
+
+    slobby.on_resume = [&game]() {
+        auto& texts = game.getComponent<addon::sfml::Text>();
+        texts.getComponent(PARAM_BUTTON_BACK).setString("RESUME");
+        texts.getComponent(PARAM_BUTTON_KEYS).setString("KEYBOARD");
+        texts.getComponent(PARAM_BUTTON_QUIT).setString("QUIT");
+        game.createComponent<addon::sfml::Drawable>(PARAM_BUTTON_BACK);
+        game.createComponent<addon::sfml::Drawable>(PARAM_BUTTON_KEYS);
+        game.createComponent<addon::sfml::Drawable>(PARAM_BUTTON_QUIT);
     };
 
     std::size_t idx = game.addScene(slobby);
