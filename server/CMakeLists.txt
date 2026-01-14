@@ -8,6 +8,8 @@ set(GAME_SERVER_HDR_DIR "${PROJECT_SOURCE_DIR}/include")
 add_executable(${PROJECT_NAME}
     ${GAME_SERVER_SRC_DIR}/main.cpp
     ${GAME_SERVER_SRC_DIR}/Server.cpp
+    ${CMAKE_SOURCE_DIR}/src/Lobby/LobbyContext.cpp
+    ${CMAKE_SOURCE_DIR}/src/Lobby/Lobby.cpp
 
     # SCENES
     ${GAME_SERVER_SRC_DIR}/scenes/Wait.cpp
