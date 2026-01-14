@@ -15,13 +15,17 @@
     #define SCAST(s) static_cast<std::size_t>(s)
 
 void setMainScene(Client& game);
+void setLobbyScene(Client& game);
 void setSearchLobbyScene(Client& game);
+void setInLobbyScene(Client& game);
 void setParametersScenes(Client& game);
 void setInGameScene(Client& game);
 
 enum class SCENES {
     MAIN = 0,
+    LOBBY,
     SEARCH_LOBBY,
+    IN_LOBBY,
     PARAMETERS,
     INGAME,
     LIMITSCENE,
@@ -30,7 +34,9 @@ enum class SCENES {
 static const std::unordered_map<SCENES,
     std::function<void(Client&)>> SCENES_SETUPS = {
     {SCENES::MAIN, &setMainScene},
+    {SCENES::LOBBY, &setLobbyScene},
     {SCENES::SEARCH_LOBBY, &setSearchLobbyScene},
+    {SCENES::IN_LOBBY, &setInLobbyScene},
     {SCENES::PARAMETERS, &setParametersScenes},
     {SCENES::INGAME, &setInGameScene},
 };
