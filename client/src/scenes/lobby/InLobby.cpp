@@ -9,7 +9,6 @@
 #include <events.hpp>
 #include <sfml/components/text.hpp>
 
-#include "ECS/DenseZipper.hpp"
 #include "scenes/lobby.hpp"
 #include "scenes.hpp"
 
@@ -30,6 +29,7 @@ void setInLobbyScene(Client& game) {
         {LOBBY_USER_RED_1, "user_red_side_lobby", {980.f, 400.f}},
         {LOBBY_USER_RED_2, "user_red_side_lobby", {980.f, 510.f}},
         {LOBBY_USER_RED_3, "user_red_side_lobby", {980.f, 620.f}},
+        // {LOBBY_LAUNCH_GAME, "launch_game", {}},
     };
 
     inlobby.on_activate = [&game]() {

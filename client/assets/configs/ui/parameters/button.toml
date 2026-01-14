@@ -26,3 +26,11 @@ button = true
         # HOVER
         [[0, 0], 1, 0.0, false],
     ]
+
+    [ENTITIES.param_button.text]
+    string = ""
+    font = "client/assets/images/ui/main_font.otf"
+    offset = [150, 45]
+    size = 40
+    center = true
+    color = [255, 255, 255, 255]

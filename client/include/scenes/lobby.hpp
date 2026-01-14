@@ -34,3 +34,5 @@
         MENU_BEGIN + 9)
     #define LOBBY_USER_RED_3 static_cast<std::size_t>(TEMP_SCENE\
         MENU_BEGIN + 10)
+    #define LOBBY_LAUNCH_GAME static_cast<std::size_t>(TEMP_SCENE\
+        MENU_BEGIN + 11)

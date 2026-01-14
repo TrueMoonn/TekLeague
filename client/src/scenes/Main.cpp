@@ -5,16 +5,16 @@
 ** Main.cpp
 */
 
+#include <SFML/Graphics/Drawable.hpp>
 #include <events.hpp>
 #include <ECS/DenseZipper.hpp>
 #include <sfml/components/text.hpp>
 #include <sfml/components/focus.hpp>
+#include <sfml/components/drawable.hpp>
 #include <Network/generated_messages.hpp>
 #include <print>
 
 #include "scenes/main.hpp"
-#include "ECS/DenseSA.hpp"
-#include "GameTool.hpp"
 #include "scenes.hpp"
 
 void setMainScene(Client& game) {
@@ -34,6 +34,34 @@ void setMainScene(Client& game) {
         {MAIN_LOGO, "logo", {30.f, 30.f}},
         {MAIN_BACKGROUND, "main_bg"},
         {MAIN_USERNAME, "text_input", {1400.f, 50.f}},
+    };
+
+    main.on_activate = [&game]() {
+        auto& texts = game.getComponent<addon::sfml::Text>();
+        texts.getComponent(MAIN_BUTTON_PLAY).setString("PLAY");
+        texts.getComponent(MAIN_BUTTON_SETTINGS).setString("SETTINGS");
+        texts.getComponent(MAIN_BUTTON_QUIT).setString("QUIT");
+    };
+
+    main.on_pause = [&game] {
+        auto& texts = game.getComponent<addon::sfml::Text>();
+        auto& draws = game.getComponent<addon::sfml::Drawable>();
+        texts.getComponent(MAIN_BUTTON_PLAY).setString("");
+        texts.getComponent(MAIN_BUTTON_SETTINGS).setString("");
+        texts.getComponent(MAIN_BUTTON_QUIT).setString("");
+        draws.removeComponent(MAIN_BUTTON_PLAY);
+        draws.removeComponent(MAIN_BUTTON_SETTINGS);
+        draws.removeComponent(MAIN_BUTTON_QUIT);
+    };
+
+    main.on_resume = [&game]() {
+        auto& texts = game.getComponent<addon::sfml::Text>();
+        texts.getComponent(MAIN_BUTTON_PLAY).setString("PLAY");
+        texts.getComponent(MAIN_BUTTON_SETTINGS).setString("SETTINGS");
+        texts.getComponent(MAIN_BUTTON_QUIT).setString("QUIT");
+        game.createComponent<addon::sfml::Drawable>(MAIN_BUTTON_PLAY);
+        game.createComponent<addon::sfml::Drawable>(MAIN_BUTTON_SETTINGS);
+        game.createComponent<addon::sfml::Drawable>(MAIN_BUTTON_QUIT);
     };
 
     std::size_t idx = game.addScene(main);
@@ -94,7 +122,7 @@ void setMainScene(Client& game) {
                 game.sendToServer(msg.serialize());
                 break;
             case MAIN_BUTTON_SETTINGS:
-                game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::MAIN));
+                game.updateScene(te::sStatus::PAUSE, SCAST(SCENES::MAIN));
                 game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::PARAMETERS));
                 break;
             case MAIN_BUTTON_QUIT:
