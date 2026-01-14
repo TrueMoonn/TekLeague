@@ -5,7 +5,10 @@
 ** Main.cpp
 */
 
+#include <events.hpp>
 #include <sfml/components/text.hpp>
+#include <Network/generated_messages.hpp>
+#include <print>
 
 #include "scenes/main.hpp"
 #include "scenes.hpp"
@@ -28,15 +31,15 @@ void setMainScene(Client& game) {
         {MAIN_BACKGROUND, "main_bg"},
     };
 
-    toml::table table;
-    table.insert_or_assign("font", "client/assets/images/ui/main_font.otf");
-    table.insert_or_assign("string", "PLAY");
-    toml::array offset;
-    offset.push_back(150);
-    offset.push_back(5);
-    table.insert_or_assign("offset", offset);
-    table.insert_or_assign("size", 60);
-    game.createComponent("text", MAIN_BUTTON_PLAY, table);
+    // toml::table table;
+    // table.insert_or_assign("font", "client/assets/images/ui/main_font.otf");
+    // table.insert_or_assign("string", "PLAY");
+    // toml::array offset;
+    // offset.push_back(150);
+    // offset.push_back(5);
+    // table.insert_or_assign("offset", offset);
+    // table.insert_or_assign("size", 60);
+    // game.createComponent("text", MAIN_BUTTON_PLAY, table);
 
     // toml::table table1;
     // table1.insert_or_assign("font", "client/assets/images/ui/main_font.otf");
@@ -62,6 +65,11 @@ void setMainScene(Client& game) {
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
         switch (e) {
             case MAIN_BUTTON_PLAY:
+                {
+                    net::GET_ALL_PUBLIC_LOBBIES msg;
+                    game.sendToServer(msg.serialize());
+                    std::println("[Client] Requesting public lobbies list...");
+                }
                 game.activateScene(SCAST(SCENES::SEARCH_LOBBY));
                 game.pauseScene(SCAST(SCENES::MAIN));
                 break;

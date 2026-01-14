@@ -8,4 +8,5 @@
     [ENTITIES.ig_window.window]
         name = "TekLeague"
         framelimit = 60
-        fullscreen = true
+        size = [1920, 1080]
+        fullscreen = false
