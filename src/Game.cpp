@@ -41,12 +41,43 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
 }
 
 ECS::Entity Game::nextEntity(eType type) {
-    if (_nextEntities.at(type) >= ENTITY_FIELDS.at(type).max) {
-        _nextEntities.at(type) = ENTITY_FIELDS.at(type).min;
-    } else {
-        _nextEntities.at(type) += 1;
+    // Initialiser la clé si elle n'existe pas
+    if (_nextEntities.find(type) == _nextEntities.end()) {
+        // Initialiser selon le type
+        switch (type) {
+            case eType::SYSTEM:
+                _nextEntities[type] = eField::SYSTEM_F;
+                break;
+            case eType::CHAMPION:
+                _nextEntities[type] = eField::CHAMPION_BEGIN;
+                break;
+            case eType::MENU:
+                _nextEntities[type] = eField::MENU_BEGIN;
+                break;
+            case eType::HUD:
+                _nextEntities[type] = eField::HUD_BEGIN;
+                break;
+            case eType::MAP:
+                _nextEntities[type] = eField::MAP_BEGIN;
+                break;
+            case eType::MOB:
+                _nextEntities[type] = eField::MOB_BEGIN;
+                break;
+            case eType::BUILDINGS:
+                _nextEntities[type] = eField::BUILDINGS_BEGIN;
+                break;
+            case eType::PROJECTILES:
+                _nextEntities[type] = eField::PROJECTILES_BEGIN;
+                break;
+        }
     }
-    return _nextEntities.at(type);
+
+    if (_nextEntities[type] >= ENTITY_FIELDS.at(type).max) {
+        _nextEntities[type] = ENTITY_FIELDS.at(type).min;
+    } else {
+        _nextEntities[type] += 1;
+    }
+    return _nextEntities[type];
 }
 
 void Game::run() {
