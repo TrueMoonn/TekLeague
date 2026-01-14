@@ -141,6 +141,8 @@ class Server : public te::network::GameServer {
     void sendLobbiesList(const net::Address& address);
     void sendGameStarting(uint lobby_id);
     void sendPlayersList(uint lobby_id);
+      // NOTE: Assumes lobbies_mutex is already locked!
+    void sendPlayersListUnsafe(uint lobby_id);
     void sendLobbyVisibilityChanged(uint lobby_id, bool is_public);
     void sendLobbyDestroyed(uint lobby_id);
     void sendLobbyFull(const net::Address& address);
@@ -149,26 +151,26 @@ class Server : public te::network::GameServer {
     void sendTeamFull(const net::Address& address);
     void sendAdminGamePaused(uint lobby_id);
     void sendGameEnded(uint lobby_id);
-    
+
     ////// Lobby State Queries //////
-    
+
     /**
      * @brief Get the game state of a specific lobby
      * @param lobby_id The lobby ID to query
      * @return Optional LobbyGameState if lobby exists
      */
     std::optional<LobbyGameState> getLobbyGameState(uint lobby_id);
-    
+
     /**
      * @brief Check if a lobby is in pre-game state
      */
     bool isLobbyPreGame(uint lobby_id);
-    
+
     /**
      * @brief Check if a lobby is in game
      */
     bool isLobbyInGame(uint lobby_id);
-    
+
     /**
      * @brief Check if a lobby game has ended
      */

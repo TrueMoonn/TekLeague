@@ -26,6 +26,7 @@ class LobbyContext {
  public:
     ////// Timestamp default latency in seconds //////
     static constexpr float PLAYERS_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
+    static constexpr float PLAYERS_LIST_DEFAULT_LATENCY = 0.5f;
 
  public:
     LobbyContext(uint max_players, const std::string& code);
@@ -97,6 +98,19 @@ class LobbyContext {
         players_update.delay = size_t(SEC_TO_MICRO(freq));
     }
 
+    /**
+     * @brief Set how often to send players list in PRE_GAME (in seconds)
+     */
+    void setPlayersListFrequency(float freq) {
+        players_list_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Check if players list should be sent (timestamp expired and in PRE_GAME)
+     * @return true if players list should be sent, false otherwise
+     */
+    bool shouldSendPlayersList();
+
  private:
     Lobby lobby;
 
@@ -108,6 +122,7 @@ class LobbyContext {
     uint max_clients;
 
     te::Timestamp players_update = te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp players_list_update = te::Timestamp(PLAYERS_LIST_DEFAULT_LATENCY);
 
     /**
      * @brief Build the PLAYERS_UPDATES message from the lobby's registry
