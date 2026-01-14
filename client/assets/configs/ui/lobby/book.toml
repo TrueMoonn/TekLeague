@@ -1,0 +1,26 @@
+[ENTITIES.bookcover]
+drawable = true
+position2 = true
+
+    [ENTITIES.bookcover.sprite]
+    path = "client/assets/images/ui/search_lobby/bookcover.png"
+    scale = [896, 640]
+    layer = 9
+
+[ENTITIES.bookleft]
+drawable = true
+position2 = true
+
+    [ENTITIES.bookleft.sprite]
+    path = "client/assets/images/ui/search_lobby/bookleft.png"
+    scale = [416, 588]
+    layer = 10
+
+[ENTITIES.bookright]
+drawable = true
+position2 = true
+
+    [ENTITIES.bookright.sprite]
+    path = "client/assets/images/ui/search_lobby/bookright.png"
+    scale = [416, 588]
+    layer = 10
