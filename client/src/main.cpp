@@ -14,7 +14,7 @@ int main() {
         SCENES_SETUPS.at(static_cast<SCENES>(i))(game);
 
     game.createEntity(game.nextEntity(eType::SYSTEM), "ig_window");
-    game.activateScene(SCAST(SCENES::MAIN));
+    game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::MAIN));
     game.run();
     return 0;
 }
