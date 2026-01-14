@@ -110,6 +110,38 @@
         { "name": "y", "type": "float" },
         { "name": "type", "type": "uint32" }
       ]
+    },
+    "CollectibleUpdate": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "type", "type": "uint32" }
+      ]
+    },
+    "InventoryUpdate": {
+      "fields": [
+        { "name": "playerid", "type": "uint32" },
+        {
+          "name": "items",
+          "type": "fixed_array",
+          "element_type": "uint32",
+          "max_size": 6
+        },
+        { "name": "gold", "type": "uint32" }
+      ]
+    },
+    "StatsUpdate": {
+      "fields": [
+        { "name": "playerid", "type": "uint32" },
+        { "name": "ad", "type": "uint32" },
+        { "name": "ap", "type": "uint32" },
+        { "name": "armor", "type": "uint32" },
+        { "name": "resist", "type": "uint32" },
+        { "name": "cdr_mov_speed", "type": "uint32" },
+        { "name": "atk_speed", "type": "uint32" },
+        { "name": "range", "type": "uint32" }
+      ]
     }
   },
 
@@ -206,10 +238,6 @@
       "id": 37,
       "fields": []
     },
-    "TOGGLE_LOBBY_PRIVATE_PUBLIC": {
-      "id": 46,
-      "fields": []
-    },
     "PLAYERS_LIST": {
       "id": 38,
       "fields": [
@@ -232,12 +260,20 @@
       "id": 42,
       "fields": []
     },
+    "LOBBY_FULL": {
+      "id": 43,
+      "fields": []
+    },
     "BAD_LOBBY_CODE": {
       "id": 44,
       "fields": []
     },
     "NOT_ADMIN": {
       "id": 45,
+      "fields": []
+    },
+    "TOGGLE_LOBBY_PRIVATE_PUBLIC": {
+      "id": 46,
       "fields": []
     },
     "CLIENT_INPUTS": {
@@ -281,36 +317,7 @@
         }
       ]
     },
-    "SCORE": {
-      "id": 54,
-      "fields": [
-        { "name": "team_count", "type": "uint8" },
-        {
-          "name": "teams",
-          "type": "fixed_array",
-          "element_type": "TeamScore",
-          "max_size": 2
-        }
-      ]
-    },
-    "GAME_DURATION": {
-      "id": 55,
-      "fields": [{ "name": "duration", "type": "uint32" }]
-    },
-    "PLAYER_DEAD": {
-      "id": 56,
-      "fields": []
-    },
-    "SCOREBOARD": {
-      "id": 57,
-      "fields": [
-        {
-          "name": "entries",
-          "type": "dynamic_array",
-          "element_type": "ScoreboardEntry"
-        }
-      ]
-    },
+
     "PLAYERS_UPDATES": {
       "id": 61,
       "fields": [
@@ -351,16 +358,76 @@
         }
       ]
     },
-    "ADMIN_PAUSE_GAME": {
+    "COLLECTIBLES_UPDATES": {
+      "id": 65,
+      "fields": [
+        {
+          "name": "collectibles",
+          "type": "dynamic_array",
+          "element_type": "CollectibleUpdate"
+        }
+      ]
+    },
+    "INVENTORIES_UPDATES": {
+      "id": 66,
+      "fields": [
+        {
+          "name": "inventories",
+          "type": "dynamic_array",
+          "element_type": "InventoryUpdate"
+        }
+      ]
+    },
+    "STATS_UPDATES": {
       "id": 67,
+      "fields": [
+        {
+          "name": "stats",
+          "type": "dynamic_array",
+          "element_type": "StatsUpdate"
+        }
+      ]
+    },
+    "SCORE": {
+      "id": 70,
+      "fields": [
+        { "name": "team_count", "type": "uint8" },
+        {
+          "name": "teams",
+          "type": "fixed_array",
+          "element_type": "TeamScore",
+          "max_size": 2
+        }
+      ]
+    },
+    "GAME_DURATION": {
+      "id": 71,
+      "fields": [{ "name": "duration", "type": "uint32" }]
+    },
+    "SCOREBOARD": {
+      "id": 72,
+      "fields": [
+        {
+          "name": "entries",
+          "type": "dynamic_array",
+          "element_type": "ScoreboardEntry"
+        }
+      ]
+    },
+    "PLAYER_DEAD": {
+      "id": 80,
+      "fields": []
+    },
+    "ADMIN_PAUSE_GAME": {
+      "id": 87,
       "fields": []
     },
     "ADMIN_GAME_PAUSED": {
-      "id": 68,
+      "id": 88,
       "fields": []
     },
     "GAME_END": {
-      "id": 69,
+      "id": 89,
       "fields": [{ "name": "winning_team", "type": "uint8" }]
     }
   }

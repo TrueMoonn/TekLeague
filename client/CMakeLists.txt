@@ -13,6 +13,7 @@ add_executable(${PROJECT_NAME}
     ${GAME_SRC_DIR}/components/champion.cpp
     ${GAME_SRC_DIR}/components/stat_pool.cpp
     ${GAME_SRC_DIR}/components/directed.cpp
+    ${GAME_SRC_DIR}/components/button.cpp
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp
@@ -20,12 +21,16 @@ add_executable(${PROJECT_NAME}
 
     ########## LOCAL ##########
     ${GAME_CLIENT_SRC_DIR}/main.cpp
-
     ${GAME_CLIENT_SRC_DIR}/Client.cpp
     ${GAME_CLIENT_SRC_DIR}/LobbyManager.cpp
 
+    # SYSTEMS
+    ${GAME_CLIENT_SRC_DIR}/systems/update_button.cpp
+
     # SCENES
     ${GAME_CLIENT_SRC_DIR}/scenes/Main.cpp
+    ${GAME_CLIENT_SRC_DIR}/scenes/SearchLobby.cpp
+    ${GAME_CLIENT_SRC_DIR}/scenes/Parameters.cpp
     ${GAME_CLIENT_SRC_DIR}/scenes/InGame.cpp
 )
 
