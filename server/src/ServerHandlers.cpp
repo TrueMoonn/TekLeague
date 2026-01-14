@@ -55,6 +55,10 @@ bool Server::setPacketsHandlers() {
         const net::Address& sender) {
         handleAdminPauseGame(data, sender);
     });
+    registerPacketHandler(89, [this](const std::vector<uint8_t>& data,
+        const net::Address& sender) {
+        handleAdminEndGame(data, sender);
+    });
     return true;
 }
 
@@ -258,11 +262,21 @@ void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
 
     std::println("[Server] handleAdminStartGame: Starting game for lobby {}",
         lobby_id);
+
+    // Change lobby state to IN_GAME
+    {
+        std::lock_guard<std::mutex> lock(lobbies_mutex);
+        if (lobbies.find(lobby_id) != lobbies.end()) {
+            lobbies.at(lobby_id).setGameState(LobbyGameState::IN_GAME);
+            std::println("[Server] handleAdminStartGame: Lobby {} state changed to IN_GAME",
+                lobby_id);
+        }
+    }
+
     sendGameStarting(lobby_id);
     std::println("[Server] handleAdminStartGame: sendGameStarting completed");
 
     // TODO(Pierre): Initialize game state in lobby
-    // std::lock_guard<std::mutex> lock(lobbies_mutex);
     // lobbies.at(lobby_id).getLobby().startGame();
 }
 
@@ -371,4 +385,47 @@ void Server::handleAdminPauseGame(
     std::println("[Server] handleAdminPauseGame: Toggling pause for lobby {}",
         lobby_id);
     sendAdminGamePaused(lobby_id);
+}
+
+void Server::handleAdminEndGame(const std::vector<uint8_t>& data,
+    const net::Address& sender) {
+    std::println("[Server] handleAdminEndGame: Request from {}:{}",
+        sender.getIP(), sender.getPort());
+
+    auto client_opt = getClient(sender);
+    if (!client_opt) {
+        std::println("[Server] handleAdminEndGame: Client not found");
+        return;
+    }
+
+    auto& client = client_opt->get();
+    if (!client.in_lobby) {
+        std::println("[Server] handleAdminEndGame: Client not in lobby");
+        return;
+    }
+
+    uint lobby_id = client.lobby_id;
+    std::println("[Server] handleAdminEndGame: Client {} is in lobby {}",
+        client.id, lobby_id);
+
+    if (!isAdmin(sender, lobby_id)) {
+        std::println("[Server] handleAdminEndGame: User is not admin");
+        sendNotAdmin(sender);
+        return;
+    }
+
+    // Change lobby state to END_GAME
+    {
+        std::lock_guard<std::mutex> lock(lobbies_mutex);
+        if (lobbies.find(lobby_id) != lobbies.end()) {
+            lobbies.at(lobby_id).setGameState(LobbyGameState::END_GAME);
+            std::println("[Server] handleAdminEndGame: Lobby {} state changed to END_GAME",
+                lobby_id);
+        }
+    }
+
+    std::println("[Server] handleAdminEndGame: Ending game for lobby {}",
+        lobby_id);
+    sendGameEnded(lobby_id);
+    std::println("[Server] handleAdminEndGame: sendGameEnded completed");
 }

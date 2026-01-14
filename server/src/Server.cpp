@@ -232,3 +232,35 @@ void Server::stop() {
     _should_run.store(false);
     stopGameServer();
 }
+
+std::optional<LobbyGameState> Server::getLobbyGameState(uint lobby_id) {
+    std::lock_guard<std::mutex> lock(lobbies_mutex);
+    if (lobbies.find(lobby_id) != lobbies.end()) {
+        return lobbies.at(lobby_id).getGameState();
+    }
+    return std::nullopt;
+}
+
+bool Server::isLobbyPreGame(uint lobby_id) {
+    std::lock_guard<std::mutex> lock(lobbies_mutex);
+    if (lobbies.find(lobby_id) != lobbies.end()) {
+        return lobbies.at(lobby_id).isPreGame();
+    }
+    return false;
+}
+
+bool Server::isLobbyInGame(uint lobby_id) {
+    std::lock_guard<std::mutex> lock(lobbies_mutex);
+    if (lobbies.find(lobby_id) != lobbies.end()) {
+        return lobbies.at(lobby_id).isInGame();
+    }
+    return false;
+}
+
+bool Server::isLobbyEndGame(uint lobby_id) {
+    std::lock_guard<std::mutex> lock(lobbies_mutex);
+    if (lobbies.find(lobby_id) != lobbies.end()) {
+        return lobbies.at(lobby_id).isEndGame();
+    }
+    return false;
+}
