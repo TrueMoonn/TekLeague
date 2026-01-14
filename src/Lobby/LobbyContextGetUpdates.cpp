@@ -86,7 +86,7 @@ net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
 // }
 
 std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetPlayerUpdates() {
-    if (!isInGame() || !players_update.checkDelay()) {
+    if (!players_update.checkDelay()) {
         return std::nullopt;
     }
 
