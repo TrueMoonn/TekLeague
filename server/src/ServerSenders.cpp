@@ -31,23 +31,42 @@
 
 void Server::sendAutomatic() {
     try {
-        std::vector<std::pair<uint, std::vector<uint8_t>>> messages_to_send;
+        std::vector<std::pair<uint, std::vector<uint8_t>>> ingame_updates;
+        std::vector<uint> pre_game_lobbies;
+
         {
             std::lock_guard<std::mutex> lock(lobbies_mutex);
-            for (auto& [id, ctx] : lobbies) {
-                if (ctx.getGameState() != LobbyGameState::IN_GAME)
-                    continue;
-                if (auto msg = ctx.tryGetPlayerUpdates()) {
-                    messages_to_send.emplace_back(id, msg->serialize());
+
+            for (auto& [lobby_id, ctx] : lobbies) {
+                if (ctx.getGameState() == LobbyGameState::PRE_GAME) {
+                    if (ctx.shouldSendPlayersList()) {
+                        pre_game_lobbies.push_back(lobby_id);
+                    }
+                } else if (ctx.getGameState() == LobbyGameState::IN_GAME) {
+                    if (auto msg = ctx.tryGetPlayerUpdates())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetBuildingsUpdates())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetCreaturesUpdates())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetProjectilesUpdates())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetCollectiblesUpdates())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetInventoriesUpdates())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetStatsUpdates())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
                 }
-                if (auto msg = ctx.tryGetPlayerUpdates()) {
-                    messages_to_send.emplace_back(id, msg->serialize());
-                }
+            }
+
+            for (uint lobby_id : pre_game_lobbies) {
+                sendPlayersListUnsafe(lobby_id);
             }
         }
 
-        for (const auto& [id, data] : messages_to_send) {
-            broadcastToLobby(id, data);
+        for (const auto& [lobby_id, data] : ingame_updates) {
+            broadcastToLobby(lobby_id, data);
         }
     } catch (const std::exception& e) {
         std::println(stderr, "[Server::sendAutomatic] ERROR: {}", e.what());
@@ -125,13 +144,9 @@ void Server::sendGameStarting(uint lobby_id) {
     std::println("[Server] sendGameStarting: Broadcast complete");
 }
 
-void Server::sendPlayersList(uint lobby_id) {
-    std::println("[Server::sendPlayersList] Entering for lobby {}", lobby_id);
-    std::lock_guard<std::mutex> lock(lobbies_mutex);
-    std::println("[Server::sendPlayersList] Lock acquired");
-
+void Server::sendPlayersListUnsafe(uint lobby_id) {
     if (lobbies.find(lobby_id) == lobbies.end()) {
-        std::println("[Server::sendPlayersList] Lobby not found");
+        std::println("[Server::sendPlayersListUnsafe] Lobby not found");
         return;
     }
 
@@ -143,6 +158,7 @@ void Server::sendPlayersList(uint lobby_id) {
             auto& client = client_opt->get();
             net::PlayerListEntry entry;
             entry.id = client.id;
+            entry.team = client.team;
             std::memset(entry.username, 0, 32);
             std::memcpy(entry.username, client.username.c_str(),
                 std::min(client.username.size(), size_t(32)));
@@ -151,9 +167,18 @@ void Server::sendPlayersList(uint lobby_id) {
     }
 
     std::println(
-        "[Server::sendPlayersList] Broadcasting to lobby with {} players",
+        "[Server::sendPlayersListUnsafe] Broadcasting to lobby with {} players",
         msg.players.size());
     broadcastToLobbyUnsafe(lobby_id, msg.serialize());
+}
+
+void Server::sendPlayersList(uint lobby_id) {
+    std::println("[Server::sendPlayersList] Entering for lobby {}", lobby_id);
+    std::lock_guard<std::mutex> lock(lobbies_mutex);
+    std::println("[Server::sendPlayersList] Lock acquired");
+
+    sendPlayersListUnsafe(lobby_id);
+
     std::println("[Server::sendPlayersList] Completed");
 }
 
@@ -183,6 +208,11 @@ void Server::sendNotAdmin(const net::Address& address) {
     sendTo(address, msg.serialize());
 }
 
+void Server::sendTeamFull(const net::Address& address) {
+    net::TEAM_FULL msg;
+    sendTo(address, msg.serialize());
+}
+
 void Server::sendAdminGamePaused(uint lobby_id) {
     net::ADMIN_GAME_PAUSED msg;
     broadcastToLobby(lobby_id, msg.serialize());
@@ -193,7 +223,7 @@ void Server::sendGameEnded(uint lobby_id) {
         "[Server] sendGameEnded: Broadcasting GAME_END to lobby {}",
         lobby_id);
     net::GAME_END msg;
-    msg.winning_team = 0;  // TODO: Determine winning team
+    msg.winning_team = 0;  // TODO(x): Determine winning team
     auto serialized = msg.serialize();
     broadcastToLobby(lobby_id, serialized);
     std::println("[Server] sendGameEnded: Broadcast complete");

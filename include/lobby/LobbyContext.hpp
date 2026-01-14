@@ -9,6 +9,8 @@
 #pragma once
 
     #include <optional>
+    #include <string>
+    #include <unordered_map>
 
     #include <Network/generated_messages.hpp>
     #include <Network/Address.hpp>
@@ -25,7 +27,14 @@ enum class LobbyGameState {
 class LobbyContext {
  public:
     ////// Timestamp default latency in seconds //////
-    static constexpr float PLAYERS_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
+    static constexpr float PLAYERS_UPDATES_DEFAULT_LATENCY = 1.0f / 120.0f;
+    static constexpr float BUILDINGS_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
+    static constexpr float CREATURES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
+    static constexpr float PROJECTILES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
+    static constexpr float COLLECTIBLES_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
+    static constexpr float INVENTORIES_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
+    static constexpr float STATS_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
+    static constexpr float PLAYERS_LIST_DEFAULT_LATENCY = 0.5f;
 
  public:
     LobbyContext(uint max_players, const std::string& code);
@@ -87,15 +96,104 @@ class LobbyContext {
      */
     std::optional<net::PLAYERS_UPDATES> tryGetPlayerUpdates();
 
+    /**
+     * @brief Try to get buildings updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::BUILDINGS_UPDATES> tryGetBuildingsUpdates();
+
+    /**
+     * @brief Try to get creatures updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::CREATURES_UPDATES> tryGetCreaturesUpdates();
+
+    /**
+     * @brief Try to get projectiles updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::PROJECTILES_UPDATES> tryGetProjectilesUpdates();
+
+    /**
+     * @brief Try to get collectibles updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::COLLECTIBLES_UPDATES> tryGetCollectiblesUpdates();
+
+    /**
+     * @brief Try to get inventories updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::INVENTORIES_UPDATES> tryGetInventoriesUpdates();
+
+    /**
+     * @brief Try to get stats updates if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::STATS_UPDATES> tryGetStatsUpdates();
 
     ////// setters //////
 
     /**
-     * @brief Set how often to send player updates (in seconds)
+     * @brief Set how often to send players updates (in seconds)
      */
     void setPlayersUpdateFrequency(float freq) {
         players_update.delay = size_t(SEC_TO_MICRO(freq));
     }
+
+    /**
+     * @brief Set how often to send buildings updates (in seconds)
+     */
+    void setBuildingsUpdateFrequency(float freq) {
+        buildings_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send creatures updates (in seconds)
+     */
+    void setCreaturesUpdateFrequency(float freq) {
+        creatures_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send projectiles updates (in seconds)
+     */
+    void setProjectilesUpdateFrequency(float freq) {
+        projectiles_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send collectibles updates (in seconds)
+     */
+    void setCollectiblesUpdateFrequency(float freq) {
+        collectibles_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send inventories updates (in seconds)
+     */
+    void setInventoriesUpdateFrequency(float freq) {
+        inventories_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send stats updates (in seconds)
+     */
+    void setStatsUpdateFrequency(float freq) {
+        stats_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+    /**
+     * @brief Set how often to send players list in PRE_GAME (in seconds)
+     */
+    void setPlayersListFrequency(float freq) {
+        players_list_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Check if players list should be sent (timestamp expired and in PRE_GAME)
+     * @return true if players list should be sent, false otherwise
+     */
+    bool shouldSendPlayersList();
 
  private:
     Lobby lobby;
@@ -107,7 +205,22 @@ class LobbyContext {
     std::unordered_map<uint32_t, net::Address> connected_players;
     uint max_clients;
 
-    te::Timestamp players_update = te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp players_update =
+        te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp buildings_update =
+        te::Timestamp(BUILDINGS_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp creatures_update =
+        te::Timestamp(CREATURES_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp projectiles_update =
+        te::Timestamp(PROJECTILES_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp collectibles_update =
+        te::Timestamp(COLLECTIBLES_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp inventories_update =
+        te::Timestamp(INVENTORIES_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp stats_update =
+        te::Timestamp(STATS_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp players_list_update =
+        te::Timestamp(PLAYERS_LIST_DEFAULT_LATENCY);
 
     /**
      * @brief Build the PLAYERS_UPDATES message from the lobby's registry
@@ -138,4 +251,16 @@ class LobbyContext {
      * @return The constructed message
      */
     net::COLLECTIBLES_UPDATES getCollectiblesUpdates();
+
+    /**
+     * @brief Build the INVENTORIES_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::INVENTORIES_UPDATES getInventoriesUpdates();
+
+    /**
+     * @brief Build the STATS_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::STATS_UPDATES getStatsUpdates();
 };

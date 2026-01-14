@@ -80,6 +80,13 @@ void LobbyDataManager::sendPauseGame() {
     std::println("[LobbyData] Sent ADMIN_PAUSE_GAME");
 }
 
+void LobbyDataManager::sendWantThisTeam(uint8_t team) {
+    net::WANT_THIS_TEAM msg;
+    msg.team = team;
+    _network_client.sendToServer(msg.serialize());
+    std::println("[LobbyData] Sent WANT_THIS_TEAM for team: {}", static_cast<int>(team));
+}
+
 ////// MESSAGE HANDLERS (update data only) //////
 
 void LobbyDataManager::handleLoggedIn(const net::LOGGED_IN& msg) {
@@ -167,5 +174,9 @@ void LobbyDataManager::handleNotAdmin(const net::NOT_ADMIN& msg) {
 }
 
 void LobbyDataManager::handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg) {
-    std::println("[LobbyData] Game pause toggled");
+    std::println("[LobbyData] Game paused/resumed");
+}
+
+void LobbyDataManager::handleTeamFull(const net::TEAM_FULL& msg) {
+    std::println("[LobbyData] Team is full");
 }
