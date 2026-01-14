@@ -32,3 +32,21 @@ frames = [
     [[0, 9], 1, 0.4, false],
     [[0, 10], 1, 0.4, false],
 ]
+
+[ENTITIES.ethan.stat_pool]
+ad = 10
+ap = 0
+atk_speed = 1.0
+armor = 20
+magic_resist = 20
+mov_speed = 300
+
+[ENTITIES.ethan.health]
+health = 1
+health_max = 200
+health_regen = 3
+
+[ENTITIES.ethan.mana]
+mana = 300
+mana_max = 300
+mana_regen = 3

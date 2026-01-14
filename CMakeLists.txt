@@ -49,6 +49,12 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/components/stats/gold.cpp
 
     ${GAME_SRC_DIR}/components/ui/button.cpp
+    ${GAME_SRC_DIR}/components/stats/stat_pool.cpp
+    ${GAME_SRC_DIR}/components/items/inventory.cpp
+    ${GAME_SRC_DIR}/components/items/item.cpp
+    ${GAME_SRC_DIR}/components/competences/target.cpp
+    ${GAME_SRC_DIR}/components/competences/auto_track.cpp
+    ${GAME_SRC_DIR}/components/interaction/health.cpp
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp

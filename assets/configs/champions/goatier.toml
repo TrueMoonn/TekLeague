@@ -1,7 +1,6 @@
 [ENTITIES.goatier]
 position2 = true
 champion = true
-directed = true
 
 [ENTITIES.goatier.velocity2]
 x = 0
