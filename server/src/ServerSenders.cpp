@@ -143,6 +143,7 @@ void Server::sendPlayersList(uint lobby_id) {
             auto& client = client_opt->get();
             net::PlayerListEntry entry;
             entry.id = client.id;
+            entry.team = client.team;
             std::memset(entry.username, 0, 32);
             std::memcpy(entry.username, client.username.c_str(),
                 std::min(client.username.size(), size_t(32)));
@@ -180,6 +181,11 @@ void Server::sendBadLobbyCode(const net::Address& address) {
 
 void Server::sendNotAdmin(const net::Address& address) {
     net::NOT_ADMIN msg;
+    sendTo(address, msg.serialize());
+}
+
+void Server::sendTeamFull(const net::Address& address) {
+    net::TEAM_FULL msg;
     sendTo(address, msg.serialize());
 }
 
