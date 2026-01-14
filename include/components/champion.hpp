@@ -8,6 +8,7 @@
 #pragma once
 
     #include "Game.hpp"
+#include "clock.hpp"
 
 enum class ChampionState {
     IDLE_BOT = 0,
@@ -22,20 +23,19 @@ enum class ChampionState {
     MOV_TOP,
 };
 
-// enum class DamageType {
-//     PHYSIC = 0,
-//     MAGICAL,
-//     LIMIT,
-// };
+enum DamageType : std::size_t {
+    PHYSIC = 0,
+    MAGICAL,
+    LIMIT,
+};
 
-// struct Spell {
-//     std::string name;
-//     DamageType dmgType;
-//     std::size_t cooldown;
-//     std::size_t castTime;
-//     std::array<std::size_t,
-//         static_cast<std::size_t>(DamageType::LIMIT)> ratios;
-// };
+struct Spell {
+    std::string name;
+    DamageType dmgType;
+    te::Timestamp cooldown;
+    te::Timestamp castTime;
+    std::array<std::size_t, DamageType::LIMIT> ratios;
+};
 
 struct Champion {
     // std::string name;

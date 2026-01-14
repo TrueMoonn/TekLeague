@@ -1,0 +1,9 @@
+[ENTITIES.logo]
+drawable = true
+position2 = true
+
+    [ENTITIES.logo.sprite]
+    path = "client/assets/images/ui/logo.png"
+    size = [500, 500]
+    scale = [300, 300]
+    layer = 1
