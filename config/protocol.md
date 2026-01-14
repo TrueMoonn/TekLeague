@@ -38,6 +38,7 @@ Every code (1 ... 255) is on ONE BYTE only
 34  GET ALL PUBLIC LOBBIES      [NO DATA]               ->  Asks for public lobbies
 36  ADMIN START GAME            [NO DATA]               ->  Sent by client, server needs to check if client is admin
 40  LEAVE LOBBY                 [NO DATA]               ->  Disconnects client from lobby
+41  WANT THIS TEAM              [1B team]               ->  Team that the client want to join
 46  TOGGLE LOBBY PRIVATE/PUBLIC [NO DATA]               ->  Set lobby visibility (moved to avoid conflict with code 38)
 ```
 
@@ -72,12 +73,13 @@ Every code (1 ... 255) is on ONE BYTE only
 33  LOBBY CREATED               [6B lobby_code]                             ->  Response to 32, send the created lobby code
 35  LOBBIES LIST                [X times (6B lobby codes)]                  ->  Response to 34, send all public lobbies
 37  GAME STARTING               [NO DATA]                                   ->  Broadcast to all lobby clients
-38  PLAYERS LIST                [X times (4B id + 32B username)]            ->  Send all players names
+38  PLAYERS LIST                [X times (4B id + 1B team + 32B username)]  ->  Send all players names
 39  LOBBY VISIBILITY CHANGED    [1B bool public]                            ->  Send to clients in the lobby
 42  LOBBY DESTROYED             [NO DATA]                                   ->  Send to all clients in the destroyed lobby, sending them all back to main menu
 43  LOBBY FULL                  [NO DATA]                                   ->  Respond to 30 if lobby is full
 44  BAD LOBBY CODE              [NO DATA]                                   ->  Respond to 30 if invalid code given
 45  NOT ADMIN                   [NO DATA]                                   ->  Send if client that sent 35 or 68 is not admin of the lobby
+47  TEAM FULL                   [NO DATA]                                   ->  Respond to 41 if the team is full
 ```
 
 ### 50 ... 89 → in game codes
@@ -85,11 +87,11 @@ Every code (1 ... 255) is on ONE BYTE only
 
 ```
 51  PLAYERS INIT            [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 8B mana + 1B champ)]
-52  BUILDINGS INIT          [X times (4B id + 4B x + 4B y + 8B hp + 4B type + 4B range)]
+52  BUILDINGS INIT          [X times (4B id + 1B team + 4B x + 4B y + 8B hp + 4B type + 4B range)]
 
 61  PLAYERS UPDATES         [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 8B mana + 1B level + 16 times (1B effect) )]
 62  BUILDINGS UPDATES       [X times (4B id + 8B hp)]
-63  CREATURES UPDATES       [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 4B type + 16 times (1B effect) )]
+63  CREATURES UPDATES       [X times (4B id + 1B team + 4B x + 4B y + 1B direction + 8B hp + 4B type + 16 times (1B effect) )]
 64  PROJECTILES UPDATES     [X times (4B id + 4B x + 4B y + 4B type)]
 65  COLLECTIBLES UPDATES    [X times (4B id + 4B x + 4B y + 4B type)]
 66  INVENTORIES UPDATES     [X times (4B playerid + 6 times (4B itemid) + 4B gold)]

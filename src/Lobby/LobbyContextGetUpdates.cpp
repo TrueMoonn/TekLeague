@@ -251,3 +251,10 @@ std::optional<net::STATS_UPDATES> LobbyContext::tryGetStatsUpdates() {
 
     return getStatsUpdates();
 }
+
+bool LobbyContext::shouldSendPlayersList() {
+    if (game_state != LobbyGameState::PRE_GAME)
+        return false;
+
+    return players_list_update.checkDelay();
+}
