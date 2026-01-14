@@ -88,7 +88,7 @@ Every code (1 ... 255) is on ONE BYTE only
 52  BUILDINGS INIT          [X times (4B id + 4B x + 4B y + 8B hp + 4B type + 4B range)]
 
 61  PLAYERS UPDATES         [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 8B mana + 1B level + 16 times (1B effect) )]
-62  BUILDING UPDATES        [X times (4B id + 8B hp)]
+62  BUILDINGS UPDATES       [X times (4B id + 8B hp)]
 63  CREATURES UPDATES       [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 4B type + 16 times (1B effect) )]
 64  PROJECTILES UPDATES     [X times (4B id + 4B x + 4B y + 4B type)]
 65  COLLECTIBLES UPDATES    [X times (4B id + 4B x + 4B y + 4B type)]
