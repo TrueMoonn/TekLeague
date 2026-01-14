@@ -7,7 +7,7 @@
 
 #include <ECS/Entity.hpp>
 
-#include "components/button.hpp"
+#include "components/ui/button.hpp"
 
 void registerButton(Game& game) {
     game.registerComponent<Button>("button",

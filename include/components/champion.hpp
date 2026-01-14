@@ -8,6 +8,7 @@
 #pragma once
 
     #include "Game.hpp"
+#include "clock.hpp"
 
 enum class ChampionState {
     IDLE_BOT = 0,
@@ -31,8 +32,8 @@ enum DamageType : std::size_t {
 struct Spell {
     std::string name;
     DamageType dmgType;
-    std::size_t cooldown;
-    std::size_t castTime;
+    te::Timestamp cooldown;
+    te::Timestamp castTime;
     std::array<std::size_t, DamageType::LIMIT> ratios;
 };
 
