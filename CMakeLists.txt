@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(tek_league)
+project(TekLeague)
 
 ########## SETUP ##########
 set(CMAKE_CXX_STANDARD 23)
@@ -26,6 +26,47 @@ endif()
 
 ########## TRUE ENGINE ##########
 add_subdirectory(TrueEngine)
+
+########## COMMUN ##########
+add_library(${PROJECT_NAME} STATIC
+    ${GAME_SRC_DIR}/Game.cpp
+
+    # COMPONENTS
+    ${GAME_SRC_DIR}/components/champion.cpp
+
+    ${GAME_SRC_DIR}/components/competences/target.cpp
+    ${GAME_SRC_DIR}/components/competences/auto_attack.cpp
+    ${GAME_SRC_DIR}/components/competences/auto_track.cpp
+
+    ${GAME_SRC_DIR}/components/items/inventory.cpp
+    ${GAME_SRC_DIR}/components/items/item.cpp
+
+    ${GAME_SRC_DIR}/components/stats/stat_pool.cpp
+    ${GAME_SRC_DIR}/components/stats/xp.cpp
+    ${GAME_SRC_DIR}/components/stats/mana.cpp
+    ${GAME_SRC_DIR}/components/stats/health.cpp
+    ${GAME_SRC_DIR}/components/stats/gold.cpp
+
+    ${GAME_SRC_DIR}/components/ui/button.cpp
+
+    # SYSTEMS
+    ${GAME_SRC_DIR}/systems/champ_mov.cpp
+    ${GAME_SRC_DIR}/systems/entity_direction.cpp
+    ${GAME_SRC_DIR}/systems/auto_attacks.cpp
+    ${GAME_SRC_DIR}/systems/track_target.cpp
+
+)
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        ${GAME_HDR_DIR}
+        ${TE_HDR_DIR}
+)
+
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        TrueEngine
+)
 
 ########## BINARIES ##########
 add_subdirectory(client)
