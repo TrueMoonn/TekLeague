@@ -46,6 +46,8 @@ void Server::sendAutomatic() {
                     messages_to_send.emplace_back(id, msg->serialize());
                 if (auto msg = ctx.tryGetProjectilesUpdates())
                     messages_to_send.emplace_back(id, msg->serialize());
+                if (auto msg = ctx.tryGetCollectiblesUpdates())
+                    messages_to_send.emplace_back(id, msg->serialize());
             }
         }
 

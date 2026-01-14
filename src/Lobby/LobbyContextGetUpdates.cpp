@@ -22,6 +22,7 @@ net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
         if (entity < eField::CHAMPION_BEGIN || entity > eField::CHAMPION_END)
             continue;
 
+        // TODO(x): fill state with real all data
         net::PlayerUpdate state;
         state.id = static_cast<uint32_t>(entity),
         state.x = pos.x,
@@ -74,6 +75,7 @@ net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
         if (entity < eField::CREATURES_BEGIN || entity > eField::CREATURES_END)
             continue;
 
+        // TODO(x): fill state with real all data
         net::CreatureUpdate state {
             .id = static_cast<uint32_t>(entity),
             .x = position.x,
@@ -102,6 +104,7 @@ net::PROJECTILES_UPDATES LobbyContext::getProjectilesUpdates() {
            entity > eField::PROJECTILES_END)
             continue;
 
+        // TODO(x): fill state with real all data
         net::ProjectileUpdate state {
             .id = entity,
             .x = position.x,
@@ -110,6 +113,32 @@ net::PROJECTILES_UPDATES LobbyContext::getProjectilesUpdates() {
         };
 
         msg.projectiles.push_back(state);
+    }
+
+    return msg;
+}
+
+net::COLLECTIBLES_UPDATES LobbyContext::getCollectiblesUpdates() {
+    net::COLLECTIBLES_UPDATES msg;
+
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& positions = registry.getComponents<addon::physic::Position2>();
+
+    for (auto&& [entity, position] :
+        ECS::IndexedDenseZipper(positions)) {
+        if (entity < eField::COLLECTIBLES_BEGIN ||
+           entity > eField::COLLECTIBLES_END)
+            continue;
+
+        // TODO(x): fill state with real all data
+        net::CollectibleUpdate state {
+            .id = entity,
+            .x = position.x,
+            .y = position.y,
+            .type = 0
+        };
+
+        msg.collectibles.push_back(state);
     }
 
     return msg;
@@ -136,10 +165,19 @@ std::optional<net::CREATURES_UPDATES> LobbyContext::tryGetCreaturesUpdates() {
     return getCreaturesUpdates();
 }
 
-std::optional<net::PROJECTILES_UPDATES> LobbyContext::tryGetProjectilesUpdates(
+std::optional<net::PROJECTILES_UPDATES>
+LobbyContext::tryGetProjectilesUpdates(
 ) {
     if (!creatures_update.checkDelay())
         return std::nullopt;
 
     return getProjectilesUpdates();
+}
+
+std::optional<net::COLLECTIBLES_UPDATES>
+LobbyContext::tryGetCollectiblesUpdates() {
+    if (!creatures_update.checkDelay())
+        return std::nullopt;
+
+    return getCollectiblesUpdates();
 }
