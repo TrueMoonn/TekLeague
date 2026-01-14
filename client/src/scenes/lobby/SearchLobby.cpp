@@ -8,7 +8,8 @@
 #include <print>
 
 #include <events.hpp>
-
+#include <sfml/components/text.hpp>
+#include <sfml/components/drawable.hpp>
 
 #include "GameTool.hpp"
 #include "Network/generated_messages.hpp"
@@ -27,6 +28,11 @@ void setSearchLobbyScene(Client& game) {
 
     slobby.entities = {
         {SEARCH_CREATE_LOBBY, "create_lobby", {560.f, 700.f}},
+    };
+
+    slobby.on_activate = [&game]() {
+        auto& texts = game.getComponent<addon::sfml::Text>();
+        texts.getComponent(SEARCH_CREATE_LOBBY).setString("CREATE");
     };
 
     std::size_t idx = game.addScene(slobby);

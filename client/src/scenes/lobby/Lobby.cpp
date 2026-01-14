@@ -5,8 +5,10 @@
 ** Lobby.cpp
 */
 
-#include <events.hpp>
 #include <print>
+
+#include <events.hpp>
+#include <sfml/components/text.hpp>
 
 #include "scenes/lobby.hpp"
 #include "scenes.hpp"
@@ -25,7 +27,12 @@ void setLobbyScene(Client& game) {
         {SEARCH_BOOKCOVER, "bookcover", {512.f, 220.f}},
         {SEARCH_BOOKLEFT, "bookleft", {542.f, 250.f}},
         {SEARCH_BOOKRIGHT, "bookright", {958.f, 250.f}},
-        {SEARCH_RETURN, "sl_return_button", {562.f, 270.f}},
+        {SEARCH_RETURN, "lobby_return_button", {562.f, 270.f}},
+    };
+
+    lobby.on_activate = [&game]() {
+        auto& texts = game.getComponent<addon::sfml::Text>();
+        texts.getComponent(SEARCH_RETURN).setString("BACK");
     };
 
     std::size_t idx = game.addScene(lobby);
