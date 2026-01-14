@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** TekLeague
 ** File description:
-** search_lobby.hpp
+** lobby.hpp
 */
 
 #pragma once
@@ -19,3 +19,5 @@
         MENU_BEGIN + 2)
     #define SEARCH_RETURN static_cast<std::size_t>(TEMP_SCENE\
         MENU_BEGIN + 3)
+    #define SEARCH_CREATE_LOBBY static_cast<std::size_t>(TEMP_SCENE\
+        MENU_BEGIN + 4)
