@@ -192,6 +192,15 @@ void Client::registerMessageHandlers() {
         emit("lobby:not_admin");
     });
 
+    registerPacketHandler(47, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received TEAM_FULL packet");
+        auto msg = net::TEAM_FULL::deserialize(data);
+
+        _lobby_data.handleTeamFull(msg);
+
+        emit("lobby:team_full");
+    });
+
     registerPacketHandler(88, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received ADMIN_GAME_PAUSED packet");
         auto msg = net::ADMIN_GAME_PAUSED::deserialize(data);
