@@ -9,6 +9,8 @@
 #include <ECS/DenseZipper.hpp>
 #include <sfml/components/text.hpp>
 #include <sfml/components/focus.hpp>
+#include <Network/generated_messages.hpp>
+#include <print>
 
 #include "scenes/main.hpp"
 #include "ECS/DenseSA.hpp"
@@ -35,6 +37,9 @@ void setMainScene(Client& game) {
     };
 
     std::size_t idx = game.addScene(main);
+    game.subForScene(idx, "lobby:logged_in", [&game]() {
+        // ok
+    });
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Enter]) {
             GET_ENTITY_CMPT(
@@ -42,6 +47,10 @@ void setMainScene(Client& game) {
                 MAIN_USERNAME).focus = false;
             game.client_name = GET_ENTITY_CMPT(
                 game.getComponent<addon::sfml::Text>(), MAIN_USERNAME).str;
+            net::LOGIN msg;
+            for (std::size_t i = 0; i < game.client_name.size(); ++i)
+                msg.username[i] = game.client_name[i];
+            game.sendToServer(msg.serialize());
         }
     });
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
@@ -77,6 +86,8 @@ void setMainScene(Client& game) {
                 game.updateScene(te::sStatus::PAUSE, SCAST(SCENES::MAIN));
                 game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::LOBBY));
                 game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::SEARCH_LOBBY));
+                net::GET_ALL_PUBLIC_LOBBIES msg;
+                game.sendToServer(msg.serialize());
                 break;
             case MAIN_BUTTON_SETTINGS:
                 game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::MAIN));

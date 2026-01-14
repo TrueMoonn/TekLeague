@@ -25,6 +25,7 @@ else()
 endif()
 
 ########## TRUE ENGINE ##########
+set(USE_CUSTOM_PROTOCOL ON CACHE BOOL "Use TekLeague protocol" FORCE)
 add_subdirectory(TrueEngine)
 
 ########## COMMUN ##########

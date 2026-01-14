@@ -8,10 +8,8 @@ set(GAME_SERVER_HDR_DIR "${PROJECT_SOURCE_DIR}/include")
 add_executable(${PROJECT_NAME}
     ${GAME_SERVER_SRC_DIR}/main.cpp
     ${GAME_SERVER_SRC_DIR}/Server.cpp
-
-    # SCENES
-    ${GAME_SERVER_SRC_DIR}/scenes/Wait.cpp
-    ${GAME_SERVER_SRC_DIR}/scenes/InGame.cpp
+    ${GAME_SRC_DIR}/Lobby/LobbyContext.cpp
+    ${GAME_SRC_DIR}/Lobby/Lobby.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

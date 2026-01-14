@@ -19,7 +19,10 @@ void setInLobbyScene(Client& game) {
         {"draw", "draw_text", "display"}  // RENDER
     }};
 
-    inlobby.entities = {};
+    inlobby.entities = {
 
+    };
+
+    // récupérer les infos avec game.getLobbyData();
     std::size_t idx = game.addScene(inlobby);
 }

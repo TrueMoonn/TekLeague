@@ -6,6 +6,7 @@
 */
 
 #include <events.hpp>
+#include <print>
 
 #include "scenes/lobby.hpp"
 #include "scenes.hpp"
@@ -38,6 +39,7 @@ void setLobbyScene(Client& game) {
                 break;
         }
     });
+
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape]) {
             game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
