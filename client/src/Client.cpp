@@ -6,7 +6,6 @@
 */
 
 #include <print>
-#include <chrono>
 #include <sys/socket.h>
 #include <thread>
 
@@ -212,6 +211,15 @@ void Client::registerMessageHandlers() {
         auto msg = net::PLAYERS_UPDATES::deserialize(data);
         // Update game state with player positions, hp, etc.
     });
+}
+
+std::optional<net::PlayerListEntry> Client::getMyInfos() {
+    auto& players = getPlayers();
+    for (auto& player : players) {
+        if (player.id == getClientId())
+            return player;
+    }
+    return std::nullopt;
 }
 
 void Client::run() {
