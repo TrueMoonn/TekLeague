@@ -60,8 +60,8 @@ ECS::Entity Game::nextEntity(eType type) {
             case eType::MAP:
                 _nextEntities[type] = eField::MAP_BEGIN;
                 break;
-            case eType::MOB:
-                _nextEntities[type] = eField::MOB_BEGIN;
+            case eType::CREATURES:
+                _nextEntities[type] = eField::CREATURES_BEGIN;
                 break;
             case eType::BUILDINGS:
                 _nextEntities[type] = eField::BUILDINGS_BEGIN;
