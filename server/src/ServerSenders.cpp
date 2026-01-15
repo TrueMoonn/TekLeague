@@ -27,7 +27,7 @@
 #include <network/GameServer.hpp>
 
 #include "Server.hpp"
-#include "lobby/LobbyContext.hpp"
+#include "LobbyContext.hpp"
 
 void Server::sendAutomatic() {
     try {
