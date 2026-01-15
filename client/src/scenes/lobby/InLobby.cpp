@@ -94,15 +94,16 @@ void setInLobbyScene(Client& game) {
     game.subForScene(idx, "lobby:players_updated", [&game]() {
         updateLobbyInfos(game);
     });
+    game.subForScene(idx, "game:init", [&game]() {
+        game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::MAIN));
+        game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
+        game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
+        game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
+    });
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
         switch (e) {
             case LOBBY_LAUNCH_GAME:
-                // net::ADMIN_START_GAME msg;
-                // game.sendToServer(msg.serialize());
-                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::MAIN));
-                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
-                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
-                game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
+                game.sendStartGame();
                 break;
             case LOBBY_SELECT_TEAM_BLUE:
                 game.sendWantThisTeam(1);

@@ -8,7 +8,13 @@
 #include <print>
 #include <cstring>
 
+#include <entity_spec/components/team.hpp>
+#include <interaction/components/player.hpp>
+
 #include "Client.hpp"
+#include "components/champion.hpp"
+#include "components/competences/target.hpp"
+#include "entities.hpp"
 
 void Client::handleLoggedIn(const net::LOGGED_IN& msg) {
     _client_id = msg.id;
@@ -114,4 +120,17 @@ void Client::handlePing() {
 
 void Client::handlePong() {
     // TODO(PIERRE): si ca fait longtemps = deco
+}
+
+void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
+    auto& targets = getComponent<Target>();
+    for (auto& player : msg.players) {
+        ECS::Entity e = nextEntity(eType::CHAMPION);
+        createEntity(e, CHAMPIONS[player.champ], {player.x, player.y});
+        targets.getComponent(e).x = player.x;
+        targets.getComponent(e).y = player.y;
+        if (player.id == getClientId()) {
+            createComponent<addon::intact::Player>(e);
+        }
+    }
 }
