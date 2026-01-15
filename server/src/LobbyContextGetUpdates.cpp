@@ -7,21 +7,29 @@
 #include <entity_spec/components/health.hpp>
 #include <interaction/components/player.hpp>
 
+#include "components/competences/spells.hpp"
 #include "entity_spec/components/team.hpp"
 #include "LobbyContext.hpp"
+#include "my.hpp"
 
 net::PLAYERS_INIT LobbyContext::getPlayersInit() {
     net::PLAYERS_INIT msg;
 
     auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
     auto& positions = registry.getComponents<addon::physic::Position2>();
+    auto& teams = registry.getComponents<addon::eSpec::Team>();
 
-    for (auto&& [entity, pos] :
-        ECS::IndexedDenseZipper(positions)) {
+    for (auto&& [entity, pos, team] :
+        ECS::IndexedDenseZipper(positions, teams)) {
         if (entity < eField::CHAMPION_BEGIN || entity > eField::CHAMPION_END)
             continue;
 
         net::PlayerInit state;
+        state.team = 0;
+        for (std::size_t i = 0; i < TEAMS.size(); ++i) {
+            if (team.name == TEAMS[i])
+               state.team = i;
+        }
         state.id = static_cast<uint32_t>(entity),
         state.x = pos.x,
         state.y = pos.y,
