@@ -6,11 +6,37 @@
 */
 
 #include <SFML/Graphics/Text.hpp>
+#include <cstddef>
 #include <events.hpp>
 #include <sfml/components/text.hpp>
 
 #include "scenes/lobby.hpp"
 #include "scenes.hpp"
+
+static void updateLobbyInfos(Client &game) {
+    const auto& players = game.getLobbyData().getPlayersInLobby();
+    std::size_t blue = 0;
+    std::size_t red = 0;
+    for (std::size_t i = 0; i < 6; ++i) {
+        game.getComponent<addon::sfml::Text>().getComponent(
+            i + LOBBY_USER_BLUE_1).setString("...");
+    }
+    for (std::size_t i = 0; i < players.size(); ++i) {
+        if (players[i].team == 1 && i < 3) {
+            game.getComponent<addon::sfml::Text>().getComponent(
+                blue + LOBBY_USER_BLUE_1).setString(players[i].username);
+            blue += 1;
+        } else if (players[i].team == 2 && i < 3) {
+            game.getComponent<addon::sfml::Text>().getComponent(
+                red + LOBBY_USER_RED_1).setString(players[i].username);
+            red += 1;
+        }
+    }
+    // if (red == 3) game.removeEntity(LOBBY_SELECT_TEAM_RED);
+    // else game.createEntity(LOBBY_SELECT_TEAM_RED, "select_red", {1000.f, 320.f});
+    // if (blue == 3) game.removeEntity(LOBBY_SELECT_TEAM_BLUE);
+    // else game.createEntity(LOBBY_SELECT_TEAM_BLUE, "select_blue", {650.f, 320.f});
+}
 
 void setInLobbyScene(Client& game) {
     te::Scene inlobby;
@@ -29,14 +55,12 @@ void setInLobbyScene(Client& game) {
         {LOBBY_USER_RED_1, "user_red_side_lobby", {980.f, 400.f}},
         {LOBBY_USER_RED_2, "user_red_side_lobby", {980.f, 510.f}},
         {LOBBY_USER_RED_3, "user_red_side_lobby", {980.f, 620.f}},
+        {LOBBY_SELECT_TEAM_BLUE, "select_blue", {650.f, 320.f}},
+        {LOBBY_SELECT_TEAM_RED, "select_red", {1100.f, 320.f}},
     };
 
     inlobby.on_activate = [&game]() {
-        const auto& lobby_names = game.getLobbyData().getPlayersInLobby();
-        for (std::size_t i = 0; i < lobby_names.size(); ++i) {
-            game.getComponent<addon::sfml::Text>().getComponent(
-                i + LOBBY_USER_BLUE_1).setString(lobby_names[i].username);
-        }
+        updateLobbyInfos(game);
         if (game.getLobbyData().isAdmin())
             game.createEntity(LOBBY_LAUNCH_GAME, "launch_game", {1100.f, 750.f});
     };
@@ -46,6 +70,9 @@ void setInLobbyScene(Client& game) {
     };
 
     std::size_t idx = game.addScene(inlobby);
+    game.subForScene(idx, "lobby:players_updated", [&game]() {
+        updateLobbyInfos(game);
+    });
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
         switch (e) {
             case LOBBY_LAUNCH_GAME:
@@ -53,6 +80,16 @@ void setInLobbyScene(Client& game) {
                 // net::LEAVE_LOBBY msg;
                 // game.sendToServer(msg.serialize());
                 game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
+                break;
+            case LOBBY_SELECT_TEAM_BLUE:
+                net::WANT_THIS_TEAM msgb;
+                msgb.team = 1;
+                game.sendToServer(msgb.serialize());
+                break;
+            case LOBBY_SELECT_TEAM_RED:
+                net::WANT_THIS_TEAM msgr;
+                msgr.team = 2;
+                game.sendToServer(msgr.serialize());
                 break;
         }
     });
