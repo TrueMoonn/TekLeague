@@ -22,6 +22,9 @@ amount = 300
 max = 300
 regen = 3
 
+[ENTITIES.Gules.xp]
+amount = 0
+
 [ENTITIES.Gules.hitbox]
 left = 0.0
 top = 0.0

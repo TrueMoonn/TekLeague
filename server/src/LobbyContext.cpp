@@ -9,13 +9,17 @@
 #include <interaction/components/player.hpp>
 
 #include "LobbyContext.hpp"
-#include "ECS/Entity.hpp"
+#include "components/competences/target.hpp"
 #include "entities.hpp"
+#include "systems.hpp"
 #include "entity_spec/components/team.hpp"
 #include "my.hpp"
 
 LobbyContext::LobbyContext(uint max_players, const std::string& code)
-    : lobby(max_players, code, PLUGINS_PATH), max_clients(max_players) {}
+    : lobby(max_players, code, PLUGINS_PATH), max_clients(max_players) {
+    for (auto& sys : SERVER_SYSTEMS)
+        lobby.createSystem(sys);
+}
 
 void LobbyContext::run() {
     lobby.run();
@@ -55,6 +59,7 @@ void LobbyContext::createPlayersEntities() {
 
     auto& teams = game.getComponent<addon::eSpec::Team>();
     auto& positions = game.getComponent<addon::physic::Position2>();
+    auto& targets = game.getComponent<Target>();
 
     for (auto& player : players) {
         ECS::Entity e = game.nextEntity(eType::CHAMPION);
@@ -67,9 +72,13 @@ void LobbyContext::createPlayersEntities() {
             if (plist.team == 1) {
                 positions.getComponent(e).x = BLUE_POS_X;
                 positions.getComponent(e).y = BLUE_POS_Y;
+                targets.getComponent(e).x = BLUE_POS_X;
+                targets.getComponent(e).y = BLUE_POS_Y;
             } else {
                 positions.getComponent(e).x = RED_POS_X;
                 positions.getComponent(e).y = RED_POS_Y;
+                targets.getComponent(e).x = RED_POS_X;
+                targets.getComponent(e).y = RED_POS_Y;
             }
         }
     }

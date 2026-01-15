@@ -63,12 +63,6 @@ void Client::receiveMessages() {
     update(0);
 }
 
-void Client::updateGame() {
-    if (_framelimit.checkDelay()) {
-        runSystems();
-    }
-}
-
 void Client::registerMessageHandlers() {
     registerPacketHandler(6, [this](const std::vector<uint8_t>& data) {
         (void)data;
@@ -215,9 +209,8 @@ void Client::registerMessageHandlers() {
 
     registerPacketHandler(61, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received PLAYERS_UPDATES packet");
-        // TODO(Pierre): Handle PLAYERS_UPDATES when in game
         auto msg = net::PLAYERS_UPDATES::deserialize(data);
-        // Update game state with player positions, hp, etc.
+        handlePlayersUpdate(msg);
     });
 }
 

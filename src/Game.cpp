@@ -40,7 +40,7 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
     _running = true;
 }
 
-Game::Game(uint max_players, const std::string& code, const std::string& ppath) 
+Game::Game(uint max_players, const std::string& code, const std::string& ppath)
     : Game(ppath) {
     _max_players = max_players;
     _code = code;
@@ -87,10 +87,8 @@ ECS::Entity Game::nextEntity(eType type) {
 }
 
 void Game::run() {
-    while (_running) {
-        if (_framelimit.checkDelay())
-            runSystems();
-    }
+    if (_framelimit.checkDelay())
+        runSystems();
 }
 
 const std::string& Game::getCode() const {

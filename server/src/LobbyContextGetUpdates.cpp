@@ -8,7 +8,6 @@
 #include <interaction/components/player.hpp>
 
 #include "components/champion.hpp"
-#include "components/competences/spells.hpp"
 #include "components/competences/target.hpp"
 #include "components/stats/gold.hpp"
 #include "components/stats/health.hpp"
@@ -22,10 +21,10 @@
 net::PLAYERS_INIT LobbyContext::getPlayersInit() {
     net::PLAYERS_INIT msg;
 
-    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
-    auto& positions = registry.getComponents<addon::physic::Position2>();
-    auto& teams = registry.getComponents<addon::eSpec::Team>();
-    auto& champs = registry.getComponents<Champion>();
+    auto& game = getLobby();
+    auto& positions = game.getComponent<addon::physic::Position2>();
+    auto& teams = game.getComponent<addon::eSpec::Team>();
+    auto& champs = game.getComponent<Champion>();
 
     for (auto&& [entity, pos, team, champ] :
         ECS::IndexedDenseZipper(positions, teams, champs)) {
@@ -43,8 +42,8 @@ net::PLAYERS_INIT LobbyContext::getPlayersInit() {
         }
         state.id = 0;
         for (auto& client : _player_entities) {
-            if (client.first == entity) {
-                state.id = client.second;
+            if (client.second == entity) {
+                state.id = client.first;
                 break;
             }
         }
@@ -61,10 +60,10 @@ net::PLAYERS_INIT LobbyContext::getPlayersInit() {
 net::BUILDINGS_INIT LobbyContext::getBuildingsInit() {
     net::BUILDINGS_INIT msg;
 
-    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
-    auto& positions = registry.getComponents<addon::physic::Position2>();
-    auto& healths = registry.getComponents<Health>();
-    auto& teams = registry.getComponents<addon::eSpec::Team>();
+    auto& game = getLobby();
+    auto& positions = game.getComponent<addon::physic::Position2>();
+    auto& healths = game.getComponent<Health>();
+    auto& teams = game.getComponent<addon::eSpec::Team>();
     // get le component building
 
     for (auto&& [entity, pos, health, team] :
@@ -89,13 +88,13 @@ net::BUILDINGS_INIT LobbyContext::getBuildingsInit() {
 net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
     net::PLAYERS_UPDATES msg;
 
-    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
-    auto& positions = registry.getComponents<addon::physic::Position2>();
-    auto& healths = registry.getComponents<Health>();
-    auto& champs = registry.getComponents<Champion>();
-    auto& levels = registry.getComponents<Xp>();
-    auto& manas = registry.getComponents<Mana>();
-    auto& targets = registry.getComponents<Target>();
+    auto& game = getLobby();
+    auto& positions = game.getComponent<addon::physic::Position2>();
+    auto& healths = game.getComponent<Health>();
+    auto& champs = game.getComponent<Champion>();
+    auto& levels = game.getComponent<Xp>();
+    auto& manas = game.getComponent<Mana>();
+    auto& targets = game.getComponent<Target>();
 
     for (auto&& [entity, pos, health, champ, level, mana, target] :
         ECS::IndexedDenseZipper(positions, healths, champs, levels, manas, targets)) {
@@ -120,8 +119,8 @@ net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
 net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
     net::BUILDINGS_UPDATES msg;
 
-    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
-    auto& healths = registry.getComponents<Health>();
+    auto& game = getLobby();
+    auto& healths = game.getComponent<Health>();
     // Get component building puis regarder le name pour tower/nexus
 
     for (auto&& [entity, health] :
@@ -143,9 +142,9 @@ net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
 net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
     net::CREATURES_UPDATES msg;
 
-    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
-    auto& healths = registry.getComponents<Health>();
-    auto& positions = registry.getComponents<addon::physic::Position2>();
+    auto& game = getLobby();
+    auto& healths = game.getComponent<Health>();
+    auto& positions = game.getComponent<addon::physic::Position2>();
 
     for (auto&& [entity, position, health] :
         ECS::IndexedDenseZipper(positions, healths)) {

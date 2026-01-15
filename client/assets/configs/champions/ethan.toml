@@ -1,7 +1,5 @@
 [ENTITIES.ethan]
 drawable = true
-player = true
-champion = true
 
 [ENTITIES.ethan.sprite]
 path = "client/assets/images/champions/ethan/ethan.png"
