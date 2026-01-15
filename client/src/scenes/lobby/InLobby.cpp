@@ -101,14 +101,10 @@ void setInLobbyScene(Client& game) {
                 game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
                 break;
             case LOBBY_SELECT_TEAM_BLUE:
-                net::WANT_THIS_TEAM msgb;
-                msgb.team = 1;
-                game.sendToServer(msgb.serialize());
+                game.sendWantThisTeam(1);
                 break;
             case LOBBY_SELECT_TEAM_RED:
-                net::WANT_THIS_TEAM msgr;
-                msgr.team = 2;
-                game.sendToServer(msgr.serialize());
+                game.sendWantThisTeam(2);
                 break;
         }
     });

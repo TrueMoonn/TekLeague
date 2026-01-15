@@ -72,13 +72,9 @@ void setMainScene(Client& game) {
         if (keys[te::Key::Enter]) {
             game.getComponent<addon::sfml::Focus>().
                 getComponent(MAIN_USERNAME).focus = false;
-            game.client_name = game.getComponent<addon::sfml::Text>()
-                .getComponent(MAIN_USERNAME).getString();
-            net::LOGIN msg;
-            memset(msg.username, 0, sizeof(msg.username));
-            for (std::size_t i = 0; i < game.client_name.size(); ++i)
-                msg.username[i] = game.client_name[i];
-            game.sendToServer(msg.serialize());
+            game.setUsername(game.getComponent<addon::sfml::Text>()
+                .getComponent(MAIN_USERNAME).getString());
+            game.sendLogin(game.getUsername());
         }
     });
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
@@ -118,8 +114,7 @@ void setMainScene(Client& game) {
                 game.updateScene(te::sStatus::PAUSE, SCAST(SCENES::MAIN));
                 game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::LOBBY));
                 game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::SEARCH_LOBBY));
-                net::GET_ALL_PUBLIC_LOBBIES msg;
-                game.sendToServer(msg.serialize());
+                game.sendGetPublicLobbies();
                 break;
             case MAIN_BUTTON_SETTINGS:
                 game.updateScene(te::sStatus::PAUSE, SCAST(SCENES::MAIN));

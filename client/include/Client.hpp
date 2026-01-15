@@ -61,14 +61,13 @@ class Client : public Game, public te::network::GameClient {
 
     ////// Getters //////
     const std::string& getUsername() const { return _username; }
+    void setUsername(const std::string& username) { _username = username; }
     uint32_t getClientId() const { return _client_id; }
     bool isAdmin() const { return _is_admin; }
     const std::vector<std::string>& getCachedLobbiesList() const {
         return _cached_lobbies_list; }
     bool isLoggedIn() const { return !_username.empty(); }
     bool isInLobby() const { return !getCode().empty(); }
-
-    std::string client_name = "default";
 
  private:
     std::string _username;
