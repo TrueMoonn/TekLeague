@@ -71,9 +71,10 @@
         { "name": "id", "type": "uint32" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
-        { "name": "direction", "type": "uint8" },
-        { "name": "hp", "type": "double" },
-        { "name": "mana", "type": "double" },
+        { "name": "direction_x", "type": "float" },
+        { "name": "direction_y", "type": "float" },
+        { "name": "hp", "type": "uint32" },
+        { "name": "mana", "type": "uint32" },
         { "name": "level", "type": "uint8" },
         {
           "name": "effects",
