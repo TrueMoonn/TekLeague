@@ -133,6 +133,8 @@ class Server : public te::network::GameServer {
         const net::Address& sender);
     void handleWantThisTeam(const std::vector<uint8_t>& data,
         const net::Address& sender);
+    void handleClientInput(const std::vector<uint8_t>& data,
+        const net::Address& sender);
     void handleAdminPauseGame(const std::vector<uint8_t>& data,
         const net::Address& sender);
     void handleAdminEndGame(const std::vector<uint8_t>& data,
