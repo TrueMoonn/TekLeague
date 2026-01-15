@@ -9,25 +9,39 @@
 #include <cstddef>
 #include <events.hpp>
 #include <sfml/components/text.hpp>
+#include <sfml/components/drawable.hpp>
 
+#include "components/ui/button.hpp"
 #include "scenes/lobby.hpp"
 #include "scenes.hpp"
 
 static void updateLobbyInfos(Client &game) {
+    auto& texts = game.getComponent<addon::sfml::Text>();
+    auto& draws = game.getComponent<addon::sfml::Drawable>();
+    auto& buttons = game.getComponent<Button>();
+    if (game.getLobbyData().isAdmin() && !draws.hasComponent(LOBBY_LAUNCH_GAME)) {
+        game.createComponent<addon::sfml::Drawable>(LOBBY_LAUNCH_GAME);
+        game.createComponent<Button>(LOBBY_LAUNCH_GAME);
+        texts.getComponent(LOBBY_LAUNCH_GAME).setString("START");
+     } else if (!game.getLobbyData().isAdmin() && draws.hasComponent(LOBBY_LAUNCH_GAME)) {
+        draws.removeComponent(LOBBY_LAUNCH_GAME);
+        buttons.removeComponent(LOBBY_LAUNCH_GAME);
+        texts.getComponent(LOBBY_LAUNCH_GAME).setString("");
+    }
     const auto& players = game.getLobbyData().getPlayersInLobby();
     std::size_t blue = 0;
     std::size_t red = 0;
     for (std::size_t i = 0; i < 6; ++i) {
-        game.getComponent<addon::sfml::Text>().getComponent(
+        texts.getComponent(
             i + LOBBY_USER_BLUE_1).setString("...");
     }
     for (std::size_t i = 0; i < players.size(); ++i) {
         if (players[i].team == 1 && i < 3) {
-            game.getComponent<addon::sfml::Text>().getComponent(
+            texts.getComponent(
                 blue + LOBBY_USER_BLUE_1).setString(players[i].username);
             blue += 1;
         } else if (players[i].team == 2 && i < 3) {
-            game.getComponent<addon::sfml::Text>().getComponent(
+            texts.getComponent(
                 red + LOBBY_USER_RED_1).setString(players[i].username);
             red += 1;
         }
@@ -57,12 +71,11 @@ void setInLobbyScene(Client& game) {
         {LOBBY_USER_RED_3, "user_red_side_lobby", {980.f, 620.f}},
         {LOBBY_SELECT_TEAM_BLUE, "select_blue", {650.f, 320.f}},
         {LOBBY_SELECT_TEAM_RED, "select_red", {1100.f, 320.f}},
+        {LOBBY_LAUNCH_GAME, "launch_game", {1100.f, 750.f}},
     };
 
     inlobby.on_activate = [&game]() {
         updateLobbyInfos(game);
-        if (game.getLobbyData().isAdmin())
-            game.createEntity(LOBBY_LAUNCH_GAME, "launch_game", {1100.f, 750.f});
     };
 
     inlobby.on_deactivate = [&game]() {
