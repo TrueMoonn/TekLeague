@@ -17,6 +17,7 @@
 #include "entity_spec/components/team.hpp"
 #include "LobbyContext.hpp"
 #include "my.hpp"
+#include "physic/components/velocity.hpp"
 
 net::PLAYERS_INIT LobbyContext::getPlayersInit() {
     net::PLAYERS_INIT msg;
@@ -95,14 +96,17 @@ net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
     auto& levels = game.getComponent<Xp>();
     auto& manas = game.getComponent<Mana>();
     auto& targets = game.getComponent<Target>();
+    auto& velocities = game.getComponent<addon::physic::Velocity2>();
 
-    for (auto&& [entity, pos, health, champ, level, mana, target] :
-        ECS::IndexedDenseZipper(positions, healths, champs, levels, manas, targets)) {
+    for (auto&& [entity, pos, health, champ, level, mana, target, vel] :
+        ECS::IndexedDenseZipper(positions, healths, champs, levels, manas, targets, velocities)) {
 
         net::PlayerUpdate state;
         state.entity = static_cast<uint32_t>(entity),
         state.x = pos.x,
         state.y = pos.y,
+        state.vel_x = vel.x;
+        state.vel_y = vel.y;
         state.hp = static_cast<double>(health.amount),
         state.level = level.amount,
         state.mana = mana.amount,
