@@ -25,6 +25,7 @@
     "PlayerListEntry": {
       "fields": [
         { "name": "id", "type": "uint32" },
+        { "name": "is_admin", "type": "uint8" },
         { "name": "team", "type": "uint8" },
         { "name": "username", "type": "string", "max_length": 32 }
       ]

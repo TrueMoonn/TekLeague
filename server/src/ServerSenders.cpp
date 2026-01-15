@@ -31,6 +31,12 @@
 
 void Server::sendAutomatic() {
     try {
+        if (ping.checkDelay()) {
+            for (const auto& client : clients) {
+                sendPing(client.first, client.second.id);
+            }
+        }
+
         std::vector<std::pair<uint, std::vector<uint8_t>>> ingame_updates;
         std::vector<uint> pre_game_lobbies;
 
@@ -57,11 +63,21 @@ void Server::sendAutomatic() {
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetStatsUpdates())
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetScore())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetGameDuration())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetScoreboard())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
                 }
             }
 
             for (uint lobby_id : pre_game_lobbies) {
                 sendPlayersListUnsafe(lobby_id);
+            }
+
+            if (lobbies_list_timestamp.checkDelay()) {
+                sendLobbiesListUnsafe();
             }
         }
 
@@ -86,6 +102,16 @@ void Server::sendPlayersUpdate() {
     } catch (const std::exception& e) {
         std::println(stderr, "[Server::sendPlayersUpdate] ERROR: {}", e.what());
     }
+}
+
+void Server::sendPing(const net::Address& address, uint32_t client_id) {
+    net::PING msg;
+    sendTo(address, msg.serialize());
+}
+
+void Server::sendPong(const net::Address& address, uint32_t client_id) {
+    net::PONG msg;
+    sendTo(address, msg.serialize());
 }
 
 void Server::sendLoggedIn(const net::Address& address, uint32_t client_id) {
@@ -134,6 +160,26 @@ void Server::sendLobbiesList(const net::Address& address) {
     sendTo(address, msg.serialize());
 }
 
+void Server::sendLobbiesListUnsafe() {
+    net::LOBBIES_LIST msg;
+
+    for (uint lobby_id : public_lobbies) {
+        if (lobbies.find(lobby_id) != lobbies.end()) {
+            msg.lobby_codes.push_back(lobbies.at(lobby_id).getCode());
+        }
+    }
+
+    auto serialized = msg.serialize();
+    for (const auto& [address, client] : clients) {
+        if (!client.in_lobby) {
+            sendTo(address, serialized);
+        }
+    }
+
+    std::println("[Server::sendLobbiesListUnsafe] Sent to all non-lobby "
+        "clients ({} lobbies)", msg.lobby_codes.size());
+}
+
 void Server::sendGameStarting(uint lobby_id) {
     std::println(
         "[Server] sendGameStarting: Broadcasting GAME_STARTING to lobby {}",
@@ -158,6 +204,7 @@ void Server::sendPlayersListUnsafe(uint lobby_id) {
             auto& client = client_opt->get();
             net::PlayerListEntry entry;
             entry.id = client.id;
+            entry.is_admin = isAdmin(address, lobby_id) ? 1 : 0;
             entry.team = client.team;
             std::memset(entry.username, 0, 32);
             std::memcpy(entry.username, client.username.c_str(),
