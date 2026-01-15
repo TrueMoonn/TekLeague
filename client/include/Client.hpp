@@ -45,11 +45,6 @@ class Client : public Game, public te::network::GameClient {
      */
     void receiveMessages();
 
-    /**
-     * @brief Update game logic
-     */
-    void updateGame();
-
     ////// Network senders //////
     void sendLogin(const std::string& username);
     void sendLogout();

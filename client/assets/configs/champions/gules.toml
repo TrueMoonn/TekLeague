@@ -1,6 +1,5 @@
 [ENTITIES.Gules]
 drawable = true
-player = true
 
 [ENTITIES.Gules.sprite]
 path = "client/assets/images/champions/gules/Gules.png"

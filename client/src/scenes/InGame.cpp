@@ -17,8 +17,6 @@
 #include <entity_spec/components/team.hpp>
 
 #include "Network/generated_messages.hpp"
-#include "components/champion.hpp"
-#include "components/competences/target.hpp"
 #include "entities.hpp"
 #include "my.hpp"
 #include "scenes.hpp"

@@ -12,9 +12,9 @@
 #include <interaction/components/player.hpp>
 #include <components/competences/target.hpp>
 #include <physic/components/position.hpp>
+#include <physic/components/velocity.hpp>
 
 #include "Client.hpp"
-#include "ECS/Entity.hpp"
 #include "components/stats/health.hpp"
 #include "components/stats/mana.hpp"
 #include "components/stats/xp.hpp"
@@ -143,6 +143,7 @@ void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
 
 void Client::handlePlayersUpdate(const net::PLAYERS_UPDATES& msg) {
     auto& pos = getComponent<addon::physic::Position2>();
+    auto& vels = getComponent<addon::physic::Velocity2>();
     auto& targets = getComponent<Target>();
     auto& healths = getComponent<Health>();
     auto& xps = getComponent<Xp>();
@@ -152,6 +153,8 @@ void Client::handlePlayersUpdate(const net::PLAYERS_UPDATES& msg) {
         ECS::Entity e = player.entity;
         targets.getComponent(e).x = player.direction_x;
         targets.getComponent(e).y = player.direction_y;
+        // vels.getComponent(e).x = player.vel_x;
+        // vels.getComponent(e).y = player.vel_y;
         pos.getComponent(e).x = player.x;
         pos.getComponent(e).y = player.y;
         healths.getComponent(e).amount = player.hp;
