@@ -212,6 +212,7 @@ net::SCORE LobbyContext::getScore() {
 net::GAME_DURATION LobbyContext::getGameDuration() {
     net::GAME_DURATION msg;
 
+    // TODO(x): use te::Timestamp to calculate elapsed time ?
     auto now = std::chrono::system_clock::now();
     auto elapsed = now - lobby.game_start_time;
     msg.duration = static_cast<uint32_t>(
