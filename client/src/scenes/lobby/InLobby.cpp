@@ -21,16 +21,16 @@ static void updateLobbyInfos(Client &game) {
     auto& texts = game.getComponent<addon::sfml::Text>();
     auto& draws = game.getComponent<addon::sfml::Drawable>();
     auto& buttons = game.getComponent<Button>();
-    if (game.getLobbyData().isAdmin() && !draws.hasComponent(LOBBY_LAUNCH_GAME)) {
+    if (game.isAdmin() && !draws.hasComponent(LOBBY_LAUNCH_GAME)) {
         game.createComponent<addon::sfml::Drawable>(LOBBY_LAUNCH_GAME);
         game.createComponent<Button>(LOBBY_LAUNCH_GAME);
         texts.getComponent(LOBBY_LAUNCH_GAME).setString("START");
-     } else if (!game.getLobbyData().isAdmin() && draws.hasComponent(LOBBY_LAUNCH_GAME)) {
+     } else if (!game.isAdmin() && draws.hasComponent(LOBBY_LAUNCH_GAME)) {
         draws.removeComponent(LOBBY_LAUNCH_GAME);
         buttons.removeComponent(LOBBY_LAUNCH_GAME);
         texts.getComponent(LOBBY_LAUNCH_GAME).setString("");
     }
-    const auto& players = game.getLobbyData().getPlayersInLobby();
+    const auto& players = game.getPlayers();
     std::size_t blue = 0;
     std::size_t red = 0;
     for (std::size_t i = 0; i < 6; ++i) {

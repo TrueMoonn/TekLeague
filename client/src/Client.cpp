@@ -10,23 +10,16 @@
 #include <sys/socket.h>
 #include <thread>
 
-#include "GameTool.hpp"
 #include "Network/generated_messages.hpp"
 #include "configs/entities.hpp"
-#include "entities_helper.hpp"
 #include "client_systems.hpp"
-#include "client_components.hpp"
 #include "Client.hpp"
-#include "LobbyContext.hpp"
 
-Client::Client() :
-    te::GameTool()
-    , te::network::GameClient(COM_DEFAULT_MODE, PROTOCOL_PATH)
-    , _lobby_data(*this) {
-    loadPlugins(CLIENT_PLUGINS_PATH);
-
-    for (auto& cmpt : CLIENT_COMPONENTS)
-        cmpt(*this);
+Client::Client()
+    : Game(CLIENT_PLUGINS_PATH)
+    , te::network::GameClient(COM_DEFAULT_MODE, PROTOCOL_PATH) {
+    
+    // Load client configs
     for (auto& conf : CLIENT_CONFIG_PATHS)
         addConfig(conf);
     for (auto& sys : CLIENT_SYSTEMS)
@@ -37,8 +30,6 @@ Client::Client() :
     createSystem("draw");
     createSystem("draw_text");
     createSystem("animate");
-
-    EntityHelper::initNextEntities(_nextEntities);
 
     sub("closed", [this]() { _running = false; });
 
@@ -57,8 +48,7 @@ void Client::connectToServer(const std::string& ip, uint16_t port) {
         throw std::runtime_error("Failed to connect to server");
     }
 
-    net::Address server_addr(ip, port);
-    _lobby_data.setServerAddress(server_addr);
+    _server_address = net::Address(ip, port);
 
     std::print("[Y] Connected to server!\n\n");
 }
@@ -83,40 +73,23 @@ void Client::updateGame() {
     }
 }
 
-void Client::handlePing() {
-    sendPong();
-}
-
-void Client::handlePong() {
-    // TODO(PIERRE): si ca fait longtemps = deco
-}
-
-void Client::sendPing() {
-    net::PING msg;
-    sendToServer(msg.serialize());
-}
-
-void Client::sendPong() {
-    net::PONG msg;
-    sendToServer(msg.serialize());
-}
-
 void Client::registerMessageHandlers() {
     registerPacketHandler(6, [this](const std::vector<uint8_t>& data) {
         (void)data;
         handlePing();
     });
+
     registerPacketHandler(7, [this](const std::vector<uint8_t>& data) {
         (void)data;
         handlePong();
     });
+
     registerPacketHandler(22, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received LOGGED_IN packet ({} bytes)", data.size());
         auto msg = net::LOGGED_IN::deserialize(data);
         std::println("[Client] Client ID: {}", msg.id);
 
-        _lobby_data.handleLoggedIn(msg);
-
+        handleLoggedIn(msg);
         emit("lobby:logged_in");
     });
 
@@ -124,8 +97,7 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received LOGGED_OUT packet");
         auto msg = net::LOGGED_OUT::deserialize(data);
 
-        _lobby_data.handleLoggedOut(msg);
-
+        handleLoggedOut(msg);
         emit("lobby:logged_out");
     });
 
@@ -133,8 +105,7 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received USERNAME_ALREADY_TAKEN packet");
         auto msg = net::USERNAME_ALREADY_TAKEN::deserialize(data);
 
-        _lobby_data.handleUsernameAlreadyTaken(msg);
-
+        handleUsernameAlreadyTaken(msg);
         emit("lobby:username_taken");
     });
 
@@ -142,9 +113,8 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received LOBBY_JOINED packet");
         auto msg = net::LOBBY_JOINED::deserialize(data);
 
-        _lobby_data.handleLobbyJoined(msg);
-
-        emit("lobby:joined", _lobby_data.getLobbyCode());
+        handleLobbyJoined(msg);
+        emit("lobby:joined", getCode());
     });
 
     registerPacketHandler(33, [this](const std::vector<uint8_t>& data) {
@@ -153,9 +123,8 @@ void Client::registerMessageHandlers() {
         std::string code(msg.lobby_code, 6);
         std::println("[Client] Lobby code: {}", code);
 
-        _lobby_data.handleLobbyCreated(msg);
-
-        emit("lobby:created", _lobby_data.getLobbyCode(), _lobby_data.isAdmin());
+        handleLobbyCreated(msg);
+        emit("lobby:created", getCode(), isAdmin());
     });
 
     registerPacketHandler(35, [this](const std::vector<uint8_t>& data) {
@@ -163,8 +132,7 @@ void Client::registerMessageHandlers() {
         auto msg = net::LOBBIES_LIST::deserialize(data);
         std::println("[Client] Number of lobbies: {}", msg.lobby_codes.size());
 
-        _lobby_data.handleLobbiesList(msg);
-
+        handleLobbiesList(msg);
         emit("lobby:lobbies_list");
     });
 
@@ -172,8 +140,7 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received GAME_STARTING packet");
         auto msg = net::GAME_STARTING::deserialize(data);
 
-        _lobby_data.handleGameStarting(msg);
-
+        handleGameStarting(msg);
         emit("lobby:game_starting");
     });
 
@@ -182,8 +149,7 @@ void Client::registerMessageHandlers() {
         auto msg = net::PLAYERS_LIST::deserialize(data);
         std::println("[Client] Number of players: {}", msg.players.size());
 
-        _lobby_data.handlePlayersList(msg);
-
+        handlePlayersList(msg);
         emit("lobby:players_updated");
     });
 
@@ -191,17 +157,15 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received LOBBY_VISIBILITY_CHANGED packet");
         auto msg = net::LOBBY_VISIBILITY_CHANGED::deserialize(data);
 
-        _lobby_data.handleLobbyVisibilityChanged(msg);
-
-        emit("lobby:visibility_changed", _lobby_data.isLobbyPublic());
+        handleLobbyVisibilityChanged(msg);
+        emit("lobby:visibility_changed", isPublic());
     });
 
     registerPacketHandler(42, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received LOBBY_DESTROYED packet");
         auto msg = net::LOBBY_DESTROYED::deserialize(data);
 
-        _lobby_data.handleLobbyDestroyed(msg);
-
+        handleLobbyDestroyed(msg);
         emit("lobby:destroyed");
     });
 
@@ -209,8 +173,7 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received LOBBY_FULL packet");
         auto msg = net::LOBBY_FULL::deserialize(data);
 
-        _lobby_data.handleLobbyFull(msg);
-
+        handleLobbyFull(msg);
         emit("lobby:full");
     });
 
@@ -218,8 +181,7 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received BAD_LOBBY_CODE packet");
         auto msg = net::BAD_LOBBY_CODE::deserialize(data);
 
-        _lobby_data.handleBadLobbyCode(msg);
-
+        handleBadLobbyCode(msg);
         emit("lobby:bad_code");
     });
 
@@ -227,8 +189,7 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received NOT_ADMIN packet");
         auto msg = net::NOT_ADMIN::deserialize(data);
 
-        _lobby_data.handleNotAdmin(msg);
-
+        handleNotAdmin(msg);
         emit("lobby:not_admin");
     });
 
@@ -236,8 +197,7 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received TEAM_FULL packet");
         auto msg = net::TEAM_FULL::deserialize(data);
 
-        _lobby_data.handleTeamFull(msg);
-
+        handleTeamFull(msg);
         emit("lobby:team_full");
     });
 
@@ -245,8 +205,7 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received ADMIN_GAME_PAUSED packet");
         auto msg = net::ADMIN_GAME_PAUSED::deserialize(data);
 
-        _lobby_data.handleAdminGamePaused(msg);
-
+        handleAdminGamePaused(msg);
         emit("lobby:game_paused");
     });
 
@@ -270,13 +229,4 @@ void Client::run() {
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
     std::println("[Client] Main game loop ended");
-}
-
-ECS::Entity Client::nextEntity(eType type) {
-    if (_nextEntities.at(type) >= ENTITY_FIELDS.at(type).max) {
-        _nextEntities.at(type) = ENTITY_FIELDS.at(type).min;
-    } else {
-        _nextEntities.at(type) += 1;
-    }
-    return _nextEntities.at(type);
 }

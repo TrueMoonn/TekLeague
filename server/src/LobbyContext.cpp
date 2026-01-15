@@ -21,7 +21,7 @@ const std::string& LobbyContext::getCode() {
     return lobby.getCode();
 }
 
-Lobby& LobbyContext::getLobby() {
+Game& LobbyContext::getLobby() {
     return lobby;
 }
 

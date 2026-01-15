@@ -12,7 +12,6 @@ add_executable(${PROJECT_NAME}
     ${GAME_SERVER_SRC_DIR}/ServerSenders.cpp
     ${GAME_SERVER_SRC_DIR}/LobbyContext.cpp
     ${GAME_SERVER_SRC_DIR}/LobbyContextGetUpdates.cpp
-    ${CMAKE_SOURCE_DIR}/src/Lobby/Lobby.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

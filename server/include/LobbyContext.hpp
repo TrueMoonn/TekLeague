@@ -16,7 +16,7 @@
     #include <Network/Address.hpp>
     #include <clock.hpp>
 
-    #include "lobby/Lobby.hpp"
+    #include "Game.hpp"
 
 class LobbyContext {
  public:
@@ -43,7 +43,7 @@ class LobbyContext {
     void run();
     const std::string& getCode();
 
-    Lobby& getLobby();
+    Game& getLobby();
 
     ////// Game State Management //////
 
@@ -249,7 +249,7 @@ class LobbyContext {
     bool shouldSendPlayersList();
 
  private:
-    Lobby lobby;
+    Game lobby;
 
     ////// Network //////
     std::unordered_map<uint32_t, net::Address> connected_players;

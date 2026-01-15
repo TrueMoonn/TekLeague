@@ -7,17 +7,10 @@
 
 #pragma once
 
-    #include "GameTool.hpp"
-    #include "LobbyContext.hpp"
+    #include "Game.hpp"
     #include <network/GameClient.hpp>
-    #include <clock.hpp>
-    #include <ECS/Entity.hpp>
-    #include <unordered_map>
-    #include "entities.hpp"
 
-    #define FRAME_LIMIT 1.0f / 60   // 60 fps
-
-class Client : public te::GameTool, public te::network::GameClient {
+class Client : public Game, public te::network::GameClient {
  public:
     static constexpr const char* CLIENT_PLUGINS_PATH = "client/plugins";
     static constexpr const char* PROTOCOL_PATH = "config/protocol.json";
@@ -27,7 +20,7 @@ class Client : public te::GameTool, public te::network::GameClient {
     Client();
     ~Client();
 
-    void run();
+    void run() override;
 
     /**
      * @brief Connect to server
@@ -45,11 +38,6 @@ class Client : public te::GameTool, public te::network::GameClient {
     bool isRunning() const { return _running; }
 
     /**
-     * @brief Check if in game (not in lobby)
-     */
-    bool isInGame() const { return _lobby_data.isInGame(); }
-
-    /**
      * @brief Receive messages from server
      */
     void receiveMessages();
@@ -59,28 +47,56 @@ class Client : public te::GameTool, public te::network::GameClient {
      */
     void updateGame();
 
-    /**
-     * @brief Get lobby data manager
-     */
-    LobbyContext& getLobbyData() { return _lobby_data; }
+    ////// Network senders //////
+    void sendLogin(const std::string& username);
+    void sendLogout();
+    void sendCreateLobby();
+    void sendJoinLobby(const std::string& code);
+    void sendGetPublicLobbies();
+    void sendLeaveLobby();
+    void sendStartGame();
+    void sendToggleVisibility();
+    void sendPauseGame();
+    void sendWantThisTeam(uint8_t team);
 
-    /**
-     * @brief Get next entity ID for a given type
-     */
-    ECS::Entity nextEntity(eType type);
+    ////// Getters //////
+    const std::string& getUsername() const { return _username; }
+    uint32_t getClientId() const { return _client_id; }
+    bool isAdmin() const { return _is_admin; }
+    const std::vector<std::string>& getCachedLobbiesList() const {
+        return _cached_lobbies_list; }
+    bool isLoggedIn() const { return !_username.empty(); }
+    bool isInLobby() const { return !getCode().empty(); }
 
     std::string client_name = "default";
 
  private:
-    bool _running = true;
-    te::Timestamp _framelimit{FRAME_LIMIT};
-    LobbyContext _lobby_data;
-    std::unordered_map<eType, ECS::Entity> _nextEntities;
+    std::string _username;
+    uint32_t _client_id = 0;
+    bool _is_admin = false;
+    std::vector<std::string> _cached_lobbies_list;
+    net::Address _server_address;
 
+    ////// Message handlers //////
     void registerMessageHandlers();
 
     void handlePing();
     void handlePong();
     void sendPing();
     void sendPong();
+    void handleLoggedIn(const net::LOGGED_IN& msg);
+    void handleLoggedOut(const net::LOGGED_OUT& msg);
+    void handleUsernameAlreadyTaken(const net::USERNAME_ALREADY_TAKEN& msg);
+    void handleLobbyCreated(const net::LOBBY_CREATED& msg);
+    void handleLobbyJoined(const net::LOBBY_JOINED& msg);
+    void handleBadLobbyCode(const net::BAD_LOBBY_CODE& msg);
+    void handleLobbyFull(const net::LOBBY_FULL& msg);
+    void handlePlayersList(const net::PLAYERS_LIST& msg);
+    void handleLobbiesList(const net::LOBBIES_LIST& msg);
+    void handleLobbyVisibilityChanged(const net::LOBBY_VISIBILITY_CHANGED& msg);
+    void handleGameStarting(const net::GAME_STARTING& msg);
+    void handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg);
+    void handleNotAdmin(const net::NOT_ADMIN& msg);
+    void handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg);
+    void handleTeamFull(const net::TEAM_FULL& msg);
 };
