@@ -204,6 +204,7 @@ void Server::sendPlayersListUnsafe(uint lobby_id) {
             auto& client = client_opt->get();
             net::PlayerListEntry entry;
             entry.id = client.id;
+            entry.is_admin = isAdmin(address, lobby_id) ? 1 : 0;
             entry.team = client.team;
             std::memset(entry.username, 0, 32);
             std::memcpy(entry.username, client.username.c_str(),
