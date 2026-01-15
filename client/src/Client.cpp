@@ -7,8 +7,11 @@
 
 #include <print>
 #include <chrono>
+#include <sys/socket.h>
 #include <thread>
 
+#include "Network/ProtocolManager.hpp"
+#include "Network/generated_messages.hpp"
 #include "configs/entities.hpp"
 #include "client_systems.hpp"
 #include "Client.hpp"
@@ -33,9 +36,7 @@ Client::Client() :
 
 Client::~Client() {
     std::println("[Client] Cleaning up resources...");
-    if (isConnected()) {
-        disconnectClient();
-    }
+    disconnect();
 }
 
 void Client::connectToServer(const std::string& ip, uint16_t port) {
@@ -52,6 +53,8 @@ void Client::connectToServer(const std::string& ip, uint16_t port) {
 }
 
 void Client::disconnect() {
+    net::DISCONNEXION msg;
+    sendToServer(msg.serialize());
     std::println("[Client] Disconnecting from server...");
     if (isConnected()) {
         disconnectClient();
@@ -69,7 +72,33 @@ void Client::updateGame() {
     }
 }
 
+void Client::handlePing() {
+    sendPong();
+}
+
+void Client::handlePong() {
+    // TODO(PIERRE): si ca fait longtemps = deco
+}
+
+void Client::sendPing() {
+    net::PING msg;
+    sendToServer(msg.serialize());
+}
+
+void Client::sendPong() {
+    net::PONG msg;
+    sendToServer(msg.serialize());
+}
+
 void Client::registerMessageHandlers() {
+    registerPacketHandler(6, [this](const std::vector<uint8_t>& data) {
+        (void)data;
+        handlePing();
+    });
+    registerPacketHandler(7, [this](const std::vector<uint8_t>& data) {
+        (void)data;
+        handlePong();
+    });
     registerPacketHandler(22, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received LOGGED_IN packet ({} bytes)", data.size());
         auto msg = net::LOGGED_IN::deserialize(data);
@@ -125,7 +154,7 @@ void Client::registerMessageHandlers() {
 
         _lobby_data.handleLobbiesList(msg);
 
-        emit("lobby:lobbies_list", _lobby_data.getCachedLobbiesList());
+        emit("lobby:lobbies_list");
     });
 
     registerPacketHandler(37, [this](const std::vector<uint8_t>& data) {
@@ -144,7 +173,7 @@ void Client::registerMessageHandlers() {
 
         _lobby_data.handlePlayersList(msg);
 
-        emit("lobby:players_updated", _lobby_data.getPlayersInLobby());
+        emit("lobby:players_updated");
     });
 
     registerPacketHandler(39, [this](const std::vector<uint8_t>& data) {
@@ -190,6 +219,15 @@ void Client::registerMessageHandlers() {
         _lobby_data.handleNotAdmin(msg);
 
         emit("lobby:not_admin");
+    });
+
+    registerPacketHandler(47, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received TEAM_FULL packet");
+        auto msg = net::TEAM_FULL::deserialize(data);
+
+        _lobby_data.handleTeamFull(msg);
+
+        emit("lobby:team_full");
     });
 
     registerPacketHandler(88, [this](const std::vector<uint8_t>& data) {

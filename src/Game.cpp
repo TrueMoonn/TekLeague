@@ -31,7 +31,7 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
     _nextEntities[eType::MENU] = eField::MENU_BEGIN;
     _nextEntities[eType::HUD] = eField::HUD_BEGIN;
     _nextEntities[eType::MAP] = eField::MAP_BEGIN;
-    _nextEntities[eType::MOB] = eField::MOB_BEGIN;
+    _nextEntities[eType::CREATURES] = eField::CREATURES_BEGIN;
     _nextEntities[eType::BUILDINGS] = eField::BUILDINGS_BEGIN;
     _nextEntities[eType::PROJECTILES] = eField::PROJECTILES_BEGIN;
 
@@ -60,8 +60,8 @@ ECS::Entity Game::nextEntity(eType type) {
             case eType::MAP:
                 _nextEntities[type] = eField::MAP_BEGIN;
                 break;
-            case eType::MOB:
-                _nextEntities[type] = eField::MOB_BEGIN;
+            case eType::CREATURES:
+                _nextEntities[type] = eField::CREATURES_BEGIN;
                 break;
             case eType::BUILDINGS:
                 _nextEntities[type] = eField::BUILDINGS_BEGIN;

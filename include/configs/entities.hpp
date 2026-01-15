@@ -31,11 +31,13 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     /* == Lobby == */
     "client/assets/configs/ui/lobby/book.toml",
     "client/assets/configs/ui/lobby/buttons.toml",
+    "client/assets/configs/ui/lobby/users.toml",
     /* == Parameters == */
     "client/assets/configs/ui/parameters/background.toml",
     "client/assets/configs/ui/parameters/button.toml",
     /* == Tower Interaction == */
-    "client/assets/configs/buildings/tower.toml",
+    "client/assets/configs/buildings/Bluetower.toml",
+    "client/assets/configs/buildings/Redtower.toml",
     "client/assets/configs/buildings/zone_enemy.toml",
 };
 
