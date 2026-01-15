@@ -7,8 +7,11 @@
 
 #include <print>
 #include <chrono>
+#include <sys/socket.h>
 #include <thread>
 
+#include "Network/ProtocolManager.hpp"
+#include "Network/generated_messages.hpp"
 #include "configs/entities.hpp"
 #include "client_systems.hpp"
 #include "Client.hpp"
@@ -69,7 +72,33 @@ void Client::updateGame() {
     }
 }
 
+void Client::handlePing() {
+    sendPong();
+}
+
+void Client::handlePong() {
+    // TODO(PIERRE): si ca fait longtemps = deco
+}
+
+void Client::sendPing() {
+    net::PING msg;
+    sendToServer(msg.serialize());
+}
+
+void Client::sendPong() {
+    net::PONG msg;
+    sendToServer(msg.serialize());
+}
+
 void Client::registerMessageHandlers() {
+    registerPacketHandler(6, [this](const std::vector<uint8_t>& data) {
+        (void)data;
+        handlePing();
+    });
+    registerPacketHandler(7, [this](const std::vector<uint8_t>& data) {
+        (void)data;
+        handlePong();
+    });
     registerPacketHandler(22, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received LOGGED_IN packet ({} bytes)", data.size());
         auto msg = net::LOGGED_IN::deserialize(data);

@@ -12,12 +12,21 @@
 
 #include <network/GameServer.hpp>
 
+#include "Network/generated_messages.hpp"
 #include "Server.hpp"
 
 bool Server::setPacketsHandlers() {
     registerPacketHandler(2, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
         handleDisconnection(data, sender);
+    });
+    registerPacketHandler(6, [this](const std::vector<uint8_t>& data,
+        const net::Address& sender) {
+        handlePing(data, sender);
+    });
+    registerPacketHandler(7, [this](const std::vector<uint8_t>& data,
+        const net::Address& sender) {
+        handlePong(data, sender);
     });
     registerPacketHandler(20, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
@@ -83,6 +92,17 @@ void Server::handleDisconnection(const std::vector<uint8_t>& data,
     }
 
     clients.erase(sender);
+}
+
+void Server::handlePing(const std::vector<uint8_t>& data,
+    const net::Address& sender) {
+    net::PONG msg;
+    sendTo(sender, msg.serialize());
+}
+
+void Server::handlePong(const std::vector<uint8_t>& data,
+    const net::Address& sender) {
+    // TODO(PIERRE): mettre à jour le délai du joueur
 }
 
 void Server::handleLogin(const std::vector<uint8_t>& data,

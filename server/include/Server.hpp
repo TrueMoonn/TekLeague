@@ -20,6 +20,7 @@
     #include <network/GameServer.hpp>
     #include <Network/ProtocolManager.hpp>
     #include <Network/Address.hpp>
+#include "clock.hpp"
     #include "lobby/LobbyContext.hpp"
 
 struct PlayerInfo {
@@ -60,6 +61,7 @@ class Server : public te::network::GameServer {
     bool setPacketsHandlers();
 
     ////// Client Management //////
+    te::Timestamp ping{5.0f};
     std::unordered_map<net::Address, PlayerInfo> clients;
 
     // username -> address
@@ -105,6 +107,10 @@ class Server : public te::network::GameServer {
     ////// Handlers //////
     void handleConnectionRequest(const std::vector<uint8_t>& data,
         const net::Address& sender);
+    void handlePing(const std::vector<uint8_t>& data,
+        const net::Address& sender);
+    void handlePong(const std::vector<uint8_t>& data,
+        const net::Address& sender);
     void handleLogin(const std::vector<uint8_t>& data,
         const net::Address& sender);
     void handleLogout(const std::vector<uint8_t>& data,
@@ -132,6 +138,8 @@ class Server : public te::network::GameServer {
 
     ////// Senders //////
     void sendPlayersUpdate();
+    void sendPing(const net::Address& address, uint32_t client_id);
+    void sendPong(const net::Address& address, uint32_t client_id);
     void sendLoggedIn(const net::Address& address, uint32_t client_id);
     void sendLoggedOut(const net::Address& address, uint32_t client_id);
     void sendUsernameAlreadyTaken(const net::Address& address);
