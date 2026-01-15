@@ -90,6 +90,7 @@ class LobbyContext {
     void removeClient(uint32_t client_id);
     const std::unordered_map<uint32_t, net::Address>& getClients() const;
     bool isFull() const;
+    void createPlayersEntities();
 
     /**
         * @brief Build the PLAYERS_INIT message from the lobby's registry
