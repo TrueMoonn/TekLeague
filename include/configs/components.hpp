@@ -10,7 +10,7 @@
     #include <vector>
     #include <functional>
 
-    #include "Game.hpp"
+    #include <GameTool.hpp>
 
     #include "components/champion.hpp"
     #include "components/competences/auto_attack.hpp"
@@ -25,7 +25,7 @@
     #include "components/stats/xp.hpp"
     #include "components/ui/button.hpp"
 
-static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
+static const std::vector<std::function<void(te::GameTool&)>> LOCAL_COMPONENTS = {
     &registerAutoAttack,
     &registerAutoTrack,
     &registerButton,

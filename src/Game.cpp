@@ -26,6 +26,7 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
     for (auto& map : MAP_PATHS)
         addMap(map);
 
+    // Initialize entity ID ranges
     _nextEntities[eType::SYSTEM] = eField::SYSTEM_F;
     _nextEntities[eType::CHAMPION] = eField::CHAMPION_BEGIN;
     _nextEntities[eType::MENU] = eField::MENU_BEGIN;
@@ -35,9 +36,14 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
     _nextEntities[eType::BUILDINGS] = eField::BUILDINGS_BEGIN;
     _nextEntities[eType::PROJECTILES] = eField::PROJECTILES_BEGIN;
 
-
     sub("closed", [this]() {_running = false;});
     _running = true;
+}
+
+Game::Game(uint max_players, const std::string& code, const std::string& ppath) 
+    : Game(ppath) {
+    _max_players = max_players;
+    _code = code;
 }
 
 ECS::Entity Game::nextEntity(eType type) {
@@ -54,4 +60,16 @@ void Game::run() {
         if (_framelimit.checkDelay())
             runSystems();
     }
+}
+
+const std::string& Game::getCode() const {
+    return _code;
+}
+
+void Game::setCode(const std::string& new_code) {
+    _code = new_code;
+}
+
+const uint Game::getMaxPlayers() const {
+    return _max_players;
 }

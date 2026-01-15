@@ -7,10 +7,10 @@
 
 #pragma once
 
-    #include "Game.hpp"
+    #include <GameTool.hpp>
 
 struct Button {
     short val = 0;
 };
 
-void registerButton(Game& game);
+void registerButton(te::GameTool& game);

@@ -9,7 +9,7 @@
 
     #include <array>
 
-    #include "Game.hpp"
+    #include <GameTool.hpp>
 
     #define MAX_ITEM_SLOT 6
 
@@ -20,4 +20,4 @@ struct Inventory {
     std::array<std::size_t, MAX_ITEM_SLOT> slots;
 };
 
-void registerInventory(Game& game);
+void registerInventory(te::GameTool& game);

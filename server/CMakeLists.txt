@@ -10,9 +10,8 @@ add_executable(${PROJECT_NAME}
     ${GAME_SERVER_SRC_DIR}/Server.cpp
     ${GAME_SERVER_SRC_DIR}/ServerHandlers.cpp
     ${GAME_SERVER_SRC_DIR}/ServerSenders.cpp
-    ${CMAKE_SOURCE_DIR}/src/Lobby/LobbyContext.cpp
-    ${CMAKE_SOURCE_DIR}/src/Lobby/LobbyContextGetUpdates.cpp
-    ${CMAKE_SOURCE_DIR}/src/Lobby/Lobby.cpp
+    ${GAME_SERVER_SRC_DIR}/LobbyContext.cpp
+    ${GAME_SERVER_SRC_DIR}/LobbyContextGetUpdates.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

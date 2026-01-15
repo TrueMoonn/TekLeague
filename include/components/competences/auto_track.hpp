@@ -8,7 +8,7 @@
 #pragma once
 
     #include "ECS/Entity.hpp"
-#include "Game.hpp"
+#include <GameTool.hpp>
 #include "maths/Vector.hpp"
 
 struct AutoTrack {
@@ -18,4 +18,4 @@ struct AutoTrack {
     bool track;
 };
 
-void registerAutoTrack(Game& game);
+void registerAutoTrack(te::GameTool& game);

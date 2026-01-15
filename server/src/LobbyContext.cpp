@@ -8,10 +8,10 @@
 #include <entity_spec/components/health.hpp>
 #include <interaction/components/player.hpp>
 
-#include "lobby/LobbyContext.hpp"
+#include "LobbyContext.hpp"
 
 LobbyContext::LobbyContext(uint max_players, const std::string& code)
-    : lobby(max_players, code), max_clients(max_players) {}
+    : lobby(max_players, code, PLUGINS_PATH), max_clients(max_players) {}
 
 void LobbyContext::run() {
     lobby.run();
@@ -21,7 +21,7 @@ const std::string& LobbyContext::getCode() {
     return lobby.getCode();
 }
 
-Lobby& LobbyContext::getLobby() {
+Game& LobbyContext::getLobby() {
     return lobby;
 }
 

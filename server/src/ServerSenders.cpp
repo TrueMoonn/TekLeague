@@ -27,7 +27,7 @@
 #include <network/GameServer.hpp>
 
 #include "Server.hpp"
-#include "lobby/LobbyContext.hpp"
+#include "LobbyContext.hpp"
 
 void Server::sendAutomatic() {
     try {
@@ -86,21 +86,6 @@ void Server::sendAutomatic() {
         }
     } catch (const std::exception& e) {
         std::println(stderr, "[Server::sendAutomatic] ERROR: {}", e.what());
-    }
-}
-
-void Server::sendPlayersUpdate() {
-    try {
-        std::lock_guard<std::mutex> lock(lobbies_mutex);
-        for (auto& [id, ctx] : lobbies) {
-            if (auto msg = ctx.tryGetPlayerUpdates()) {
-                if (!msg->players.empty()) {
-                    broadcastToLobbyUnsafe(id, msg->serialize());
-                }
-            }
-        }
-    } catch (const std::exception& e) {
-        std::println(stderr, "[Server::sendPlayersUpdate] ERROR: {}", e.what());
     }
 }
 
@@ -274,4 +259,33 @@ void Server::sendGameEnded(uint lobby_id) {
     auto serialized = msg.serialize();
     broadcastToLobby(lobby_id, serialized);
     std::println("[Server] sendGameEnded: Broadcast complete");
+}
+
+void Server::sendPlayersInit(uint lobby_id) {
+    {
+        std::lock_guard<std::mutex> lock(lobbies_mutex);
+
+        for (auto& [ctx_id, ctx] : lobbies) {
+            if (ctx_id == lobby_id) {
+                net::PLAYERS_INIT msg = ctx.getPlayersInit();
+                broadcastToLobbyUnsafe(lobby_id, msg.serialize());
+                return;
+            }
+        }
+    }
+}
+
+
+void Server::sendBuildingsInit(uint lobby_id) {
+    {
+        std::lock_guard<std::mutex> lock(lobbies_mutex);
+
+        for (auto& [ctx_id, ctx] : lobbies) {
+            if (ctx_id == lobby_id) {
+                net::BUILDINGS_INIT msg = ctx.getBuildingsInit();
+                broadcastToLobbyUnsafe(lobby_id, msg.serialize());
+                return;
+            }
+        }
+    }
 }
