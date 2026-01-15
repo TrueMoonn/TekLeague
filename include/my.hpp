@@ -10,6 +10,12 @@
     #include <array>
     #include <string>
 
+    #define BLUE_POS_X 750
+    #define BLUE_POS_Y 1800
+
+    #define RED_POS_X 8192 - 750
+    #define RED_POS_Y 1800
+
     #define NB_CHAMPIONS 8
 
 static const std::array<std::string, NB_CHAMPIONS> CHAMPIONS = {

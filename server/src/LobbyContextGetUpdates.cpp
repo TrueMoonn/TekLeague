@@ -9,6 +9,12 @@
 
 #include "components/champion.hpp"
 #include "components/competences/spells.hpp"
+#include "components/competences/target.hpp"
+#include "components/stats/gold.hpp"
+#include "components/stats/health.hpp"
+#include "components/stats/mana.hpp"
+#include "components/stats/stat_pool.hpp"
+#include "components/stats/xp.hpp"
 #include "entity_spec/components/team.hpp"
 #include "LobbyContext.hpp"
 #include "my.hpp"
@@ -50,7 +56,7 @@ net::BUILDINGS_INIT LobbyContext::getBuildingsInit() {
 
     auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
     auto& positions = registry.getComponents<addon::physic::Position2>();
-    auto& healths = registry.getComponents<addon::eSpec::Health>();
+    auto& healths = registry.getComponents<Health>();
     auto& teams = registry.getComponents<addon::eSpec::Team>();
     // get le component building
 
@@ -78,23 +84,24 @@ net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
 
     auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
     auto& positions = registry.getComponents<addon::physic::Position2>();
-    auto& healths = registry.getComponents<addon::eSpec::Health>();
-    auto& players = registry.getComponents<addon::intact::Player>();
+    auto& healths = registry.getComponents<Health>();
+    auto& champs = registry.getComponents<Champion>();
+    auto& levels = registry.getComponents<Xp>();
+    auto& manas = registry.getComponents<Mana>();
+    auto& targets = registry.getComponents<Target>();
 
-    for (auto&& [entity, player, pos, health] :
-        ECS::IndexedDenseZipper(players, positions, healths)) {
-        if (entity < eField::CHAMPION_BEGIN || entity > eField::CHAMPION_END)
-            continue;
+    for (auto&& [entity, pos, health, champ, level, mana, target] :
+        ECS::IndexedDenseZipper(positions, healths, champs, levels, manas, targets)) {
 
-        // TODO(x): fill state with real all data
         net::PlayerUpdate state;
         state.id = static_cast<uint32_t>(entity),
         state.x = pos.x,
         state.y = pos.y,
         state.hp = static_cast<double>(health.amount),
-        state.level = 0.0,
-        state.mana = 0.0,
-        state.direction = 0,
+        state.level = level.amount,
+        state.mana = mana.amount,
+        state.direction_x = target.x,
+        state.direction_y = target.y,
         std::memset(state.effects, 0, sizeof(state.effects));
 
         msg.players.push_back(state);
@@ -107,7 +114,7 @@ net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
     net::BUILDINGS_UPDATES msg;
 
     auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
-    auto& healths = registry.getComponents<addon::eSpec::Health>();
+    auto& healths = registry.getComponents<Health>();
     // Get component building puis regarder le name pour tower/nexus
 
     for (auto&& [entity, health] :
@@ -130,7 +137,7 @@ net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
     net::CREATURES_UPDATES msg;
 
     auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
-    auto& healths = registry.getComponents<addon::eSpec::Health>();
+    auto& healths = registry.getComponents<Health>();
     auto& positions = registry.getComponents<addon::physic::Position2>();
 
     for (auto&& [entity, position, health] :

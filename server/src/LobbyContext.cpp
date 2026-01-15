@@ -54,11 +54,20 @@ void LobbyContext::createPlayersEntities() {
     auto& players = game.getPlayers();
 
     auto& teams = game.getComponent<addon::eSpec::Team>();
+    auto& positions = game.getComponent<addon::physic::Position2>();
 
     for (auto& player : players) {
         ECS::Entity e = game.nextEntity(eType::CHAMPION);
         game.createEntity(e, "Gules");
-        for (auto& plist : game.getPlayers())
+        for (auto& plist : game.getPlayers()) {
             teams.getComponent(e).name = TEAMS[plist.team];
+            if (plist.team == 1) {
+                positions.getComponent(e).x = BLUE_POS_X;
+                positions.getComponent(e).y = BLUE_POS_Y;
+            } else {
+                positions.getComponent(e).x = RED_POS_X;
+                positions.getComponent(e).y = RED_POS_Y;
+            }
+        }
     }
 }
