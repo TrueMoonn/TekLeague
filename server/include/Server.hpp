@@ -21,7 +21,7 @@
     #include <network/GameServer.hpp>
     #include <Network/ProtocolManager.hpp>
     #include <Network/Address.hpp>
-    #include "lobby/LobbyContext.hpp"
+    #include "LobbyContext.hpp"
 
 struct PlayerInfo {
     uint32_t id;

@@ -7,8 +7,9 @@
 
 #include "lobby/Lobby.hpp"
 
-Lobby::Lobby(uint max_clients, const std::string& code) :
-    Game(PLUGINS_PATH), max_players(max_clients), code(code) {
+Lobby::Lobby(uint max_clients, const std::string& code,
+    const std::string& ppath) :
+    Game(ppath), max_players(max_clients), code(code) {
     // gérer les scenes ici ?
 }
 

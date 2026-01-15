@@ -14,9 +14,9 @@
 
     #include <Network/generated_messages.hpp>
     #include <Network/Address.hpp>
+    #include <clock.hpp>
 
-    #include "clock.hpp"
-    #include "Lobby.hpp"
+    #include "lobby/Lobby.hpp"
 
 enum class LobbyGameState {
     PRE_GAME,   // Lobby en attente de joueurs / configuration
@@ -40,6 +40,8 @@ class LobbyContext {
     static constexpr float SCOREBOARD_DEFAULT_LATENCY = 1.0f / 1.0f;
 
     static constexpr float PLAYERS_LIST_DEFAULT_LATENCY = 0.5f;
+
+    static constexpr std::string PLUGINS_PATH = "server/plugins";
 
  public:
     LobbyContext(uint max_players, const std::string& code);
