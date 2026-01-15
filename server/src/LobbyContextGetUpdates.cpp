@@ -7,6 +7,7 @@
 #include <entity_spec/components/health.hpp>
 #include <interaction/components/player.hpp>
 
+#include "components/champion.hpp"
 #include "components/competences/spells.hpp"
 #include "entity_spec/components/team.hpp"
 #include "LobbyContext.hpp"
@@ -18,11 +19,10 @@ net::PLAYERS_INIT LobbyContext::getPlayersInit() {
     auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
     auto& positions = registry.getComponents<addon::physic::Position2>();
     auto& teams = registry.getComponents<addon::eSpec::Team>();
+    auto& champs = registry.getComponents<Champion>();
 
-    for (auto&& [entity, pos, team] :
-        ECS::IndexedDenseZipper(positions, teams)) {
-        if (entity < eField::CHAMPION_BEGIN || entity > eField::CHAMPION_END)
-            continue;
+    for (auto&& [entity, pos, team, champ] :
+        ECS::IndexedDenseZipper(positions, teams, champs)) {
 
         net::PlayerInit state;
         state.team = 0;
@@ -30,10 +30,14 @@ net::PLAYERS_INIT LobbyContext::getPlayersInit() {
             if (team.name == TEAMS[i])
                state.team = i;
         }
+        state.champ = 0;
+        for (std::size_t i = 0; i < CHAMPIONS.size(); ++i) {
+            if (champ.name == CHAMPIONS[i])
+               state.champ = i;
+        }
         state.id = static_cast<uint32_t>(entity),
         state.x = pos.x,
         state.y = pos.y,
-        state.champ = 0,
 
         msg.players.push_back(state);
     }

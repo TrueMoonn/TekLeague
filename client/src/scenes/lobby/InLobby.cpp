@@ -94,7 +94,7 @@ void setInLobbyScene(Client& game) {
     game.subForScene(idx, "lobby:players_updated", [&game]() {
         updateLobbyInfos(game);
     });
-    game.subForScene(idx, "game:init", [&game]() {
+    game.subForScene(idx, "game:game_starting", [&game]() {
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::MAIN));
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));

@@ -130,9 +130,7 @@ void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
         createEntity(e, CHAMPIONS[player.champ], {player.x, player.y});
         targets.getComponent(e).x = player.x;
         targets.getComponent(e).y = player.y;
-        for (auto& plist : getPlayers())
-            if (plist.id == player.id)
-                teams.getComponent(e).name = TEAMS[plist.team];
+        teams.getComponent(e).name = TEAMS[player.team];
         if (player.id == getClientId()) {
             createComponent<addon::intact::Player>(e);
         }

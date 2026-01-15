@@ -39,32 +39,9 @@ void setInGameScene(Client& game) {
         {game.nextEntity(eType::BUILDINGS), "tower_blue", {1400, 1000}},
         {game.nextEntity(eType::BUILDINGS), "tower_red", {6792, 1000}},
         {game.nextEntity(eType::BUILDINGS), "zone_left_enemy", {6792, 1000}},
-        {game.nextEntity(eType::CHAMPION), "Gules", {200, 1100}},
     };
 
-    ingame.on_activate = [&game](){
-        auto& champs = game.getComponent<Champion>();
-        auto& posis = game.getComponent<addon::physic::Position2>();
-        auto& targets = game.getComponent<Target>();
-        for (auto&& [_, pos, target] :
-            ECS::DenseZipper(champs, posis, targets)) {
-            target.x = pos.x;
-            target.y = pos.y;
-        }
-        auto& players = game.getComponent<addon::intact::Player>();
-        auto& teams = game.getComponent<addon::eSpec::Team>();
-        for (auto&& [e, team, player] : ECS::IndexedDenseZipper(teams, players)) {
-            const auto& players_lobby = game.getPlayers();
-            for (auto& pla : players_lobby) {
-                if (pla.id == game.getClientId()) {
-                    if (pla.team == 1)
-                        team.name = "blue";
-                    else
-                        team.name = "red";
-                }
-            }
-        }
-    };
+    ingame.on_activate = [&game](){};
 
     std::size_t idx = game.addScene(ingame);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
