@@ -261,7 +261,7 @@ net::SCORE LobbyContext::getScore() {
 
     msg.team_count = sizeof(lobby.teams) / sizeof(net::TeamScore);
     msg.teams[0] = lobby.teams[0];
-    msg.teams[1] = lobby.teams[0];
+    msg.teams[1] = lobby.teams[1];
 
     return msg;
 }
