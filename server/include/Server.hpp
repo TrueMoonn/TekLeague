@@ -20,7 +20,7 @@
     #include <network/GameServer.hpp>
     #include <Network/ProtocolManager.hpp>
     #include <Network/Address.hpp>
-#include "clock.hpp"
+    #include "clock.hpp"
     #include "lobby/LobbyContext.hpp"
 
 struct PlayerInfo {
@@ -88,6 +88,8 @@ class Server : public te::network::GameServer {
     ////// Server Control //////
     std::atomic<bool> _should_run{true};
 
+     te::Timestamp lobbies_list_timestamp{2.0f};
+
     uint createLobby(uint max_clients, const net::Address& admin);
     void destroyLobby(uint lobby_id);
     void broadcastToLobby(uint lobby_id, const std::vector<uint8_t>& data);
@@ -146,6 +148,8 @@ class Server : public te::network::GameServer {
     void sendLobbyJoined(const net::Address& address, uint32_t client_id);
     void sendLobbyCreated(const net::Address& address,
         const std::string& lobby_code);
+    // NOTE: Assumes lobbies_mutex is already locked!
+    void sendLobbiesListUnsafe();
     void sendLobbiesList(const net::Address& address);
     void sendGameStarting(uint lobby_id);
     void sendPlayersList(uint lobby_id);

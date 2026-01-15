@@ -75,6 +75,10 @@ void Server::sendAutomatic() {
             for (uint lobby_id : pre_game_lobbies) {
                 sendPlayersListUnsafe(lobby_id);
             }
+
+            if (lobbies_list_timestamp.checkDelay()) {
+                sendLobbiesListUnsafe();
+            }
         }
 
         for (const auto& [lobby_id, data] : ingame_updates) {
@@ -83,6 +87,25 @@ void Server::sendAutomatic() {
     } catch (const std::exception& e) {
         std::println(stderr, "[Server::sendAutomatic] ERROR: {}", e.what());
     }
+}
+
+void Server::sendLobbiesListUnsafe() {
+    net::LOBBIES_LIST msg;
+
+    for (uint lobby_id : public_lobbies) {
+        if (lobbies.find(lobby_id) != lobbies.end()) {
+            msg.lobby_codes.push_back(lobbies.at(lobby_id).getCode());
+        }
+    }
+
+    auto serialized = msg.serialize();
+    for (const auto& [address, client] : clients) {
+        if (!client.in_lobby) {
+            sendTo(address, serialized);
+        }
+    }
+    std::println("[Server::sendLobbiesListUnsafe] Sent to all non-lobby "
+        " clients {} lobbies)", msg.lobby_codes.size());
 }
 
 void Server::sendPlayersUpdate() {
