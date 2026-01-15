@@ -137,7 +137,7 @@ void Client::registerMessageHandlers() {
         auto msg = net::GAME_STARTING::deserialize(data);
 
         handleGameStarting(msg);
-        emit("lobby:game_starting");
+        emit("game:game_starting");
     });
 
     registerPacketHandler(38, [this](const std::vector<uint8_t>& data) {
@@ -195,6 +195,14 @@ void Client::registerMessageHandlers() {
 
         handleTeamFull(msg);
         emit("lobby:team_full");
+    });
+
+    registerPacketHandler(51, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received PLAYER_INIT packet");
+        auto msg = net::PLAYERS_INIT::deserialize(data);
+
+        handlePlayersInit(msg);
+        emit("game:init_player");
     });
 
     registerPacketHandler(88, [this](const std::vector<uint8_t>& data) {
