@@ -15,23 +15,17 @@ net::PLAYERS_INIT LobbyContext::getPlayersInit() {
 
     auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
     auto& positions = registry.getComponents<addon::physic::Position2>();
-    auto& healths = registry.getComponents<addon::eSpec::Health>();
-    auto& players = registry.getComponents<addon::intact::Player>();
 
-    for (auto&& [entity, player, pos, health] :
-        ECS::IndexedDenseZipper(players, positions, healths)) {
+    for (auto&& [entity, pos] :
+        ECS::IndexedDenseZipper(positions)) {
         if (entity < eField::CHAMPION_BEGIN || entity > eField::CHAMPION_END)
             continue;
 
-        // TODO(x): fill state with real all data
         net::PlayerInit state;
         state.id = static_cast<uint32_t>(entity),
         state.x = pos.x,
         state.y = pos.y,
-        state.hp = static_cast<double>(health.amount),
         state.champ = 0,
-        state.mana = 0.0,
-        state.direction = 0,
 
         msg.players.push_back(state);
     }

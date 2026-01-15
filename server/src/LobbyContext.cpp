@@ -9,6 +9,10 @@
 #include <interaction/components/player.hpp>
 
 #include "LobbyContext.hpp"
+#include "ECS/Entity.hpp"
+#include "entities.hpp"
+#include "entity_spec/components/team.hpp"
+#include "my.hpp"
 
 LobbyContext::LobbyContext(uint max_players, const std::string& code)
     : lobby(max_players, code, PLUGINS_PATH), max_clients(max_players) {}
@@ -43,4 +47,19 @@ const std::unordered_map<uint32_t, net::Address>& LobbyContext::getClients(
 
 bool LobbyContext::isFull() const {
     return connected_players.size() >= max_clients;
+}
+
+void LobbyContext::createPlayersEntities() {
+    auto& game = getLobby();
+    auto& players = game.getPlayers();
+
+    auto& teams = game.getComponent<addon::eSpec::Team>();
+
+    for (auto& player : players) {
+        ECS::Entity e = game.nextEntity(eType::CHAMPION);
+        game.createEntity(e, "Gules");
+        for (auto& plist : game.getPlayers())
+            if (plist.id == player.id)
+                teams.getComponent(e).name = TEAMS[plist.team];
+    }
 }

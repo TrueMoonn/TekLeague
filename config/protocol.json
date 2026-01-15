@@ -35,9 +35,6 @@
         { "name": "id", "type": "uint32" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
-        { "name": "direction", "type": "uint8" },
-        { "name": "hp", "type": "double" },
-        { "name": "mana", "type": "double" },
         { "name": "champ", "type": "uint8" }
       ]
     },
