@@ -38,6 +38,7 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/components/competences/target.cpp
     ${GAME_SRC_DIR}/components/competences/auto_attack.cpp
     ${GAME_SRC_DIR}/components/competences/auto_track.cpp
+    ${GAME_SRC_DIR}/components/competences/spells.cpp
 
     ${GAME_SRC_DIR}/components/items/inventory.cpp
     ${GAME_SRC_DIR}/components/items/item.cpp

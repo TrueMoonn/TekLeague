@@ -1,10 +1,39 @@
-[ENTITIES.sumoners_rift]
+[ENTITIES.sumoners_rift_ground]
 drawable = true
 position2 = true
 
-[ENTITIES.sumoners_rift.sprite]
-path = "client/assets/images/map/map.png"
-size = [512, 512]
-scale = [7680, 7680]
-origin = [0, 0]
+[ENTITIES.sumoners_rift_ground.sprite]
+path = "client/assets/images/map/ground.png"
+# size = [4096, 2136]
+scale = [8192, 4272]
 layer = 0
+
+[ENTITIES.sumoners_rift_nash_zone]
+drawable = true
+position2 = true
+
+[ENTITIES.sumoners_rift_nash_zone.sprite]
+path = "client/assets/images/map/nash_zone.png"
+# size = [4096, 2136]
+scale = [8192, 4272]
+layer = 1
+
+[ENTITIES.sumoners_rift_jungle]
+drawable = true
+position2 = true
+
+[ENTITIES.sumoners_rift_jungle.sprite]
+path = "client/assets/images/map/jungle.png"
+# size = [4096, 2136]
+scale = [8192, 4272]
+layer = 1
+
+[ENTITIES.sumoners_rift_walls]
+drawable = true
+position2 = true
+
+[ENTITIES.sumoners_rift_walls.sprite]
+path = "client/assets/images/map/walls.png"
+# size = [4096, 2136]
+scale = [8192, 4272]
+layer = 10

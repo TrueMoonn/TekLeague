@@ -1,0 +1,76 @@
+[ENTITIES.Gules]
+position2 = true
+target = true
+
+[ENTITIES.Gules.champion]
+name = "Gules"
+
+[ENTITIES.Gules.team]
+name = "blue"
+
+[ENTITIES.Gules.velocity2]
+x = 0
+y = 0
+
+[ENTITIES.Gules.health]
+amount = 200
+max = 200
+regen = 3
+
+[ENTITIES.Gules.mana]
+amount = 300
+max = 300
+regen = 3
+
+[ENTITIES.Gules.hitbox]
+left = 0.0
+top = 0.0
+width = 144.3
+height = 192.3
+
+[ENTITIES.Gules.stat_pool]
+ad = 67
+ap = 0
+atk_speed = 1.5
+atk_range = 200
+cdr = 0
+armor = 34
+magic_resist = 25
+mov_speed = 350
+
+[[ENTITIES.Gules.spells]]
+name = "name"
+base = 50
+damage_type = 0
+cooldown = 5.0
+cast_time = 0.2
+target = 0
+ratios = [100, 0]
+entities = [
+    "gules_ball"
+]
+
+[[ENTITIES.Gules.spells]]
+name = "name"
+base = 50
+damage_type = 0
+cooldown = 5.0
+cast_time = 0.2
+target = 0
+ratios = [100, 0]
+entities = [
+    "gules_ball"
+]
+
+[ENTITIES.gules_ball]
+position2 = true
+
+[ENTITIES.gules_ball.velocity2]
+x = 0
+y = 0
+
+[ENTITIES.gules_ball.hitbox]
+top = 0
+left = 0
+width = 20
+height = 20

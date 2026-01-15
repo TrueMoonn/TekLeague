@@ -12,6 +12,8 @@
 #include <interaction/components/clickable.hpp>
 #include <sfml/components/drawable.hpp>
 
+#include "GameTool.hpp"
+#include "Network/generated_messages.hpp"
 #include "components/ui/button.hpp"
 #include "scenes/lobby.hpp"
 #include "scenes.hpp"
@@ -48,14 +50,14 @@ static void updateLobbyInfos(Client &game) {
             red += 1;
         }
     }
-    if (red == 3 && clics.hasComponent(LOBBY_SELECT_TEAM_RED))
-        clics.removeComponent(LOBBY_SELECT_TEAM_RED);
-    else if (!clics.hasComponent(LOBBY_SELECT_TEAM_RED))
-        game.createComponent<addon::intact::Clickable>(LOBBY_SELECT_TEAM_RED);
-    if (blue == 3 && clics.hasComponent(LOBBY_SELECT_TEAM_BLUE))
-        clics.removeComponent(LOBBY_SELECT_TEAM_BLUE);
-    else if (!clics.hasComponent(LOBBY_SELECT_TEAM_BLUE))
-        game.createComponent<addon::intact::Clickable>(LOBBY_SELECT_TEAM_BLUE);
+    // if (red == 3 && clics.hasComponent(LOBBY_SELECT_TEAM_RED))
+    //     clics.removeComponent(LOBBY_SELECT_TEAM_RED);
+    // else if (!clics.hasComponent(LOBBY_SELECT_TEAM_RED))
+    //     game.createComponent<addon::intact::Clickable>(LOBBY_SELECT_TEAM_RED);
+    // if (blue == 3 && clics.hasComponent(LOBBY_SELECT_TEAM_BLUE))
+    //     clics.removeComponent(LOBBY_SELECT_TEAM_BLUE);
+    // else if (!clics.hasComponent(LOBBY_SELECT_TEAM_BLUE))
+    //     game.createComponent<addon::intact::Clickable>(LOBBY_SELECT_TEAM_BLUE);
 }
 
 void setInLobbyScene(Client& game) {
@@ -95,9 +97,11 @@ void setInLobbyScene(Client& game) {
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
         switch (e) {
             case LOBBY_LAUNCH_GAME:
-                game.deactivateAllScenes();
-                // net::LEAVE_LOBBY msg;
+                // net::ADMIN_START_GAME msg;
                 // game.sendToServer(msg.serialize());
+                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::MAIN));
+                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
+                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
                 game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
                 break;
             case LOBBY_SELECT_TEAM_BLUE:

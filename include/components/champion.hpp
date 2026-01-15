@@ -8,41 +8,20 @@
 #pragma once
 
     #include "Game.hpp"
-#include "clock.hpp"
 
-enum class ChampionState {
-    IDLE_BOT = 0,
-    IDLE_BOT_SIDE,
-    IDLE_SIDE,
-    IDLE_TOP_SIDE,
-    IDLE_TOP,
-    MOV_BOT,
-    MOV_BOT_SIDE,
-    MOV_SIDE,
-    MOV_TOP_SIDE,
-    MOV_TOP,
-};
-
-enum DamageType : std::size_t {
-    PHYSIC = 0,
-    MAGICAL,
-    LIMIT,
-};
-
-struct Spell {
-    std::string name;
-    DamageType dmgType;
-    te::Timestamp cooldown;
-    te::Timestamp castTime;
-    std::array<std::size_t, DamageType::LIMIT> ratios;
+enum class ChampState {
+    IDLE = 0,
+    MOVEMENT = 1,
+    AUTO_ATTACKS = 6,
+    SPELL1 = 11,
+    SPELL2 = 16,
+    DEATH = 21,
 };
 
 struct Champion {
-    // std::string name;
-    // ChampionState state;
-    // Spell Aspell;
-    // Spell Zspell;
-    short champion = 0;
+    Champion(const std::string& name) : name(name) {}
+    std::string name;
+    ChampState state = ChampState::IDLE;
 };
 
 void registerChampion(Game& game);

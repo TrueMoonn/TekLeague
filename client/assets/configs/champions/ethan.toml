@@ -2,14 +2,6 @@
 drawable = true
 player = true
 champion = true
-target = true
-
-[ENTITIES.ethan.team]
-name = "blue"
-
-[ENTITIES.ethan.velocity2]
-x = 0
-y = 0
 
 [ENTITIES.ethan.sprite]
 path = "client/assets/images/champions/ethan/ethan.png"
@@ -35,27 +27,3 @@ frames = [
     [[0, 9], 1, 0.4, false],
     [[0, 10], 1, 0.4, false],
 ]
-
-[ENTITIES.ethan.hitbox]
-left = 0.0
-top = 0.0
-width = 144.3
-height = 192.3
-
-[ENTITIES.ethan.stat_pool]
-ad = 10
-ap = 0
-atk_speed = 1.0
-armor = 20
-magic_resist = 20
-mov_speed = 300
-
-[ENTITIES.ethan.health]
-amount = 200
-max = 200
-regen = 3
-
-[ENTITIES.ethan.mana]
-amount = 300
-max = 300
-regen = 3

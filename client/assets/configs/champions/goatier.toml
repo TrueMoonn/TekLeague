@@ -7,7 +7,7 @@ path = "client/assets/images/champions/goatier/Goatier.png"
 size = [386, 646]
 scale = [144.3, 192.3]
 origin = [193, 646]
-layer = 1
+layer = 10
 
 [ENTITIES.goatier.animation]
 frames = [

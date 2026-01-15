@@ -14,6 +14,7 @@
 #include <interaction/components/player.hpp>
 #include <sfml/components/window.hpp>
 
+#include "components/champion.hpp"
 #include "entities.hpp"
 #include "scenes.hpp"
 #include "components/competences/target.hpp"
@@ -30,18 +31,32 @@ void setInGameScene(Client& game) {
     }};
 
     ingame.entities = {
-        {game.nextEntity(eType::MAP), "sumoners_rift"},
-        {game.nextEntity(eType::BUILDINGS), "tower_blue", {200, 6300}},
-        {game.nextEntity(eType::BUILDINGS), "tower_red", {200, 6500}},
-        {game.nextEntity(eType::CHAMPION), "ethan", {150, 7100}},
-        {game.nextEntity(eType::BUILDINGS), "zone_left_enemy", {200, 6350}}
+        {game.nextEntity(eType::MAP), "sumoners_rift_ground"},
+        {game.nextEntity(eType::MAP), "sumoners_rift_nash_zone"},
+        {game.nextEntity(eType::MAP), "sumoners_rift_jungle"},
+        {game.nextEntity(eType::MAP), "sumoners_rift_walls"},
+        {game.nextEntity(eType::BUILDINGS), "tower_blue", {1400, 1000}},
+        {game.nextEntity(eType::BUILDINGS), "tower_red", {6792, 1000}},
+        {game.nextEntity(eType::BUILDINGS), "zone_left_enemy", {6792, 1000}},
+        {game.nextEntity(eType::CHAMPION), "Gules", {200, 1100}},
+    };
+
+    ingame.on_activate = [&game](){
+        auto& champs = game.getComponent<Champion>();
+        auto& posis = game.getComponent<addon::physic::Position2>();
+        auto& targets = game.getComponent<Target>();
+        for (auto&& [_, pos, target] :
+            ECS::DenseZipper(champs, posis, targets)) {
+            target.x = pos.x;
+            target.y = pos.y;
+        }
     };
 
     std::size_t idx = game.addScene(ingame);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape]) {
             // game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::MAIN));
-            game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
+            // game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
         }
 
         // if (keys[te::Key::A]) {

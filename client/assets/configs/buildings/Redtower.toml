@@ -9,9 +9,9 @@ name = "red"
 [ENTITIES.tower_red.sprite]
 path = "client/assets/images/buildings/tower_red_top.png"
 size = [575, 1459]
-scale = [192, 486]
+scale = [171, 378]
 origin = [192, 486]
-layer = 1
+layer = 10
 
 [ENTITIES.tower_red.stat_pool]
 ad = 10
@@ -60,7 +60,7 @@ speed = 300
 path = "client/assets/images/buildings/tower_projectile.png"
 size = [16, 16]
 origin = [8, 8]
-layer = 1
+layer = 10
 
 [ENTITIES.tower_projectiles_red.animation]
 frames = [
