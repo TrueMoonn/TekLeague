@@ -18,8 +18,7 @@
 Client::Client()
     : Game(CLIENT_PLUGINS_PATH)
     , te::network::GameClient(COM_DEFAULT_MODE, PROTOCOL_PATH) {
-    
-    // Load client configs
+
     for (auto& conf : CLIENT_CONFIG_PATHS)
         addConfig(conf);
     for (auto& sys : CLIENT_SYSTEMS)
@@ -30,8 +29,6 @@ Client::Client()
     createSystem("draw");
     createSystem("draw_text");
     createSystem("animate");
-
-    sub("closed", [this]() { _running = false; });
 
     registerMessageHandlers();
 }
