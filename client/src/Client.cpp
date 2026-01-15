@@ -154,7 +154,7 @@ void Client::registerMessageHandlers() {
 
         _lobby_data.handleLobbiesList(msg);
 
-        emit("lobby:lobbies_list", _lobby_data.getCachedLobbiesList());
+        emit("lobby:lobbies_list");
     });
 
     registerPacketHandler(37, [this](const std::vector<uint8_t>& data) {
@@ -173,7 +173,7 @@ void Client::registerMessageHandlers() {
 
         _lobby_data.handlePlayersList(msg);
 
-        emit("lobby:players_updated", _lobby_data.getPlayersInLobby());
+        emit("lobby:players_updated");
     });
 
     registerPacketHandler(39, [this](const std::vector<uint8_t>& data) {

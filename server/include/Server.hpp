@@ -17,10 +17,10 @@
     #include <mutex>
     #include <atomic>
 
+    #include <clock.hpp>
     #include <network/GameServer.hpp>
     #include <Network/ProtocolManager.hpp>
     #include <Network/Address.hpp>
-    #include "clock.hpp"
     #include "lobby/LobbyContext.hpp"
 
 struct PlayerInfo {
