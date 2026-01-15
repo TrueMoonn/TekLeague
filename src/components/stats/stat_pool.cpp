@@ -12,7 +12,7 @@ void registerStatPool(Game& game) {
         [&game](ECS::Entity e, const toml::table& params) {
             int ad = params["ad"].value_or(0);
             int ap = params["ap"].value_or(0);
-            int as = params["atk_speed"].value_or(0);
+            float as = params["atk_speed"].value_or(0.f);
             int atkr = params["atk_range"].value_or(0);
             int cdr = params["cdr"].value_or(0);
             int ar = params["armor"].value_or(0);
