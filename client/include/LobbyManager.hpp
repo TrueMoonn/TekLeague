@@ -76,6 +76,12 @@ class LobbyDataManager {
      */
     void sendPauseGame();
 
+    /**
+     * @brief Send request to join a specific team
+     * @param team Team number (1 or 2)
+     */
+    void sendWantThisTeam(uint8_t team);
+
     ////// MESSAGE HANDLERS (update data only) //////
 
     void handleLoggedIn(const net::LOGGED_IN& msg);
@@ -92,6 +98,7 @@ class LobbyDataManager {
     void handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg);
     void handleNotAdmin(const net::NOT_ADMIN& msg);
     void handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg);
+    void handleTeamFull(const net::TEAM_FULL& msg);
 
     ////// GETTERS //////
 

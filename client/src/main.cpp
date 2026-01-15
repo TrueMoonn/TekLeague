@@ -51,8 +51,8 @@ int main(int ac, char **av) {
         SCENES_SETUPS.at(static_cast<SCENES>(i))(game);
 
     game.createEntity(game.nextEntity(eType::SYSTEM), "ig_window");
-    game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
 
+    game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::MAIN));
     std::print("Server IP: {}\n", server_ip);
     std::print("Server Port: {}\n\n", server_port);
 

@@ -11,8 +11,6 @@
 #include <sfml/components/sprite.hpp>
 
 #include "ECS/Registry.hpp"
-#include "components/target.hpp"
-#include "components/stat_pool.hpp"
 #include "configs/systems.hpp"
 
 void killAllEntity(Game &game) {
@@ -20,6 +18,7 @@ void killAllEntity(Game &game) {
         [&game](ECS::Registry &) {
         for (auto& e : game.getAllEntityToKill()) {
             game.removeEntity(e);
+            game.popEntity(e);
         }
     });
 }

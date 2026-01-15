@@ -62,4 +62,9 @@ class Client : public Game, public te::network::GameClient {
     LobbyDataManager _lobby_data;
 
     void registerMessageHandlers();
+
+    void handlePing();
+    void handlePong();
+    void sendPing();
+    void sendPong();
 };

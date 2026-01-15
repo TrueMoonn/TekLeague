@@ -80,6 +80,13 @@ void LobbyDataManager::sendPauseGame() {
     std::println("[LobbyData] Sent ADMIN_PAUSE_GAME");
 }
 
+void LobbyDataManager::sendWantThisTeam(uint8_t team) {
+    net::WANT_THIS_TEAM msg;
+    msg.team = team;
+    _network_client.sendToServer(msg.serialize());
+    std::println("[LobbyData] Sent WANT_THIS_TEAM for team: {}", static_cast<int>(team));
+}
+
 ////// MESSAGE HANDLERS (update data only) //////
 
 void LobbyDataManager::handleLoggedIn(const net::LOGGED_IN& msg) {
@@ -122,16 +129,22 @@ void LobbyDataManager::handlePlayersList(const net::PLAYERS_LIST& msg) {
     _players_in_lobby = msg.players;
     std::println("[LobbyData] Players list updated ({} players)", _players_in_lobby.size());
 
-    if (!_players_in_lobby.empty() && _players_in_lobby[0].id == _client_id) {
-        _is_admin = true;
+
+    _is_admin = false;
+    for (const auto& player : _players_in_lobby) {
+        if (player.id == _client_id && player.is_admin != 0) {
+            _is_admin = true;
+            break;
+        }
     }
 
     for (size_t i = 0; i < _players_in_lobby.size(); ++i) {
         const auto& player = _players_in_lobby[i];
         std::string name(player.username, strnlen(player.username, 32));
-        std::println("  [{}] ID={} Username='{}'{}{}", i, player.id, name,
+        std::println("  [{}] ID={} Team={} Username='{}'{}{}", i, player.id,
+                static_cast<int>(player.team), name,
                 (player.id == _client_id ? " [ME]" : ""),
-                (i == 0 ? " [ADMIN]" : ""));
+                (player.is_admin != 0 ? " [ADMIN]" : ""));
     }
 }
 
@@ -167,5 +180,9 @@ void LobbyDataManager::handleNotAdmin(const net::NOT_ADMIN& msg) {
 }
 
 void LobbyDataManager::handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg) {
-    std::println("[LobbyData] Game pause toggled");
+    std::println("[LobbyData] Game paused/resumed");
+}
+
+void LobbyDataManager::handleTeamFull(const net::TEAM_FULL& msg) {
+    std::println("[LobbyData] Team is full");
 }
