@@ -11,6 +11,7 @@
 #include "configs/components.hpp"
 #include "configs/systems.hpp"
 #include "entities.hpp"
+#include "entities_helper.hpp"
 #include "Game.hpp"
 
 Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
@@ -26,14 +27,7 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
     for (auto& map : MAP_PATHS)
         addMap(map);
 
-    _nextEntities[eType::SYSTEM] = eField::SYSTEM_F;
-    _nextEntities[eType::CHAMPION] = eField::CHAMPION_BEGIN;
-    _nextEntities[eType::MENU] = eField::MENU_BEGIN;
-    _nextEntities[eType::HUD] = eField::HUD_BEGIN;
-    _nextEntities[eType::MAP] = eField::MAP_BEGIN;
-    _nextEntities[eType::CREATURES] = eField::CREATURES_BEGIN;
-    _nextEntities[eType::BUILDINGS] = eField::BUILDINGS_BEGIN;
-    _nextEntities[eType::PROJECTILES] = eField::PROJECTILES_BEGIN;
+    EntityHelper::initNextEntities(_nextEntities);
 
 
     sub("closed", [this]() {_running = false;});

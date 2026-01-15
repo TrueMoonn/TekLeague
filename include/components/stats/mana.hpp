@@ -5,7 +5,7 @@
 ** mana.hpp
 */
 
-#include "Game.hpp"
+#include <GameTool.hpp>
 
 struct Mana {
     Mana(int amount, int regen, int max) :
@@ -16,4 +16,4 @@ struct Mana {
     int max;
 };
 
-void registerMana(Game& game);
+void registerMana(te::GameTool& game);

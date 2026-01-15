@@ -7,7 +7,7 @@
 
 #include "components/stats/health.hpp"
 
-void registerHealth(Game& game) {
+void registerHealth(te::GameTool& game) {
     game.registerComponent<Health>("health",
         [&game](ECS::Entity e, const toml::table& params) {
         int amount = params["amount"].value_or(0);

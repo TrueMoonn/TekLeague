@@ -9,7 +9,7 @@
 
 #include "components/stats/xp.hpp"
 
-void registerXp(Game& game) {
+void registerXp(te::GameTool& game) {
     game.registerComponent<Xp>("xp",
         [&game](ECS::Entity e, const toml::table &params) {
         std::size_t amount = params["xp"].value_or(0);

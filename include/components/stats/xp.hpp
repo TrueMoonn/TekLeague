@@ -7,11 +7,11 @@
 
 #pragma once
 
-    #include "Game.hpp"
+    #include <GameTool.hpp>
 
 struct Xp {
     Xp(std::size_t am) : amount(am) {};
     std::size_t amount;
 };
 
-void registerXp(Game& game);
+void registerXp(te::GameTool& game);

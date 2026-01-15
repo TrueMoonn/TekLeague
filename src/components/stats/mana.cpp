@@ -7,7 +7,7 @@
 
 #include "components/stats/mana.hpp"
 
-void registerMana(Game& game) {
+void registerMana(te::GameTool& game) {
     game.registerComponent<Mana>("mana",
         [&game](ECS::Entity e, const toml::table& params) {
         int amount = params["amount"].value_or(0);

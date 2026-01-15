@@ -9,7 +9,7 @@
 
 #include "components/items/inventory.hpp"
 
-void registerInventory(Game& game) {
+void registerInventory(te::GameTool& game) {
     game.registerComponent<Inventory>("inventory",
         [&game](ECS::Entity e, const toml::table& params) {
         std::array<std::size_t, MAX_ITEM_SLOT> arr;

@@ -8,7 +8,7 @@
 #include "components/champion.hpp"
 #include "ECS/Entity.hpp"
 
-void registerChampion(Game& game) {
+void registerChampion(te::GameTool& game) {
     game.registerComponent<Champion>("champion",
         [&game](ECS::Entity e, const toml::table &) {
         game.createComponent<Champion>(e);

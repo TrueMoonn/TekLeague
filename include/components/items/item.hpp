@@ -10,7 +10,7 @@
     #include <vector>
     #include <string>
 
-    #include "Game.hpp"
+    #include <GameTool.hpp>
 
 static const std::vector<std::string> ITEMS = {
     "none",
@@ -27,4 +27,4 @@ struct Item {
     std::size_t id;
 };
 
-void registerItem(Game& game);
+void registerItem(te::GameTool& game);

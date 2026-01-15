@@ -7,7 +7,7 @@
 
 #include "components/stats/stat_pool.hpp"
 
-void registerStatPool(Game& game) {
+void registerStatPool(te::GameTool& game) {
     game.registerComponent<StatPool>("stat_pool",
         [&game](ECS::Entity e, const toml::table& params) {
             int ad = params["ad"].value_or(0);
