@@ -96,6 +96,18 @@ class LobbyContext {
     bool isFull() const;
 
     /**
+        * @brief Build the PLAYERS_INIT message from the lobby's registry
+        * @return The constructed message
+        */
+    net::PLAYERS_INIT getPlayersInit();
+
+    /**
+    * @brief Build the BUILDINGS_INIT message from the lobby's registry
+    * @return The constructed message
+    */
+    net::BUILDINGS_INIT getBuildingsInit();
+
+    /**
      * @brief Try to get player updates if the timestamp delay has passed
      * @return std::optional containing the message if ready, std::nullopt otherwise
      */
