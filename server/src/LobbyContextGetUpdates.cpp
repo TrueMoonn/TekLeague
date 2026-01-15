@@ -41,7 +41,14 @@ net::PLAYERS_INIT LobbyContext::getPlayersInit() {
             if (champ.name == CHAMPIONS[i])
                state.champ = i;
         }
-        state.id = static_cast<uint32_t>(entity),
+        state.id = 0;
+        for (auto& client : _player_entities) {
+            if (client.first == entity) {
+                state.id = client.second;
+                break;
+            }
+        }
+        state.entity = static_cast<uint32_t>(entity),
         state.x = pos.x,
         state.y = pos.y,
 
