@@ -199,8 +199,7 @@ void Server::run() {
                             lobbies.size());
                     }
                     for (auto& [id, ctx] : lobbies) {
-// TODO(PIERRE): Uncomment when Lobby scenes/systems are properly initialized
-                        // ctx.run();
+                        ctx.run();
                     }
                 }
             } catch (const std::exception& e) {
