@@ -11,7 +11,7 @@ path = "client/assets/images/buildings/tower_blue_top.png"
 size = [514, 1133]
 scale = [171, 378]
 origin = [171, 378]
-layer = 1
+layer = 10
 
 [ENTITIES.tower_blue.stat_pool]
 ad = 10
@@ -60,7 +60,7 @@ speed = 300
 path = "client/assets/images/buildings/tower_projectile.png"
 size = [16, 16]
 origin = [8, 8]
-layer = 1
+layer = 10
 
 [ENTITIES.tower_projectiles_blue.animation]
 frames = [

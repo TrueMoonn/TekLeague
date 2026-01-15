@@ -10,4 +10,4 @@ path = "client/assets/images/buildings/red_circle.png"
 size = [311, 200]
 scale = [400, 400]
 origin = [156, 100]
-layer = 1
+layer = 10
