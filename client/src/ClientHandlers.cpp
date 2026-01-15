@@ -153,8 +153,8 @@ void Client::handlePlayersUpdate(const net::PLAYERS_UPDATES& msg) {
         ECS::Entity e = player.entity;
         targets.getComponent(e).x = player.direction_x;
         targets.getComponent(e).y = player.direction_y;
-        // vels.getComponent(e).x = player.vel_x;
-        // vels.getComponent(e).y = player.vel_y;
+        vels.getComponent(e).x = player.vel_x;
+        vels.getComponent(e).y = player.vel_y;
         pos.getComponent(e).x = player.x;
         pos.getComponent(e).y = player.y;
         healths.getComponent(e).amount = player.hp;
