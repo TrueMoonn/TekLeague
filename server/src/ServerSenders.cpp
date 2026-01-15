@@ -202,6 +202,7 @@ void Server::sendPlayersListUnsafe(uint lobby_id) {
         "[Server::sendPlayersListUnsafe] Broadcasting to lobby with {} players",
         msg.players.size());
     broadcastToLobbyUnsafe(lobby_id, msg.serialize());
+    lobbies.at(lobby_id).getLobby().setPlayers(msg.players);
 }
 
 void Server::sendPlayersList(uint lobby_id) {

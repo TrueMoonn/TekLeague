@@ -86,7 +86,7 @@ Every code (1 ... 255) is on ONE BYTE only
 **these fields have fixed size, thus do not need parsing of any kind, and values are all packet together without separators**
 
 ```
-51  PLAYERS INIT            [X times (4B id + 1B team + 4B x + 4B y + 1B champ)]
+51  PLAYERS INIT            [X times (4B id + 4B entity + 1B team + 4B x + 4B y + 1B champ)]
 52  BUILDINGS INIT          [X times (4B id + 1B team + 4B x + 4B y + 8B hp + 4B type + 4B range)]
 
 61  PLAYERS UPDATES         [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 8B mana + 1B level + 16 times (1B effect) )]
