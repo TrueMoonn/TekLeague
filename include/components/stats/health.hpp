@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Game.hpp"
+    #include "Game.hpp"
 
 struct Health {
     Health(int hp, int hp_max, int hp_regen) :

@@ -7,7 +7,7 @@
 
 #include "components/competences/auto_track.hpp"
 
-void registerAutoTrack(Game &game) {
+void registerAutoTrack(Game& game) {
     game.registerComponent<AutoTrack>("auto_track",
         [&game](ECS::Entity e, const toml::table &params) {
             int speed = params["speed"].value_or(0);

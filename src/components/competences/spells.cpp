@@ -22,6 +22,7 @@ void registerSpellCasting(Game& game) {
                 const std::string& name = spell->at("name").value_or("unkown");
                 std::size_t base = spell->at("base").value_or(0);
                 std::size_t dtype = spell->at("damage_type").value_or(0);
+                std::size_t mc = spell->at("mana_cost").value_or(0);
                 std::array<std::size_t, DamageType::DMGLIMIT> ratios;
                 ratios.fill(0);
                 if (spell->at("ratios").is_array()) {
@@ -39,7 +40,7 @@ void registerSpellCasting(Game& game) {
                         entities.emplace_back(raw_entities[i].value_or("unkown"));
                 }
                 spells.emplace_back(name, base, static_cast<EffectType>(dtype),
-                    ratios, cd, ctime, static_cast<SpellTarget>(target), entities);
+                    ratios, cd, ctime, static_cast<SpellTarget>(target), mc, entities);
             }
         }
         game.createComponent<Spells>(e, spells);
