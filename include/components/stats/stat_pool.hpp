@@ -7,8 +7,9 @@
 
 #pragma once
 
+    #include <clock.hpp>
+
     #include "Game.hpp"
-#include "clock.hpp"
 
 struct StatPool {
     StatPool(int ad_, int ap_, float as, int atkr,

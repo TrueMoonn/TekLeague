@@ -14,15 +14,9 @@
 
     #include <Network/generated_messages.hpp>
     #include <Network/Address.hpp>
+    #include <clock.hpp>
 
-    #include "clock.hpp"
-    #include "Lobby.hpp"
-
-enum class LobbyGameState {
-    PRE_GAME,   // Lobby en attente de joueurs / configuration
-    IN_GAME,    // Partie en cours
-    END_GAME    // Partie terminée
-};
+    #include "Game.hpp"
 
 class LobbyContext {
  public:
@@ -41,31 +35,33 @@ class LobbyContext {
 
     static constexpr float PLAYERS_LIST_DEFAULT_LATENCY = 0.5f;
 
+    static constexpr std::string PLUGINS_PATH = "server/plugins";
+
  public:
     LobbyContext(uint max_players, const std::string& code);
 
     void run();
     const std::string& getCode();
 
-    Lobby& getLobby();
+    Game& getLobby();
 
     ////// Game State Management //////
 
     /**
      * @brief Get current game state
      */
-    LobbyGameState getGameState() const { return game_state; }
+    LobbyGameState getGameState() const { return lobby.getGameState(); }
 
     /**
      * @brief Set the game state
      */
-    void setGameState(LobbyGameState state) { game_state = state; }
+    void setGameState(LobbyGameState state) { lobby.setGameState(state); }
 
     /**
      * @brief Get current game state as string
      */
     const char* getGameStateString() const {
-        switch (game_state) {
+        switch (lobby.getGameState()) {
             case LobbyGameState::PRE_GAME: return "PRE_GAME";
             case LobbyGameState::IN_GAME: return "IN_GAME";
             case LobbyGameState::END_GAME: return "END_GAME";
@@ -76,17 +72,17 @@ class LobbyContext {
     /**
      * @brief Check if lobby is in pre-game state
      */
-    bool isPreGame() const { return game_state == LobbyGameState::PRE_GAME; }
+    bool isPreGame() const { return lobby.isPreGame(); }
 
     /**
      * @brief Check if lobby is in game
      */
-    bool isInGame() const { return game_state == LobbyGameState::IN_GAME; }
+    bool isInGame() const { return lobby.isInGame(); }
 
     /**
      * @brief Check if lobby game has ended
      */
-    bool isEndGame() const { return game_state == LobbyGameState::END_GAME; }
+    bool isEndGame() const { return lobby.isEndGame(); }
 
     ////// Network //////
 
@@ -94,6 +90,18 @@ class LobbyContext {
     void removeClient(uint32_t client_id);
     const std::unordered_map<uint32_t, net::Address>& getClients() const;
     bool isFull() const;
+
+    /**
+        * @brief Build the PLAYERS_INIT message from the lobby's registry
+        * @return The constructed message
+        */
+    net::PLAYERS_INIT getPlayersInit();
+
+    /**
+    * @brief Build the BUILDINGS_INIT message from the lobby's registry
+    * @return The constructed message
+    */
+    net::BUILDINGS_INIT getBuildingsInit();
 
     /**
      * @brief Try to get player updates if the timestamp delay has passed
@@ -241,10 +249,7 @@ class LobbyContext {
     bool shouldSendPlayersList();
 
  private:
-    Lobby lobby;
-
-    ////// Game State //////
-    LobbyGameState game_state = LobbyGameState::PRE_GAME;
+    Game lobby;
 
     ////// Network //////
     std::unordered_map<uint32_t, net::Address> connected_players;

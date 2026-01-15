@@ -303,6 +303,8 @@ void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
 
     // TODO(Pierre): Initialize game state in lobby
     // lobbies.at(lobby_id).getLobby().startGame();
+    // sendPlayersInit(lobby_id);
+    // sendBuildingsInit(lobby_id);
 }
 
 void Server::handleLeaveLobby(const std::vector<uint8_t>& data,
