@@ -199,6 +199,36 @@ net::STATS_UPDATES LobbyContext::getStatsUpdates() {
     return msg;
 }
 
+net::SCORE LobbyContext::getScore() {
+    net::SCORE msg;
+
+    msg.team_count = sizeof(lobby.teams) / sizeof(net::TeamScore);
+    msg.teams[0] = lobby.teams[0];
+    msg.teams[1] = lobby.teams[0];
+
+    return msg;
+}
+
+net::GAME_DURATION LobbyContext::getGameDuration() {
+    net::GAME_DURATION msg;
+
+    auto now = std::chrono::system_clock::now();
+    auto elapsed = now - lobby.game_start_time;
+    msg.duration = static_cast<uint32_t>(
+        std::chrono::duration_cast<std::chrono::seconds>(elapsed).count());
+
+    return msg;
+}
+
+net::SCOREBOARD LobbyContext::getScoreboard() {
+    net::SCOREBOARD msg;
+
+    for (auto scoreboardentry : lobby.scoreboard) {
+        msg.entries.push_back(scoreboardentry);
+    }
+    return msg;
+}
+
 std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetPlayerUpdates() {
     if (!players_update.checkDelay())
         return std::nullopt;
@@ -250,6 +280,27 @@ std::optional<net::STATS_UPDATES> LobbyContext::tryGetStatsUpdates() {
         return std::nullopt;
 
     return getStatsUpdates();
+}
+
+std::optional<net::SCORE> LobbyContext::tryGetScore() {
+    if (!score_update.checkDelay())
+        return std::nullopt;
+
+    return getScore();
+}
+
+std::optional<net::GAME_DURATION> LobbyContext::tryGetGameDuration() {
+    if (!game_duration_update.checkDelay())
+        return std::nullopt;
+
+    return getGameDuration();
+}
+
+std::optional<net::SCOREBOARD> LobbyContext::tryGetScoreboard() {
+    if (!scoreboard_update.checkDelay())
+        return std::nullopt;
+
+    return getScoreboard();
 }
 
 bool LobbyContext::shouldSendPlayersList() {
