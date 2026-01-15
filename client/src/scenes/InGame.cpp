@@ -28,8 +28,8 @@ void setInGameScene(Client& game) {
     te::Scene ingame;
     ingame.systems = {{
         {"poll_event"},  // INPUT
-        {"champion_movement", "auto_attacks", "track_target", "deal_damage", "kill_all_entity"},  // PRE UPDATE
-        {"animate", "entity_direction", "movement2"},  // UPDATE
+        {"champion_movement"},  // PRE UPDATE
+        {"animate"},  // UPDATE
         {"follow_player"},  // POST UPDATE
         {"draw", "display"}  // RENDER
     }};
