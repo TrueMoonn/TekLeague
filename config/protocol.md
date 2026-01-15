@@ -44,7 +44,7 @@ Every code (1 ... 255) is on ONE BYTE only
 
 ### 50 ... 69 → in game codes
 ```
-50  CLIENT INPUTS       [4B spells + 4B x + 4B y]     ->  Spell and mouse position
+50  CLIENT INPUTS       [4B action + 4B x + 4B y]    ->  Action and mouse position
 87  ADMIN PAUSE GAME    [NO DATA]                     ->  Player asks to pause the game / Player asks to play the game, responded by 37 if you are not admin, 61 if ok
 ```
 

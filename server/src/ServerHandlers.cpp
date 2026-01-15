@@ -14,6 +14,8 @@
 
 #include "Network/generated_messages.hpp"
 #include "Server.hpp"
+#include "components/competences/target.hpp"
+#include "my.hpp"
 
 bool Server::setPacketsHandlers() {
     registerPacketHandler(2, [this](const std::vector<uint8_t>& data,
@@ -63,6 +65,10 @@ bool Server::setPacketsHandlers() {
     registerPacketHandler(46, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
         handleToggleLobbyVisibility(data, sender);
+    });
+    registerPacketHandler(50, [this](const std::vector<uint8_t>& data,
+        const net::Address& sender) {
+        handleClientInput(data, sender);
     });
     registerPacketHandler(87, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
@@ -393,6 +399,33 @@ void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data,
     std::println("[Server] handleToggleLobbyVisibility: Lobby {} is now {}",
                  lobby_id, (is_public ? "PUBLIC" : "PRIVATE"));
     sendLobbyVisibilityChanged(lobby_id, is_public);
+}
+
+void Server::handleClientInput(const std::vector<uint8_t>& data,
+    const net::Address& sender) {
+    net::CLIENT_INPUTS msg = net::CLIENT_INPUTS::deserialize(data);
+    auto client_opt = getClient(sender);
+    if (!client_opt)
+        return;
+
+    auto& client = client_opt->get();
+    if (!client.in_lobby)
+        return;
+
+    uint lobby_id = client.lobby_id;
+
+    {
+        std::lock_guard<std::mutex> lock(lobbies_mutex);
+        auto& lobby_ctx = lobbies.at(lobby_id);
+        auto& game = lobby_ctx.getLobby();
+        auto e = lobby_ctx.getPlayerEntity(client.id);
+
+        if (msg.actions == static_cast<uint8_t>(ActionIG::MOVEMENT)) {
+            auto& target = game.getComponent<Target>();
+            target.getComponent(e).x = msg.mouse_x;
+            target.getComponent(e).y = msg.mouse_y;
+        }
+    }
 }
 
 void Server::handleWantThisTeam(const std::vector<uint8_t>& data,

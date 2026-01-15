@@ -59,6 +59,9 @@ void LobbyContext::createPlayersEntities() {
     for (auto& player : players) {
         ECS::Entity e = game.nextEntity(eType::CHAMPION);
         game.createEntity(e, "Gules");
+
+        _player_entities[player.id] = e;
+
         for (auto& plist : game.getPlayers()) {
             teams.getComponent(e).name = TEAMS[plist.team];
             if (plist.team == 1) {
@@ -70,4 +73,9 @@ void LobbyContext::createPlayersEntities() {
             }
         }
     }
+}
+
+ECS::Entity LobbyContext::getPlayerEntity(uint32_t client_id) const {
+    auto it = _player_entities.find(client_id);
+    return it->second;
 }

@@ -93,9 +93,16 @@ class LobbyContext {
     void createPlayersEntities();
 
     /**
-        * @brief Build the PLAYERS_INIT message from the lobby's registry
-        * @return The constructed message
-        */
+     * @brief Get the entity associated with a player's client ID
+     * @param client_id The client ID of the player
+     * @return std::optional containing the entity if found, std::nullopt otherwise
+     */
+    ECS::Entity getPlayerEntity(uint32_t client_id) const;
+
+    /**
+     * @brief Build the PLAYERS_INIT message from the lobby's registry
+     * @return The constructed message
+     */
     net::PLAYERS_INIT getPlayersInit();
 
     /**
@@ -254,6 +261,7 @@ class LobbyContext {
 
     ////// Network //////
     std::unordered_map<uint32_t, net::Address> connected_players;
+    std::unordered_map<uint32_t, ECS::Entity> _player_entities;
     uint max_clients;
 
     te::Timestamp players_update =
