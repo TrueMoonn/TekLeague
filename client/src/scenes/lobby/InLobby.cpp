@@ -9,11 +9,13 @@
 #include <cstddef>
 #include <events.hpp>
 #include <sfml/components/text.hpp>
+#include <interaction/components/clickable.hpp>
 
 #include "scenes/lobby.hpp"
 #include "scenes.hpp"
 
 static void updateLobbyInfos(Client &game) {
+    auto& clics = game.getComponent<addon::intact::Clickable>();
     const auto& players = game.getLobbyData().getPlayersInLobby();
     std::size_t blue = 0;
     std::size_t red = 0;
@@ -32,10 +34,14 @@ static void updateLobbyInfos(Client &game) {
             red += 1;
         }
     }
-    // if (red == 3) game.removeEntity(LOBBY_SELECT_TEAM_RED);
-    // else game.createEntity(LOBBY_SELECT_TEAM_RED, "select_red", {1000.f, 320.f});
-    // if (blue == 3) game.removeEntity(LOBBY_SELECT_TEAM_BLUE);
-    // else game.createEntity(LOBBY_SELECT_TEAM_BLUE, "select_blue", {650.f, 320.f});
+    if (red == 3 && clics.hasComponent(LOBBY_SELECT_TEAM_RED))
+        clics.removeComponent(LOBBY_SELECT_TEAM_RED);
+    else if (!clics.hasComponent(LOBBY_SELECT_TEAM_RED))
+        game.createComponent<addon::intact::Clickable>(LOBBY_SELECT_TEAM_RED);
+    if (blue == 3 && clics.hasComponent(LOBBY_SELECT_TEAM_BLUE))
+        clics.removeComponent(LOBBY_SELECT_TEAM_BLUE);
+    else if (!clics.hasComponent(LOBBY_SELECT_TEAM_BLUE))
+        game.createComponent<addon::intact::Clickable>(LOBBY_SELECT_TEAM_BLUE);
 }
 
 void setInLobbyScene(Client& game) {

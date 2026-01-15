@@ -13,9 +13,7 @@
 #include <sfml/components/drawable.hpp>
 
 #include "GameTool.hpp"
-#include "Network/generated_messages.hpp"
 #include "components/ui/button.hpp"
-#include "interaction/components/clickable.hpp"
 #include "scenes/lobby.hpp"
 #include "scenes.hpp"
 
