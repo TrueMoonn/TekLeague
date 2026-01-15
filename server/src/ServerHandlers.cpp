@@ -337,8 +337,9 @@ void Server::handleLeaveLobby(const std::vector<uint8_t>& data,
     client.lobby_id = 0;
 
     if (lobby_is_empty) {
-        net::LOBBY_DESTROYED msg;
-        broadcastToLobbyUnsafe(lobby_id, msg.serialize());
+        std::println("[Server] handleLeaveLobby: Lobby {} is now empty, destroying it",
+            lobby_id);
+        destroyLobbyUnsafe(lobby_id);
         return;
     }
 

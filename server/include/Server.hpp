@@ -92,6 +92,8 @@ class Server : public te::network::GameServer {
 
     uint createLobby(uint max_clients, const net::Address& admin);
     void destroyLobby(uint lobby_id);
+    // NOTE: This function assumes lobbies_mutex is already locked!
+    void destroyLobbyUnsafe(uint lobby_id);
     void broadcastToLobby(uint lobby_id, const std::vector<uint8_t>& data);
     void sendToLobby(uint lobby_id,
         const std::vector<uint8_t>& data, const net::Address& exclude);
