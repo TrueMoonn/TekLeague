@@ -69,15 +69,11 @@ void setInGameScene(Client& game) {
     std::size_t idx = game.addScene(ingame);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape]) {
-            // game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::MAIN));
-            // game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
+            game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::PARAMETERS));
         }
 
-        // if (keys[te::Key::A]) {
-        //     auto& players = game.getComponent<addon::intact::Player>();
-        //     auto& stats = game.getComponent<StatPool>();
-        //     static te::Timestamp();
-        // }
+        if (keys[te::Key::A]) {
+        }
     });
     game.subForScene<te::Mouse>(idx, "mouse_input", [&game](te::Mouse mouse) {
         if (mouse.type[te::MouseEvent::MouseRight]) {
