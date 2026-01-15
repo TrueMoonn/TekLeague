@@ -22,7 +22,7 @@ static void shootAt(Game &game, const addon::physic::Position2 &towerPos,
     const addon::physic::Position2 &playerPos, ECS::Entity Player)
 {
     auto e = game.nextEntity(eType::PROJECTILES);
-    game.createEntity(e, "tower_projectiles", towerPos);
+    game.createEntity(e, "tower_projectiles_red", towerPos);
     auto& track = game.getComponent<AutoTrack>().getComponent(e);
     track.toFollow = Player;
 }
@@ -36,8 +36,6 @@ void autoAttacks(Game &game) {
 
         for (auto&& [e1, pos1, stat1, team1, _] :
             ECS::IndexedDenseZipper(positions, stats, teams, aa)) {
-            if (!stat1.atk_speed.checkDelay())
-                continue;
             for (auto&& [e2, pos2, stat2, team2] :
                 ECS::IndexedDenseZipper(positions, stats, teams)) {
                 if (!team1.name.compare(team2.name))

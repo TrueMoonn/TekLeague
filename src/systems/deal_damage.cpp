@@ -15,12 +15,12 @@
 #include "ECS/DenseSA.hpp"
 #include "ECS/Entity.hpp"
 #include "ECS/Registry.hpp"
-#include "components/auto_track.hpp"
 #include "components/champion.hpp"
-#include "components/interaction/health.hpp"
-#include "components/ranged_zone.hpp"
-#include "components/stat_pool.hpp"
+#include "components/competences/auto_track.hpp"
+#include "components/stats/health.hpp"
+#include "components/stats/stat_pool.hpp"
 #include "configs/systems.hpp"
+#include "entity_spec/components/team.hpp"
 #include "maths/Rect.hpp"
 #include "physic/components/hitbox.hpp"
 
@@ -38,23 +38,27 @@ static mat::RectF true_hitbox(const addon::physic::Position2 &pos,
         mat::Vector2f(hit.size.x, hit.size.y));
 }
 
-static std::vector<ECS::Entity> entity_hit(Game& reg,
+static std::vector<ECS::Entity> entity_hit_team(Game& reg,
     const ECS::Entity& entity) {
     std::vector<ECS::Entity> entities_hit;
 
     auto& positions = reg.getComponent<addon::physic::Position2>();
     auto& hitboxs = reg.getComponent<addon::physic::Hitbox>();
+    auto& teams = reg.getComponent<addon::eSpec::Team>();
+    auto& track = reg.getComponent<AutoTrack>();
     auto& damage = reg.getComponent<StatPool>();
 
-    auto e_hit = true_hitbox(GET_ENTITY_CMPT(positions, entity),
-        GET_ENTITY_CMPT(hitboxs, entity));
+    auto e_hit = true_hitbox(positions.getComponent(entity),
+        hitboxs.getComponent(entity));
+        auto& e_team = teams.getComponent(entity);
 
-    for (auto &&[e, pos, hit, _]
-        : ECS::IndexedDenseZipper(positions, hitboxs, damage)) {
-        // if (tm.name == e_team.name)
-        //     continue;
-        if (square_hitbox(e_hit, true_hitbox(pos, hit)))
+    for (auto &&[e, pos, hit, tm, _]
+        : ECS::IndexedDenseZipper(positions, hitboxs, teams, track)) {
+        if (tm.name == e_team.name)
+            continue;
+        if (square_hitbox(e_hit, true_hitbox(pos, hit))) {
             entities_hit.push_back(e);
+        }
     }
     return entities_hit;
 }
@@ -66,15 +70,16 @@ void dealDamage(Game &game) {
         auto& healths = game.getComponent<Health>();
         std::vector<ECS::Entity> deads;
 
-        for (auto&& [e, champ, pool, hp] : ECS::IndexedDenseZipper(champions, pools, healths)) {
-            for (auto& hit : entity_hit(game, e)) {
+        for (auto&& [e, _, pool, hp] : ECS::IndexedDenseZipper(champions, pools, healths)) {
+            for (auto& hit : entity_hit_team(game, e)) {
                 hp.reduceSafely(pool.ad);
                 if (hp.amount <= 0) {
                     deads.push_back(e);
                 }
+                deads.push_back(hit);
             }
             for (auto& dead : deads) {
-                game.AddKillEntity(e);
+                game.AddKillEntity(dead);
             }
         }
     });

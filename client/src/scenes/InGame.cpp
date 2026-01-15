@@ -23,7 +23,7 @@ void setInGameScene(Client& game) {
     te::Scene ingame;
     ingame.systems = {{
         {"poll_event"},  // INPUT
-        {"champion_movement", "auto_attacks", "track_target"},  // PRE UPDATE
+        {"champion_movement", "auto_attacks", "track_target", "deal_damage", "kill_all_entity"},  // PRE UPDATE
         {"animate", "entity_direction", "movement2"},  // UPDATE
         {"follow_player"},  // POST UPDATE
         {"draw", "display"}  // RENDER
@@ -31,7 +31,8 @@ void setInGameScene(Client& game) {
 
     ingame.entities = {
         {game.nextEntity(eType::MAP), "sumoners_rift"},
-        {game.nextEntity(eType::BUILDINGS), "tower", {200, 6300}},
+        {game.nextEntity(eType::BUILDINGS), "tower_blue", {200, 6300}},
+        {game.nextEntity(eType::BUILDINGS), "tower_red", {200, 6500}},
         {game.nextEntity(eType::CHAMPION), "ethan", {150, 7100}},
         {game.nextEntity(eType::BUILDINGS), "zone_left_enemy", {200, 6350}}
     };

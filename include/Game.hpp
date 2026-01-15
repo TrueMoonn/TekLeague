@@ -12,7 +12,7 @@
     #include <ECS/Entity.hpp>
     #include <GameTool.hpp>
     #include <clock.hpp>
-#include <vector>
+    #include <vector>
 
     #include "entities.hpp"
 
@@ -32,6 +32,11 @@ class Game : public te::GameTool {
         return this->_EntityToKill;
     };
 
+    void popEntity(ECS::Entity e) {
+        this->_EntityToKill.erase(std::find(this->_EntityToKill.begin(),
+            this->_EntityToKill.end(), e));
+    };
+
     virtual void run();
 
  protected:
@@ -39,5 +44,5 @@ class Game : public te::GameTool {
     te::Timestamp _framelimit;
  private:
     std::unordered_map<eType, ECS::Entity> _nextEntities;
-    std::vector<ECS::Entity> _EntityToKill;
+        std::vector<ECS::Entity> _EntityToKill;
 };
