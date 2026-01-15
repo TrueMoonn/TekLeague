@@ -129,16 +129,22 @@ void LobbyDataManager::handlePlayersList(const net::PLAYERS_LIST& msg) {
     _players_in_lobby = msg.players;
     std::println("[LobbyData] Players list updated ({} players)", _players_in_lobby.size());
 
-    if (!_players_in_lobby.empty() && _players_in_lobby[0].id == _client_id) {
-        _is_admin = true;
+
+    _is_admin = false;
+    for (const auto& player : _players_in_lobby) {
+        if (player.id == _client_id && player.is_admin != 0) {
+            _is_admin = true;
+            break;
+        }
     }
 
     for (size_t i = 0; i < _players_in_lobby.size(); ++i) {
         const auto& player = _players_in_lobby[i];
         std::string name(player.username, strnlen(player.username, 32));
-        std::println("  [{}] ID={} Username='{}'{}{}", i, player.id, name,
+        std::println("  [{}] ID={} Team={} Username='{}'{}{}", i, player.id,
+                static_cast<int>(player.team), name,
                 (player.id == _client_id ? " [ME]" : ""),
-                (i == 0 ? " [ADMIN]" : ""));
+                (player.is_admin != 0 ? " [ADMIN]" : ""));
     }
 }
 

@@ -34,6 +34,11 @@ class LobbyContext {
     static constexpr float COLLECTIBLES_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
     static constexpr float INVENTORIES_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
     static constexpr float STATS_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
+
+    static constexpr float SCORE_DEFAULT_LATENCY = 1.0f / 1.0f;
+    static constexpr float GAME_DURATION_DEFAULT_LATENCY = 1.0f / 1.0f;
+    static constexpr float SCOREBOARD_DEFAULT_LATENCY = 1.0f / 1.0f;
+
     static constexpr float PLAYERS_LIST_DEFAULT_LATENCY = 0.5f;
 
  public:
@@ -132,6 +137,24 @@ class LobbyContext {
      */
     std::optional<net::STATS_UPDATES> tryGetStatsUpdates();
 
+    /**
+     * @brief Try to get score if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::SCORE> tryGetScore();
+
+    /**
+     * @brief Try to get game duration if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::GAME_DURATION> tryGetGameDuration();
+
+    /**
+     * @brief Try to get scoreboard if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::SCOREBOARD> tryGetScoreboard();
+
     ////// setters //////
 
     /**
@@ -182,6 +205,28 @@ class LobbyContext {
     void setStatsUpdateFrequency(float freq) {
         stats_update.delay = size_t(SEC_TO_MICRO(freq));
     }
+
+    /**
+     * @brief Set how often to send score (in seconds)
+     */
+    void setScoreFrequency(float freq) {
+        score_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send game duration (in seconds)
+     */
+    void setGameDurationFrequency(float freq) {
+        game_duration_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
+    /**
+     * @brief Set how often to send scoreboard (in seconds)
+     */
+    void setScoreboardFrequency(float freq) {
+        scoreboard_update.delay = size_t(SEC_TO_MICRO(freq));
+    }
+
     /**
      * @brief Set how often to send players list in PRE_GAME (in seconds)
      */
@@ -219,6 +264,14 @@ class LobbyContext {
         te::Timestamp(INVENTORIES_UPDATES_DEFAULT_LATENCY);
     te::Timestamp stats_update =
         te::Timestamp(STATS_UPDATES_DEFAULT_LATENCY);
+
+    te::Timestamp score_update =
+        te::Timestamp(SCORE_DEFAULT_LATENCY);
+    te::Timestamp game_duration_update =
+        te::Timestamp(GAME_DURATION_DEFAULT_LATENCY);
+    te::Timestamp scoreboard_update =
+        te::Timestamp(SCOREBOARD_DEFAULT_LATENCY);
+
     te::Timestamp players_list_update =
         te::Timestamp(PLAYERS_LIST_DEFAULT_LATENCY);
 
@@ -263,4 +316,22 @@ class LobbyContext {
      * @return The constructed message
      */
     net::STATS_UPDATES getStatsUpdates();
+
+    /**
+     * @brief Build the STATS_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::SCORE getScore();
+
+    /**
+     * @brief Build the STATS_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::GAME_DURATION getGameDuration();
+
+    /**
+     * @brief Build the STATS_UPDATES message from the lobby's registry
+     * @return The constructed message
+     */
+    net::SCOREBOARD getScoreboard();
 };
