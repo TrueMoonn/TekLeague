@@ -7,6 +7,7 @@
 
 #include <ECS/DenseZipper.hpp>
 
+#include <cstdint>
 #include <events.hpp>
 #include <clock.hpp>
 #include <maths/Vector.hpp>
@@ -15,9 +16,11 @@
 #include <sfml/components/window.hpp>
 #include <entity_spec/components/team.hpp>
 
+#include "Network/generated_messages.hpp"
 #include "components/champion.hpp"
 #include "components/competences/target.hpp"
 #include "entities.hpp"
+#include "my.hpp"
 #include "scenes.hpp"
 
 
@@ -57,17 +60,17 @@ void setInGameScene(Client& game) {
             static te::Timestamp delta(0.02f);
             if (!delta.checkDelay())
                 return;
-            auto& targets = game.getComponent<Target>();
             auto& posis = game.getComponent<addon::physic::Position2>();
             auto& players = game.getComponent<addon::intact::Player>();
-            auto& wins = game.getComponent<addon::sfml::Window>();
-            const auto& winSize = wins.getComponent(
-                static_cast<std::size_t>(SYSTEM_F)).win->getSize();
+            const auto& winSize = game.getComponent<addon::sfml::Window>()
+                .getComponent(static_cast<std::size_t>(SYSTEM_F)).win->getSize();
 
-            for (auto&& [_, dir, pos] :
-                ECS::DenseZipper(players, targets, posis)) {
-                    dir.x = pos.x - (winSize.x / 2.f) + mouse.position.x;
-                    dir.y = pos.y - (winSize.y / 2.f) + mouse.position.y;
+            for (auto&& [_, pos] : ECS::DenseZipper(players, posis)) {
+                net::CLIENT_INPUTS msg;
+                msg.mouse_x = pos.x - (winSize.x / 2.f) + mouse.position.x;
+                msg.mouse_y = pos.y - (winSize.y / 2.f) + mouse.position.y;
+                msg.actions = static_cast<uint8_t>(ActionIG::MOVEMENT);
+                game.sendToServer(msg.serialize());
             }
         }
     });

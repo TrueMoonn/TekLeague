@@ -36,3 +36,12 @@ static const std::array<std::string, NB_TEAMS> TEAMS = {
     "blue",
     "red",
 };
+
+enum class ActionIG {
+    MOVEMENT = 0,
+    AA,
+    SPELL1,
+    SPELL2,
+    BACK,
+    SHOP,
+};

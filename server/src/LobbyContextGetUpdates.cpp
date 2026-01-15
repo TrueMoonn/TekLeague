@@ -94,7 +94,7 @@ net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
         ECS::IndexedDenseZipper(positions, healths, champs, levels, manas, targets)) {
 
         net::PlayerUpdate state;
-        state.id = static_cast<uint32_t>(entity),
+        state.entity = static_cast<uint32_t>(entity),
         state.x = pos.x,
         state.y = pos.y,
         state.hp = static_cast<double>(health.amount),
