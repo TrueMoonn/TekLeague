@@ -68,7 +68,7 @@
     },
     "PlayerUpdate": {
       "fields": [
-        { "name": "id", "type": "uint32" },
+        { "name": "entity", "type": "uint32" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
         { "name": "direction_x", "type": "float" },
@@ -291,22 +291,9 @@
     "CLIENT_INPUTS": {
       "id": 50,
       "fields": [
-        { "name": "keyboard_input_count", "type": "uint8" },
-        {
-          "name": "keyboard_inputs",
-          "type": "fixed_array",
-          "element_type": "uint8",
-          "max_size": 102
-        },
-        { "name": "mouse_input_count", "type": "uint8" },
-        {
-          "name": "mouse_inputs",
-          "type": "fixed_array",
-          "element_type": "uint8",
-          "max_size": 3
-        },
-        { "name": "mouse_x", "type": "uint32" },
-        { "name": "mouse_y", "type": "uint32" }
+        { "name": "actions", "type": "uint8" },
+        { "name": "mouse_x", "type": "float" },
+        { "name": "mouse_y", "type": "float" }
       ]
     },
     "PLAYERS_INIT": {

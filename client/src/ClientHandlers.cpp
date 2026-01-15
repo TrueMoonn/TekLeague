@@ -10,11 +10,15 @@
 
 #include <entity_spec/components/team.hpp>
 #include <interaction/components/player.hpp>
+#include <components/competences/target.hpp>
+#include <physic/components/position.hpp>
 
 #include "Client.hpp"
+#include "ECS/Entity.hpp"
+#include "components/stats/health.hpp"
+#include "components/stats/mana.hpp"
+#include "components/stats/xp.hpp"
 #include "my.hpp"
-#include "components/competences/target.hpp"
-#include "entities.hpp"
 
 void Client::handleLoggedIn(const net::LOGGED_IN& msg) {
     _client_id = msg.id;
@@ -136,3 +140,22 @@ void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
         }
     }
 }
+
+void Client::handlePlayersUpdate(const net::PLAYERS_UPDATES& msg) {
+    auto& pos = getComponent<addon::physic::Position2>();
+    auto& targets = getComponent<Target>();
+    auto& healths = getComponent<Health>();
+    auto& xps = getComponent<Xp>();
+    auto& manas = getComponent<Mana>();
+
+    for (auto& player : msg.players) {
+        ECS::Entity e = player.entity;
+        targets.getComponent(e).x = player.direction_x;
+        targets.getComponent(e).y = player.direction_y;
+        pos.getComponent(e).x = player.x;
+        pos.getComponent(e).y = player.y;
+        healths.getComponent(e).amount = player.hp;
+        xps.getComponent(e).amount = player.level;
+        manas.getComponent(e).amount = player.mana;
+    }
+};
