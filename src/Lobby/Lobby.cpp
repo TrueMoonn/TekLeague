@@ -10,7 +10,6 @@
 Lobby::Lobby(uint max_clients, const std::string& code,
     const std::string& ppath) :
     Game(ppath), max_players(max_clients), code(code) {
-    // gérer les scenes ici ?
 }
 
 void Lobby::run() {
@@ -20,6 +19,10 @@ void Lobby::run() {
 
 const std::string& Lobby::getCode() {
     return code;
+}
+
+void Lobby::setCode(const std::string& new_code) {
+    code = new_code;
 }
 
 const uint Lobby::getMaxPlayers() {

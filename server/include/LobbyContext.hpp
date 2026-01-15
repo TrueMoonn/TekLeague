@@ -18,12 +18,6 @@
 
     #include "lobby/Lobby.hpp"
 
-enum class LobbyGameState {
-    PRE_GAME,   // Lobby en attente de joueurs / configuration
-    IN_GAME,    // Partie en cours
-    END_GAME    // Partie terminée
-};
-
 class LobbyContext {
  public:
     ////// Timestamp default latency in seconds //////
@@ -56,18 +50,18 @@ class LobbyContext {
     /**
      * @brief Get current game state
      */
-    LobbyGameState getGameState() const { return game_state; }
+    LobbyGameState getGameState() const { return lobby.getGameState(); }
 
     /**
      * @brief Set the game state
      */
-    void setGameState(LobbyGameState state) { game_state = state; }
+    void setGameState(LobbyGameState state) { lobby.setGameState(state); }
 
     /**
      * @brief Get current game state as string
      */
     const char* getGameStateString() const {
-        switch (game_state) {
+        switch (lobby.getGameState()) {
             case LobbyGameState::PRE_GAME: return "PRE_GAME";
             case LobbyGameState::IN_GAME: return "IN_GAME";
             case LobbyGameState::END_GAME: return "END_GAME";
@@ -78,17 +72,17 @@ class LobbyContext {
     /**
      * @brief Check if lobby is in pre-game state
      */
-    bool isPreGame() const { return game_state == LobbyGameState::PRE_GAME; }
+    bool isPreGame() const { return lobby.isPreGame(); }
 
     /**
      * @brief Check if lobby is in game
      */
-    bool isInGame() const { return game_state == LobbyGameState::IN_GAME; }
+    bool isInGame() const { return lobby.isInGame(); }
 
     /**
      * @brief Check if lobby game has ended
      */
-    bool isEndGame() const { return game_state == LobbyGameState::END_GAME; }
+    bool isEndGame() const { return lobby.isEndGame(); }
 
     ////// Network //////
 
@@ -256,9 +250,6 @@ class LobbyContext {
 
  private:
     Lobby lobby;
-
-    ////// Game State //////
-    LobbyGameState game_state = LobbyGameState::PRE_GAME;
 
     ////// Network //////
     std::unordered_map<uint32_t, net::Address> connected_players;

@@ -7,7 +7,7 @@
 
 #pragma once
 
-    #include "Game.hpp"
+    #include <GameTool.hpp>
 #include "clock.hpp"
 
 struct StatPool {
@@ -25,4 +25,4 @@ struct StatPool {
     int mov_speed;
 };
 
-void registerStatPool(Game& game);
+void registerStatPool(te::GameTool& game);

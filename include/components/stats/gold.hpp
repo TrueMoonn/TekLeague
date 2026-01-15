@@ -7,10 +7,10 @@
 
 #pragma once
 
-    #include "Game.hpp"
+    #include <GameTool.hpp>
 
 struct Gold {
     std::size_t amount;
 };
 
-void registerGold(Game& game);
+void registerGold(te::GameTool& game);

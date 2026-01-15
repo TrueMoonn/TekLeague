@@ -11,8 +11,8 @@
 
     #include "physic/components/position.hpp"
 
-    #include "Game.hpp"
+    #include <GameTool.hpp>
 
 struct Target : addon::physic::Position2 {};
 
-void registerTarget(Game& game);
+void registerTarget(te::GameTool& game);

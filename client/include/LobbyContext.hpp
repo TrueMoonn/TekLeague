@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** TekLeague
 ** File description:
-** LobbyDataManager.hpp
+** LobbyContext.hpp
 */
 
 #pragma once
@@ -15,14 +15,20 @@
 #include <Network/generated_messages.hpp>
 #include <network/GameClient.hpp>
 
+#include "lobby/Lobby.hpp"
+
 /**
  * @brief Manages lobby data and network communication on the client side
  * Provides data storage and network helpers for lobby operations
  * Does NOT handle UI - signals are emitted by the Client for UI updates
  */
-class LobbyDataManager {
+class LobbyContext {
  public:
-    explicit LobbyDataManager(te::network::GameClient& network_client);
+    static constexpr std::string PLUGINS_PATH = "client/plugins";
+    static constexpr uint MAX_PLAYERS = 6;
+    static constexpr std::string DEFAULT_CODE = "000000";
+ public:
+    explicit LobbyContext(te::network::GameClient& network_client);
 
     /**
      * @brief Set the server address
@@ -110,7 +116,7 @@ class LobbyDataManager {
     /**
      * @brief Get current lobby code
      */
-    const std::string& getLobbyCode() const { return _lobby_code; }
+    const std::string& getLobbyCode() { return lobby.getCode(); }
 
     /**
      * @brief Get client ID
@@ -125,12 +131,12 @@ class LobbyDataManager {
     /**
      * @brief Check if lobby is public
      */
-    bool isLobbyPublic() const { return _lobby_is_public; }
+    bool isLobbyPublic() const { return lobby.isPublic(); }
 
     /**
      * @brief Get players in current lobby
      */
-    const std::vector<net::PlayerListEntry>& getPlayersInLobby() const { return _players_in_lobby; }
+    const std::vector<net::PlayerListEntry>& getPlayersInLobby() const { return lobby.getPlayers(); }
 
     /**
      * @brief Get cached list of public lobbies
@@ -145,12 +151,15 @@ class LobbyDataManager {
     /**
      * @brief Check if in lobby
      */
-    bool isInLobby() const { return !_lobby_code.empty(); }
+    bool isInLobby() { return !lobby.getCode().empty(); }
 
     /**
      * @brief Check if in game
      */
-    bool isInGame() const { return _in_game; }
+    bool isInGame() const { return lobby.isInGame(); }
+
+ public:
+    Lobby lobby;
 
  private:
     te::network::GameClient& _network_client;
@@ -161,13 +170,7 @@ class LobbyDataManager {
     uint32_t _client_id = 0;
 
     // Lobby info
-    std::string _lobby_code;
     bool _is_admin = false;
-    bool _lobby_is_public = true;
-    bool _in_game = false;
-
-    // Players in current lobby
-    std::vector<net::PlayerListEntry> _players_in_lobby;
 
     // Cached list of public lobbies
     std::vector<std::string> _cached_lobbies_list;

@@ -7,7 +7,7 @@
 
 #pragma once
 
-    #include "Game.hpp"
+    #include <GameTool.hpp>
 #include "clock.hpp"
 
 enum class ChampionState {
@@ -45,4 +45,4 @@ struct Champion {
     short champion = 0;
 };
 
-void registerChampion(Game& game);
+void registerChampion(te::GameTool& game);

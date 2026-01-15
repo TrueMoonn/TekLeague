@@ -10,16 +10,23 @@
 #include <sys/socket.h>
 #include <thread>
 
-#include "Network/ProtocolManager.hpp"
+#include "GameTool.hpp"
 #include "Network/generated_messages.hpp"
 #include "configs/entities.hpp"
+#include "entities_helper.hpp"
 #include "client_systems.hpp"
+#include "client_components.hpp"
 #include "Client.hpp"
+#include "LobbyContext.hpp"
 
 Client::Client() :
-    Game(CLIENT_PLUGINS_PATH)
+    te::GameTool()
     , te::network::GameClient(COM_DEFAULT_MODE, PROTOCOL_PATH)
     , _lobby_data(*this) {
+    loadPlugins(CLIENT_PLUGINS_PATH);
+
+    for (auto& cmpt : CLIENT_COMPONENTS)
+        cmpt(*this);
     for (auto& conf : CLIENT_CONFIG_PATHS)
         addConfig(conf);
     for (auto& sys : CLIENT_SYSTEMS)
@@ -30,6 +37,10 @@ Client::Client() :
     createSystem("draw");
     createSystem("draw_text");
     createSystem("animate");
+
+    EntityHelper::initNextEntities(_nextEntities);
+
+    sub("closed", [this]() { _running = false; });
 
     registerMessageHandlers();
 }
@@ -259,4 +270,13 @@ void Client::run() {
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
     std::println("[Client] Main game loop ended");
+}
+
+ECS::Entity Client::nextEntity(eType type) {
+    if (_nextEntities.at(type) >= ENTITY_FIELDS.at(type).max) {
+        _nextEntities.at(type) = ENTITY_FIELDS.at(type).min;
+    } else {
+        _nextEntities.at(type) += 1;
+    }
+    return _nextEntities.at(type);
 }

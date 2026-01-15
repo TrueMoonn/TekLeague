@@ -362,7 +362,7 @@ std::optional<net::SCOREBOARD> LobbyContext::tryGetScoreboard() {
 }
 
 bool LobbyContext::shouldSendPlayersList() {
-    if (game_state != LobbyGameState::PRE_GAME)
+    if (lobby.getGameState() != LobbyGameState::PRE_GAME)
         return false;
 
     return players_list_update.checkDelay();
