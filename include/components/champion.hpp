@@ -7,22 +7,7 @@
 
 #pragma once
 
-    #include <array>
-
     #include "Game.hpp"
-
-    #define NB_CHAMPIONS 8
-
-static const std::array<std::string, NB_CHAMPIONS> CHAMPIONS = {
-    "Gules",
-    "Goatier",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-};
 
 enum class ChampState {
     IDLE = 0,

@@ -12,7 +12,7 @@
 #include <interaction/components/player.hpp>
 
 #include "Client.hpp"
-#include "components/champion.hpp"
+#include "my.hpp"
 #include "components/competences/target.hpp"
 #include "entities.hpp"
 
@@ -124,11 +124,15 @@ void Client::handlePong() {
 
 void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
     auto& targets = getComponent<Target>();
+    auto& teams = getComponent<addon::eSpec::Team>();
     for (auto& player : msg.players) {
         ECS::Entity e = nextEntity(eType::CHAMPION);
         createEntity(e, CHAMPIONS[player.champ], {player.x, player.y});
         targets.getComponent(e).x = player.x;
         targets.getComponent(e).y = player.y;
+        for (auto& plist : getPlayers())
+            if (plist.id == player.id)
+                teams.getComponent(e).name = TEAMS[plist.team];
         if (player.id == getClientId()) {
             createComponent<addon::intact::Player>(e);
         }
