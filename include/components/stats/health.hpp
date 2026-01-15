@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Game.hpp"
+#include <GameTool.hpp>
 
 struct Health {
     Health(int hp, int hp_max, int hp_regen) :
@@ -18,4 +18,4 @@ struct Health {
     int regen;
 };
 
-void registerHealth(Game& game);
+void registerHealth(te::GameTool& game);

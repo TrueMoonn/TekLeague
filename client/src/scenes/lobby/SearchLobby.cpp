@@ -50,7 +50,7 @@ void setSearchLobbyScene(Client& game) {
 
     std::size_t idx = game.addScene(slobby);
     game.subForScene(idx, "lobby:lobbies_list", [&game]() {
-        const auto& lobbies = game.getLobbyData().getCachedLobbiesList();
+        const auto& lobbies = game.getCachedLobbiesList();
         auto& draws = game.getComponent<addon::sfml::Drawable>();
         auto& buttons = game.getComponent<Button>();
         auto& texts = game.getComponent<addon::sfml::Text>();
@@ -85,18 +85,13 @@ void setSearchLobbyScene(Client& game) {
     });
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
         if (e >= SEARCH_LOBBY_LIST && e < SEARCH_LOBBY_LIST + 4) {
-            net::JOIN_LOBBY msgj;
-            std::strncpy(msgj.lobby_code,
-                game.getLobbyData().
-                    getCachedLobbiesList()[e - SEARCH_LOBBY_LIST].c_str(),
-                6);
-            game.sendToServer(msgj.serialize());
+            std::string lobby_code = game.getCachedLobbiesList()[e - SEARCH_LOBBY_LIST];
+            game.sendJoinLobby(lobby_code);
             return;
         }
         switch (e) {
             case SEARCH_CREATE_LOBBY:
-                net::CREATE_LOBBY msg;
-                game.sendToServer(msg.serialize());
+                game.sendCreateLobby();
                 break;
         }
     });

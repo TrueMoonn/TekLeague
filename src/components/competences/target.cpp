@@ -7,7 +7,7 @@
 
 #include "components/competences/target.hpp"
 
-void registerTarget(Game& game) {
+void registerTarget(te::GameTool& game) {
     game.registerComponent<Target>("target",
         [&game](ECS::Entity e, const toml::table&) {
         game.createComponent<Target>(e);

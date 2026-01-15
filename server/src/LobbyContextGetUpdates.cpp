@@ -7,7 +7,65 @@
 #include <entity_spec/components/health.hpp>
 #include <interaction/components/player.hpp>
 
-#include "lobby/LobbyContext.hpp"
+#include "entity_spec/components/team.hpp"
+#include "LobbyContext.hpp"
+
+net::PLAYERS_INIT LobbyContext::getPlayersInit() {
+    net::PLAYERS_INIT msg;
+
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& positions = registry.getComponents<addon::physic::Position2>();
+    auto& healths = registry.getComponents<addon::eSpec::Health>();
+    auto& players = registry.getComponents<addon::intact::Player>();
+
+    for (auto&& [entity, player, pos, health] :
+        ECS::IndexedDenseZipper(players, positions, healths)) {
+        if (entity < eField::CHAMPION_BEGIN || entity > eField::CHAMPION_END)
+            continue;
+
+        // TODO(x): fill state with real all data
+        net::PlayerInit state;
+        state.id = static_cast<uint32_t>(entity),
+        state.x = pos.x,
+        state.y = pos.y,
+        state.hp = static_cast<double>(health.amount),
+        state.champ = 0,
+        state.mana = 0.0,
+        state.direction = 0,
+
+        msg.players.push_back(state);
+    }
+
+    return msg;
+}
+
+net::BUILDINGS_INIT LobbyContext::getBuildingsInit() {
+    net::BUILDINGS_INIT msg;
+
+    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
+    auto& positions = registry.getComponents<addon::physic::Position2>();
+    auto& healths = registry.getComponents<addon::eSpec::Health>();
+    auto& teams = registry.getComponents<addon::eSpec::Team>();
+    // get le component building
+
+    for (auto&& [entity, pos, health, team] :
+        ECS::IndexedDenseZipper(positions, healths, teams)) {
+        if (entity < eField::BUILDINGS_BEGIN || entity > eField::BUILDINGS_END)
+            continue;
+
+        // TODO(x): fill state with real all data
+        net::BuildingInit state;
+        state.id = static_cast<uint32_t>(entity),
+        state.x = pos.x,
+        state.y = pos.y,
+        state.hp = static_cast<double>(health.amount),
+        state.team = 0;
+        // state.team = team.name;  // TODO(PIERRE): conversion team name, uint8_t
+        msg.buildings.push_back(state);
+    }
+
+    return msg;
+}
 
 net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
     net::PLAYERS_UPDATES msg;
@@ -28,12 +86,10 @@ net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
         state.x = pos.x,
         state.y = pos.y,
         state.hp = static_cast<double>(health.amount),
-        // TODO(xxx): implement later (
         state.level = 0.0,
         state.mana = 0.0,
         state.direction = 0,
         std::memset(state.effects, 0, sizeof(state.effects));
-        // )
 
         msg.players.push_back(state);
     }
@@ -46,6 +102,7 @@ net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
 
     auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
     auto& healths = registry.getComponents<addon::eSpec::Health>();
+    // Get component building puis regarder le name pour tower/nexus
 
     for (auto&& [entity, health] :
         ECS::IndexedDenseZipper(healths)) {
@@ -204,7 +261,7 @@ net::SCORE LobbyContext::getScore() {
 
     msg.team_count = sizeof(lobby.teams) / sizeof(net::TeamScore);
     msg.teams[0] = lobby.teams[0];
-    msg.teams[1] = lobby.teams[0];
+    msg.teams[1] = lobby.teams[1];
 
     return msg;
 }
@@ -305,7 +362,7 @@ std::optional<net::SCOREBOARD> LobbyContext::tryGetScoreboard() {
 }
 
 bool LobbyContext::shouldSendPlayersList() {
-    if (game_state != LobbyGameState::PRE_GAME)
+    if (lobby.getGameState() != LobbyGameState::PRE_GAME)
         return false;
 
     return players_list_update.checkDelay();
