@@ -51,12 +51,6 @@ class Server : public te::network::GameServer {
     void sendAutomatic();
 
     /**
-     * @brief Check if it's time to send LOBBIES_LIST to non-lobby clients
-     * @return true if lobbies list should be sent, false otherwise
-     */
-    bool shouldSendLobbiesList();
-
-    /**
      * @brief Set how often to send PLAYERS_UPDATES (in seconds)
      */
     void setPlayersUpdateFrequency(std::size_t lobby_id, float frequency) {
@@ -67,6 +61,7 @@ class Server : public te::network::GameServer {
     bool setPacketsHandlers();
 
     ////// Client Management //////
+    te::Timestamp ping{5.0f};
     std::unordered_map<net::Address, PlayerInfo> clients;
 
     // username -> address
@@ -92,10 +87,13 @@ class Server : public te::network::GameServer {
 
     ////// Server Control //////
     std::atomic<bool> _should_run{true};
-    te::Timestamp lobbies_list_timestamp{1.0f};
+
+     te::Timestamp lobbies_list_timestamp{2.0f};
 
     uint createLobby(uint max_clients, const net::Address& admin);
     void destroyLobby(uint lobby_id);
+    // NOTE: This function assumes lobbies_mutex is already locked!
+    void destroyLobbyUnsafe(uint lobby_id);
     void broadcastToLobby(uint lobby_id, const std::vector<uint8_t>& data);
     void sendToLobby(uint lobby_id,
         const std::vector<uint8_t>& data, const net::Address& exclude);
@@ -112,6 +110,10 @@ class Server : public te::network::GameServer {
 
     ////// Handlers //////
     void handleConnectionRequest(const std::vector<uint8_t>& data,
+        const net::Address& sender);
+    void handlePing(const std::vector<uint8_t>& data,
+        const net::Address& sender);
+    void handlePong(const std::vector<uint8_t>& data,
         const net::Address& sender);
     void handleLogin(const std::vector<uint8_t>& data,
         const net::Address& sender);
@@ -140,15 +142,17 @@ class Server : public te::network::GameServer {
 
     ////// Senders //////
     void sendPlayersUpdate();
+    void sendPing(const net::Address& address, uint32_t client_id);
+    void sendPong(const net::Address& address, uint32_t client_id);
     void sendLoggedIn(const net::Address& address, uint32_t client_id);
     void sendLoggedOut(const net::Address& address, uint32_t client_id);
     void sendUsernameAlreadyTaken(const net::Address& address);
     void sendLobbyJoined(const net::Address& address, uint32_t client_id);
     void sendLobbyCreated(const net::Address& address,
         const std::string& lobby_code);
-    void sendLobbiesList(const net::Address& address);
-    // NOTE: Assumes lobbies_mutex is already locked! Broadcasts to all non-lobby clients
+    // NOTE: Assumes lobbies_mutex is already locked!
     void sendLobbiesListUnsafe();
+    void sendLobbiesList(const net::Address& address);
     void sendGameStarting(uint lobby_id);
     void sendPlayersList(uint lobby_id);
       // NOTE: Assumes lobbies_mutex is already locked!

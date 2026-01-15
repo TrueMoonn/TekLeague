@@ -69,17 +69,17 @@ Every code (1 ... 255) is on ONE BYTE only
 
 ### 30 ... 49 → lobby codes
 ```
-31  LOBBY JOINED                [4B id]                                     ->  Giving id of the client that joined
-33  LOBBY CREATED               [6B lobby_code]                             ->  Response to 32, send the created lobby code
-35  LOBBIES LIST                [X times (6B lobby codes)]                  ->  Response to 34, send all public lobbies
-37  GAME STARTING               [NO DATA]                                   ->  Broadcast to all lobby clients
-38  PLAYERS LIST                [X times (4B id + 1B team + 32B username)]  ->  Send all players names
-39  LOBBY VISIBILITY CHANGED    [1B bool public]                            ->  Send to clients in the lobby
-42  LOBBY DESTROYED             [NO DATA]                                   ->  Send to all clients in the destroyed lobby, sending them all back to main menu
-43  LOBBY FULL                  [NO DATA]                                   ->  Respond to 30 if lobby is full
-44  BAD LOBBY CODE              [NO DATA]                                   ->  Respond to 30 if invalid code given
-45  NOT ADMIN                   [NO DATA]                                   ->  Send if client that sent 35 or 68 is not admin of the lobby
-47  TEAM FULL                   [NO DATA]                                   ->  Respond to 41 if the team is full
+31  LOBBY JOINED                [4B id]                                                   ->  Giving id of the client that joined
+33  LOBBY CREATED               [6B lobby_code]                                           ->  Response to 32, send the created lobby code
+35  LOBBIES LIST                [X times (6B lobby codes)]                                ->  Response to 34, send all public lobbies
+37  GAME STARTING               [NO DATA]                                                 ->  Broadcast to all lobby clients
+38  PLAYERS LIST                [X times (4B id + 1B is_admin + 1B team + 32B username)]  ->  Send all players names
+39  LOBBY VISIBILITY CHANGED    [1B bool public]                                          ->  Send to clients in the lobby
+42  LOBBY DESTROYED             [NO DATA]                                                 ->  Send to all clients in the destroyed lobby, sending them all back to main menu
+43  LOBBY FULL                  [NO DATA]                                                 ->  Respond to 30 if lobby is full
+44  BAD LOBBY CODE              [NO DATA]                                                 ->  Respond to 30 if invalid code given
+45  NOT ADMIN                   [NO DATA]                                                 ->  Send if client that sent 35 or 68 is not admin of the lobby
+47  TEAM FULL                   [NO DATA]                                                 ->  Respond to 41 if the team is full
 ```
 
 ### 50 ... 89 → in game codes

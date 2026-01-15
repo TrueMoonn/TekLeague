@@ -31,10 +31,14 @@
 
 void Server::sendAutomatic() {
     try {
+        if (ping.checkDelay()) {
+            for (const auto& client : clients) {
+                sendPing(client.first, client.second.id);
+            }
+        }
+
         std::vector<std::pair<uint, std::vector<uint8_t>>> ingame_updates;
         std::vector<uint> pre_game_lobbies;
-
-        bool should_send_lobbies_list = shouldSendLobbiesList();
 
         {
             std::lock_guard<std::mutex> lock(lobbies_mutex);
@@ -72,7 +76,7 @@ void Server::sendAutomatic() {
                 sendPlayersListUnsafe(lobby_id);
             }
 
-            if (should_send_lobbies_list) {
+            if (lobbies_list_timestamp.checkDelay()) {
                 sendLobbiesListUnsafe();
             }
         }
@@ -98,6 +102,16 @@ void Server::sendPlayersUpdate() {
     } catch (const std::exception& e) {
         std::println(stderr, "[Server::sendPlayersUpdate] ERROR: {}", e.what());
     }
+}
+
+void Server::sendPing(const net::Address& address, uint32_t client_id) {
+    net::PING msg;
+    sendTo(address, msg.serialize());
+}
+
+void Server::sendPong(const net::Address& address, uint32_t client_id) {
+    net::PONG msg;
+    sendTo(address, msg.serialize());
 }
 
 void Server::sendLoggedIn(const net::Address& address, uint32_t client_id) {
@@ -162,7 +176,8 @@ void Server::sendLobbiesListUnsafe() {
         }
     }
 
-    std::println("[Server::sendLobbiesListUnsafe] Sent to all non-lobby clients ({} lobbies)", msg.lobby_codes.size());
+    std::println("[Server::sendLobbiesListUnsafe] Sent to all non-lobby "
+        "clients ({} lobbies)", msg.lobby_codes.size());
 }
 
 void Server::sendGameStarting(uint lobby_id) {
@@ -189,6 +204,7 @@ void Server::sendPlayersListUnsafe(uint lobby_id) {
             auto& client = client_opt->get();
             net::PlayerListEntry entry;
             entry.id = client.id;
+            entry.is_admin = isAdmin(address, lobby_id) ? 1 : 0;
             entry.team = client.team;
             std::memset(entry.username, 0, 32);
             std::memcpy(entry.username, client.username.c_str(),

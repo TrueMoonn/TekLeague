@@ -29,6 +29,14 @@ Server::Server(uint16_t port, const std::string& protocol) :
     te::network::GameServer(port, protocol) {
     startGameServer();
     setPacketsHandlers();
+
+    setClientDisconnectCallback([this](const net::Address& client) {
+        std::println("[Server] Client disconnected or timed out: {}:{}",
+            client.getIP(), client.getPort());
+
+        std::vector<uint8_t> empty_data;
+        handleDisconnection(empty_data, client);
+    });
 }
 
 uint32_t Server::generateClientId() {
@@ -88,6 +96,10 @@ uint Server::createLobby(uint max_clients, const net::Address& admin) {
 
 void Server::destroyLobby(uint lobby_id) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
+    destroyLobbyUnsafe(lobby_id);
+}
+
+void Server::destroyLobbyUnsafe(uint lobby_id) {
     if (lobbies.find(lobby_id) != lobbies.end()) {
         sendLobbyDestroyed(lobby_id);
 
@@ -239,10 +251,6 @@ std::optional<LobbyGameState> Server::getLobbyGameState(uint lobby_id) {
         return lobbies.at(lobby_id).getGameState();
     }
     return std::nullopt;
-}
-
-bool Server::shouldSendLobbiesList() {
-    return lobbies_list_timestamp.checkDelay();
 }
 
 bool Server::isLobbyPreGame(uint lobby_id) {
