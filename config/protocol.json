@@ -71,6 +71,8 @@
         { "name": "entity", "type": "uint32" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
+        { "name": "vel_x", "type": "float" },
+        { "name": "vel_y", "type": "float" },
         { "name": "direction_x", "type": "float" },
         { "name": "direction_y", "type": "float" },
         { "name": "hp", "type": "uint32" },
