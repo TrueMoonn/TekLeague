@@ -141,7 +141,6 @@ class Server : public te::network::GameServer {
         const net::Address& sender);
 
     ////// Senders //////
-    void sendPlayersUpdate();
     void sendPing(const net::Address& address, uint32_t client_id);
     void sendPong(const net::Address& address, uint32_t client_id);
     void sendLoggedIn(const net::Address& address, uint32_t client_id);
@@ -165,6 +164,8 @@ class Server : public te::network::GameServer {
     void sendTeamFull(const net::Address& address);
     void sendAdminGamePaused(uint lobby_id);
     void sendGameEnded(uint lobby_id);
+    void sendPlayersInit(uint lobby_id);
+    void sendBuildingsInit(uint lobby_id);
 
     ////// Lobby State Queries //////
 
