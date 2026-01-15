@@ -31,6 +31,12 @@
 
 void Server::sendAutomatic() {
     try {
+        if (ping.checkDelay()) {
+            for (const auto& client : clients) {
+                sendPing(client.first, client.second.id);
+            }
+        }
+
         std::vector<std::pair<uint, std::vector<uint8_t>>> ingame_updates;
         std::vector<uint> pre_game_lobbies;
 
@@ -92,6 +98,16 @@ void Server::sendPlayersUpdate() {
     } catch (const std::exception& e) {
         std::println(stderr, "[Server::sendPlayersUpdate] ERROR: {}", e.what());
     }
+}
+
+void Server::sendPing(const net::Address& address, uint32_t client_id) {
+    net::PING msg;
+    sendTo(address, msg.serialize());
+}
+
+void Server::sendPong(const net::Address& address, uint32_t client_id) {
+    net::PONG msg;
+    sendTo(address, msg.serialize());
 }
 
 void Server::sendLoggedIn(const net::Address& address, uint32_t client_id) {
