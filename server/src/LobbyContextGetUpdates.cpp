@@ -188,20 +188,17 @@ net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
 
     for (auto&& [entity, position, health] :
         ECS::IndexedDenseZipper(positions, healths)) {
-        if (entity < eField::CREATURES_BEGIN || entity > eField::CREATURES_END)
+        if (entity < eField::CREATURES_BEGIN)
             continue;
+        if (entity > eField::CREATURES_END)
+            break;
 
-        // TODO(x): fill state with real all data
         net::CreatureUpdate state;
         std::memset(&state, 0, sizeof(state));
-        state.id = static_cast<uint32_t>(entity);
-        state.team = 0;
+        state.entity = static_cast<uint32_t>(entity);
         state.x = position.x;
         state.y = position.y;
-        state.direction = 0;
-        state.hp = static_cast<double>(health.amount);
-        state.type = 0;
-
+        state.hp = health.amount;
         msg.creatures.push_back(state);
     }
 
@@ -250,7 +247,6 @@ net::COLLECTIBLES_UPDATES LobbyContext::getCollectiblesUpdates() {
         state.id = static_cast<uint32_t>(entity);
         state.x = position.x;
         state.y = position.y;
-        state.type = 0;
 
         msg.collectibles.push_back(state);
     }
