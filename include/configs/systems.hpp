@@ -20,6 +20,7 @@ void spawnDeathEntity(Game &game);
 void handleTimeout(Game &game);
 void killAllEntity(Game &game);
 void dealDamage(Game &game);
+void circlePushback(Game &game);
 
 
 static const std::vector<std::function<void(Game&)>> LOCAL_SYSTEMS = {
@@ -31,4 +32,5 @@ static const std::vector<std::function<void(Game&)>> LOCAL_SYSTEMS = {
     &handleTimeout,
     &killAllEntity,
     &dealDamage,
+    &circlePushback
 };

@@ -1,9 +1,14 @@
 [ENTITIES.Gules]
 position2 = true
 target = true
+movable = true
 
 [ENTITIES.Gules.champion]
 name = "Gules"
+
+[ENTITIES.Gules.circle_hitbox]
+radius = 20
+pushback = true
 
 [ENTITIES.Gules.team]
 name = ""
