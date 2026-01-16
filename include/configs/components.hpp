@@ -14,6 +14,7 @@
 
     #include "components/champion.hpp"
     #include "components/competences/auto_attack.hpp"
+    #include "components/competences/spells.hpp"
     #include "components/competences/auto_track.hpp"
     #include "components/competences/target.hpp"
     #include "components/items/inventory.hpp"
@@ -28,6 +29,7 @@
 static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerAutoAttack,
     &registerAutoTrack,
+    &registerSpellCasting,
     &registerButton,
     &registerChampion,
     &registerGold,

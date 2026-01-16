@@ -11,6 +11,7 @@
 #include <display/components/animation.hpp>
 #include <sfml/components/sprite.hpp>
 
+#include "components/competences/spells.hpp"
 #include "components/competences/target.hpp"
 #include "components/stats/stat_pool.hpp"
 #include "configs/systems.hpp"
@@ -19,6 +20,7 @@ void entityDirection(Game& game) {
     game.createSystem("entity_direction", [&game](ECS::Registry&) {
         auto& targets = game.getComponent<Target>();
         auto& stats = game.getComponent<StatPool>();
+        auto& spells = game.getComponent<Spell>();
         auto& posis = game.getComponent<addon::physic::Position2>();
         auto& vels = game.getComponent<addon::physic::Velocity2>();
 
@@ -36,6 +38,22 @@ void entityDirection(Game& game) {
             dir /= length;
             vel.x = dir.x * stat.mov_speed;
             vel.y = dir.y * stat.mov_speed;
+        }
+
+        for (auto&& [goTo, pos, vel, spell] :
+            ECS::DenseZipper(targets, posis, vels, spells)) {
+            float dist = std::sqrt(std::pow(pos.x - goTo.x, 2) +
+                std::pow(pos.y - goTo.y, 2));
+            if (dist < 10) {
+                vel.x = 0;
+                vel.y = 0;
+                continue;
+            }
+            mat::Vector2f dir(goTo - pos);
+            float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+            dir /= length;
+            vel.x = dir.x * spell.spellSpeed;
+            vel.y = dir.y * spell.spellSpeed;
         }
     });
 }

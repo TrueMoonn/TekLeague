@@ -37,9 +37,9 @@ void setInGameScene(Client& game) {
         {game.nextEntity(eType::MAP), "sumoners_rift_nash_zone"},
         {game.nextEntity(eType::MAP), "sumoners_rift_jungle"},
         {game.nextEntity(eType::MAP), "sumoners_rift_walls"},
-        {game.nextEntity(eType::BUILDINGS), "tower_blue", {1400, 1000}},
-        {game.nextEntity(eType::BUILDINGS), "tower_red", {6792, 1000}},
-        {game.nextEntity(eType::BUILDINGS), "zone_left_enemy", {6792, 1000}},
+        // {game.nextEntity(eType::BUILDINGS), "tower_blue", {1400, 1000}},
+        // {game.nextEntity(eType::BUILDINGS), "tower_red", {6792, 1000}},
+        // {game.nextEntity(eType::BUILDINGS), "zone_left_enemy", {6792, 1000}},
     };
 
     ingame.on_activate = [&game](){};
@@ -49,11 +49,23 @@ void setInGameScene(Client& game) {
         if (keys[te::Key::Escape]) {
             game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::PARAMETERS));
         }
-
         if (keys[te::Key::A]) {
+            net::CLIENT_INPUTS msg;
+            msg.mouse_x = game.mpos.x;
+            msg.mouse_y = game.mpos.y;
+            msg.actions = static_cast<uint8_t>(ActionIG::SPELL1);
+            game.sendToServer(msg.serialize());
+        }
+        if (keys[te::Key::Z]) {
+            net::CLIENT_INPUTS msg;
+            msg.mouse_x = game.mpos.x;
+            msg.mouse_y = game.mpos.y;
+            msg.actions = static_cast<uint8_t>(ActionIG::SPELL2);
+            game.sendToServer(msg.serialize());
         }
     });
     game.subForScene<te::Mouse>(idx, "mouse_input", [&game](te::Mouse mouse) {
+        game.mpos = mouse.position;
         if (mouse.type[te::MouseEvent::MouseRight]) {
             static te::Timestamp delta(0.02f);
             if (!delta.checkDelay())

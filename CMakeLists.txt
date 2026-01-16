@@ -34,6 +34,7 @@ add_library(${PROJECT_NAME} STATIC
 
     # COMPONENTS
     ${GAME_SRC_DIR}/components/champion.cpp
+    ${GAME_SRC_DIR}/components/gules.cpp
 
     ${GAME_SRC_DIR}/components/competences/target.cpp
     ${GAME_SRC_DIR}/components/competences/auto_attack.cpp
@@ -55,6 +56,10 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/components/items/item.cpp
     ${GAME_SRC_DIR}/components/competences/target.cpp
     ${GAME_SRC_DIR}/components/competences/auto_track.cpp
+
+    # SPELLS
+    ${GAME_SRC_DIR}/spells/gules_spell1.cpp
+    ${GAME_SRC_DIR}/spells/no_spell.cpp
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp

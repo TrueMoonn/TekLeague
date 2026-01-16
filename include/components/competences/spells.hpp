@@ -7,13 +7,11 @@
 
 #pragma once
 
-    #include <array>
     #include <vector>
 
     #include <clock.hpp>
     #include <maths/Vector.hpp>
 
-#include "ECS/Entity.hpp"
     #include "Game.hpp"
 
 enum DamageType : std::size_t {
@@ -37,18 +35,13 @@ enum SpellTarget : std::size_t {
     MONSTER,
 };
 
-struct SpellEntities {
-    std::string name;
-    mat::Vector2f pos;
-};
-
-struct Casting {
-    Casting(const std::string& name, std::size_t base, EffectType dtype,
+struct Spell {
+    Spell(const std::string& name, std::size_t base, EffectType dtype,
         const std::array<std::size_t, DamageType::DMGLIMIT>& ratio,
         float cd, float cast, SpellTarget to, std::size_t mc,
-        const std::vector<SpellEntities>& es) :
+        std::size_t spd, std::size_t r) :
         name(name), base(base), dmgType(dtype), ratios(ratio), cooldown(cd),
-        castTime(cast), target(to), mana_cost(mc), entities(es) {}
+        castTime(cast), target(to), mana_cost(mc), spellSpeed(spd), range(r) {}
 
     std::string name;
 
@@ -57,22 +50,17 @@ struct Casting {
     std::array<std::size_t, DamageType::DMGLIMIT> ratios;
     std::size_t mana_cost;
 
-    te::Timestamp cooldown;
-    te::Timestamp castTime;
+    te::Timestamp cooldown{0.f};
+    te::Timestamp castTime{0.f};
 
+    std::size_t spellSpeed;
+    std::size_t range;
     SpellTarget target;
-    std::vector<SpellEntities> entities;
 };
 
 struct Spells {
-    Spells(const std::vector<Casting>& sps) : spells(sps) {}
-    std::vector<Casting> spells;
-};
-
-struct SpellEntity {
-    SpellEntity(ECS::Entity e, int spell) : entity(e), spellIdx(spell) {};
-    ECS::Entity entity;
-    int spellIdx;
+    Spells(const std::vector<std::size_t>& spellid) : spell_id(spellid) {}
+    std::vector<std::size_t> spell_id;
 };
 
 void registerSpellCasting(Game& game);

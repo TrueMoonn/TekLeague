@@ -115,6 +115,7 @@ class Game : public te::GameTool {
      */
     void clearPlayers() { _players_in_lobby.clear(); }
 
+    std::vector<std::pair<ECS::Entity, std::string>> entities_queue;
  protected:
     bool _running;
     te::Timestamp _framelimit;

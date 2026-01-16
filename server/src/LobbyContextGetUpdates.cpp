@@ -175,8 +175,8 @@ net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
 net::PROJECTILES_UPDATES LobbyContext::getProjectilesUpdates() {
     net::PROJECTILES_UPDATES msg;
 
-    auto& registry = const_cast<ECS::Registry&>(lobby.getRegistry());
-    auto& positions = registry.getComponents<addon::physic::Position2>();
+    auto& game = getLobby();
+    auto& positions = game.getComponent<addon::physic::Position2>();
 
     for (auto&& [entity, position] :
         ECS::IndexedDenseZipper(positions)) {
