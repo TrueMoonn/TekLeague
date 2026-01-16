@@ -333,6 +333,16 @@
         }
       ]
     },
+    "ENTITIES_DESTROYED": {
+      "id": 54,
+      "fields": [
+        {
+          "name": "entities",
+          "type": "dynamic_array",
+          "element_type": "uint32"
+        }
+      ]
+    },
     "PLAYERS_UPDATES": {
       "id": 61,
       "fields": [

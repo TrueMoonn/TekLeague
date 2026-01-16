@@ -55,6 +55,8 @@ void Server::sendAutomatic() {
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetEntitiesCreated())
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetEntitiesDestroyed())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetCreaturesUpdates())
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetProjectilesUpdates())

@@ -147,6 +147,18 @@ net::ENTITIES_CREATED LobbyContext::getEntitiesCreated() {
     return msg;
 }
 
+net::ENTITIES_DESTROYED LobbyContext::getEntitiesDestroyed() {
+    net::ENTITIES_DESTROYED msg;
+
+    auto& game = getLobby();
+
+    for (auto& entity : game._EntityToKill) {
+        msg.entities.push_back(entity);
+    }
+    game._EntityToKill.clear();
+    return msg;
+}
+
 net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
     net::BUILDINGS_UPDATES msg;
 
@@ -329,6 +341,14 @@ std::optional<net::ENTITIES_CREATED> LobbyContext::tryGetEntitiesCreated() {
         return std::nullopt;
 
     return getEntitiesCreated();
+}
+
+std::optional<net::ENTITIES_DESTROYED> LobbyContext::tryGetEntitiesDestroyed() {
+    auto& game = getLobby();
+    if (!entities_destroyed.checkDelay() || game._EntityToKill.empty())
+        return std::nullopt;
+
+    return getEntitiesDestroyed();
 }
 
 std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetPlayerUpdates() {

@@ -103,6 +103,7 @@ class Client : public Game, public te::network::GameClient {
     void handlePlayersInit(const net::PLAYERS_INIT& msg);
     void handleBuildingsInit(const net::BUILDINGS_INIT& msg);
     void handleEntitiesCreated(const net::ENTITIES_CREATED& msg);
+    void handleEntitiesDestroyed(const net::ENTITIES_DESTROYED& msg);
     void handlePlayersUpdate(const net::PLAYERS_UPDATES& msg);
     void handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg);
     void handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg);

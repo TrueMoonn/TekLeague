@@ -24,6 +24,7 @@ class LobbyContext {
     static constexpr float PLAYERS_UPDATES_DEFAULT_LATENCY = 1.0f / 120.0f;
     static constexpr float BUILDINGS_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
     static constexpr float ENTITIES_CREATED_DEFAULT_LATENCY = 1.0f / 50.0f;
+    static constexpr float ENTITIES_DESTROYED_DEFAULT_LATENCY = 1.0f / 50.0f;
     static constexpr float CREATURES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
     static constexpr float PROJECTILES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
     static constexpr float COLLECTIBLES_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
@@ -118,6 +119,12 @@ class LobbyContext {
      * @return std::optional containing the message if ready, std::nullopt otherwise
      */
     std::optional<net::ENTITIES_CREATED> tryGetEntitiesCreated();
+
+    /**
+     * @brief Try to get entities destroyed if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::ENTITIES_DESTROYED> tryGetEntitiesDestroyed();
 
     /**
      * @brief Try to get player updates if the timestamp delay has passed
@@ -284,7 +291,9 @@ class LobbyContext {
     te::Timestamp buildings_update =
         te::Timestamp(BUILDINGS_UPDATES_DEFAULT_LATENCY);
     te::Timestamp entities_created =
-        te::Timestamp(BUILDINGS_UPDATES_DEFAULT_LATENCY);
+        te::Timestamp(ENTITIES_CREATED_DEFAULT_LATENCY);
+    te::Timestamp entities_destroyed =
+        te::Timestamp(ENTITIES_DESTROYED_DEFAULT_LATENCY);
     te::Timestamp creatures_update =
         te::Timestamp(CREATURES_UPDATES_DEFAULT_LATENCY);
     te::Timestamp projectiles_update =
@@ -311,6 +320,12 @@ class LobbyContext {
         * @return The constructed message
         */
     net::ENTITIES_CREATED getEntitiesCreated();
+
+    /**
+        * @brief Build the ENTITIES_DESTROYED message from the lobby's registry
+        * @return The constructed message
+        */
+    net::ENTITIES_DESTROYED getEntitiesDestroyed();
 
     /**
      * @brief Build the PLAYERS_UPDATES message from the lobby's registry
