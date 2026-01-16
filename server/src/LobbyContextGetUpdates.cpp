@@ -213,11 +213,13 @@ net::PROJECTILES_UPDATES LobbyContext::getProjectilesUpdates() {
 
     auto& game = getLobby();
     auto& positions = game.getComponent<addon::physic::Position2>();
-    auto& spells = game.getComponent<Spell>();
 
-    for (auto&& [entity, position, _] :
-        ECS::IndexedDenseZipper(positions, spells)) {
-
+    for (auto&& [entity, position] :
+        ECS::IndexedDenseZipper(positions)) {
+        if (entity < eField::PROJECTILES_BEGIN)
+            continue;
+        if (entity > eField::PROJECTILES_END)
+            break;
         net::ProjectileUpdate state;
         std::memset(&state, 0, sizeof(state));
         state.entity = static_cast<uint32_t>(entity);
