@@ -14,6 +14,8 @@
 #include "Game.hpp"
 
 Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
+    std::memset(teams, 0, sizeof(teams));
+
     loadPlugins(ppath);
     std::srand(std::time(0));
 

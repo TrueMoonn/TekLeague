@@ -32,6 +32,7 @@ net::PLAYERS_INIT LobbyContext::getPlayersInit() {
         ECS::IndexedDenseZipper(positions, teams, champs)) {
 
         net::PlayerInit state;
+        std::memset(&state, 0, sizeof(state));
         state.team = 0;
         for (std::size_t i = 0; i < TEAMS.size(); ++i) {
             if (team.name == TEAMS[i])
@@ -75,6 +76,7 @@ net::BUILDINGS_INIT LobbyContext::getBuildingsInit() {
 
         // TODO(x): fill state with real all data
         net::BuildingInit state;
+        std::memset(&state, 0, sizeof(state));
         state.id = static_cast<uint32_t>(entity),
         state.x = pos.x,
         state.y = pos.y,
@@ -103,6 +105,7 @@ net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
         ECS::IndexedDenseZipper(positions, healths, champs, levels, manas, targets, velocities)) {
 
         net::PlayerUpdate state;
+        std::memset(&state, 0, sizeof(state));
         state.entity = static_cast<uint32_t>(entity),
         state.x = pos.x,
         state.y = pos.y,
@@ -129,12 +132,13 @@ net::ENTITIES_CREATED LobbyContext::getEntitiesCreated() {
 
     for (auto& entity : game.entities_queue) {
         auto& pos = positions.getComponent(static_cast<uint32_t>(entity.first));
-        net::EntitiesCreated state {
-            .entity = static_cast<uint32_t>(entity.first),
-            .x = pos.x,
-            .y = pos.y,
-        };
-        std::strcpy(state.type, entity.second.data());
+        net::EntitiesCreated state;
+        std::memset(&state, 0, sizeof(state));
+        state.entity = static_cast<uint32_t>(entity.first);
+        state.x = pos.x;
+        state.y = pos.y;
+        std::strncpy(state.type, entity.second.data(), sizeof(state.type) - 1);
+        state.type[sizeof(state.type) - 1] = '\0';
         msg.entities.push_back(state);
     }
     game.entities_queue.clear();
@@ -153,10 +157,10 @@ net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
         if (entity < eField::BUILDINGS_BEGIN || entity > eField::BUILDINGS_END)
             continue;
 
-        net::BuildingsUpdate state {
-            .id = static_cast<uint32_t>(entity),
-            .hp = static_cast<double>(health.amount)
-        };
+        net::BuildingsUpdate state;
+        std::memset(&state, 0, sizeof(state));
+        state.id = static_cast<uint32_t>(entity);
+        state.hp = static_cast<double>(health.amount);
 
         msg.buildings.push_back(state);
     }
@@ -177,15 +181,15 @@ net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
             continue;
 
         // TODO(x): fill state with real all data
-        net::CreatureUpdate state {
-            .id = static_cast<uint32_t>(entity),
-            .x = position.x,
-            .y = position.y,
-            .direction = 0,
-            .hp = static_cast<double>(health.amount),
-            .type = 0,
-            .effects = static_cast<uint8_t>(0)
-        };
+        net::CreatureUpdate state;
+        std::memset(&state, 0, sizeof(state));
+        state.id = static_cast<uint32_t>(entity);
+        state.team = 0;
+        state.x = position.x;
+        state.y = position.y;
+        state.direction = 0;
+        state.hp = static_cast<double>(health.amount);
+        state.type = 0;
 
         msg.creatures.push_back(state);
     }
@@ -203,11 +207,11 @@ net::PROJECTILES_UPDATES LobbyContext::getProjectilesUpdates() {
     for (auto&& [entity, position, _] :
         ECS::IndexedDenseZipper(positions, spells)) {
 
-        net::ProjectileUpdate state {
-            .entity = static_cast<uint32_t>(entity),
-            .x = position.x,
-            .y = position.y,
-        };
+        net::ProjectileUpdate state;
+        std::memset(&state, 0, sizeof(state));
+        state.entity = static_cast<uint32_t>(entity);
+        state.x = position.x;
+        state.y = position.y;
 
         msg.projectiles.push_back(state);
     }
@@ -228,12 +232,12 @@ net::COLLECTIBLES_UPDATES LobbyContext::getCollectiblesUpdates() {
             continue;
 
         // TODO(x): fill state with real all data
-        net::CollectibleUpdate state {
-            .id = static_cast<uint32_t>(entity),
-            .x = position.x,
-            .y = position.y,
-            .type = 0
-        };
+        net::CollectibleUpdate state;
+        std::memset(&state, 0, sizeof(state));
+        state.id = static_cast<uint32_t>(entity);
+        state.x = position.x;
+        state.y = position.y;
+        state.type = 0;
 
         msg.collectibles.push_back(state);
     }
@@ -254,11 +258,10 @@ net::INVENTORIES_UPDATES LobbyContext::getInventoriesUpdates() {
             continue;
 
         // TODO(x): fill state with real all data
-        net::InventoryUpdate state {
-            .playerid = static_cast<uint32_t>(entity),
-            .items = 0,
-            .gold = 0
-        };
+        net::InventoryUpdate state;
+        std::memset(&state, 0, sizeof(state));
+        state.playerid = static_cast<uint32_t>(entity);
+        // items array and gold are already zeroed by memset
 
         msg.inventories.push_back(state);
     }
@@ -279,16 +282,10 @@ net::STATS_UPDATES LobbyContext::getStatsUpdates() {
             continue;
 
         // TODO(x): fill state with real all data
-        net::StatsUpdate state {
-            .playerid = static_cast<uint32_t>(entity),
-            .ad = 0,
-            .ap = 0,
-            .armor = 0,
-            .resist = 0,
-            .cdr_mov_speed = 0,
-            .atk_speed = 0,
-            .range = 0,
-        };
+        net::StatsUpdate state;
+        std::memset(&state, 0, sizeof(state));
+        state.playerid = static_cast<uint32_t>(entity);
+        // All other fields are already zeroed by memset
 
         msg.stats.push_back(state);
     }
