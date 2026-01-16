@@ -1,5 +1,6 @@
 #include <unordered_map>
 #include <string>
+#include <print>
 
 #include <Network/generated_messages.hpp>
 #include <Network/Address.hpp>
@@ -13,6 +14,7 @@
 #include "entities.hpp"
 #include "systems.hpp"
 #include "entity_spec/components/team.hpp"
+#include "components/building.hpp"
 #include "my.hpp"
 
 LobbyContext::LobbyContext(uint max_players, const std::string& code)
@@ -51,6 +53,30 @@ const std::unordered_map<uint32_t, net::Address>& LobbyContext::getClients(
 
 bool LobbyContext::isFull() const {
     return connected_players.size() >= max_clients;
+}
+
+void LobbyContext::createOtherEntities() {
+    auto& game = getLobby();
+
+    auto& teams = game.getComponent<addon::eSpec::Team>();
+    auto& positions = game.getComponent<addon::physic::Position2>();
+
+
+    for (size_t i = 0; i < BUILDINGS.size(); ++i) {
+        const auto& [tower_name, tower_pos] = BUILDINGS[i];
+
+        ECS::Entity e = game.nextEntity(eType::BUILDINGS);
+        game.createEntity(e, tower_name.c_str());
+
+        positions.getComponent(e).x = tower_pos.x;
+        positions.getComponent(e).y = tower_pos.y;
+
+        if (i < 3) {
+            teams.getComponent(e).name = TEAMS[1];  // "blue"
+        } else {
+            teams.getComponent(e).name = TEAMS[2];  // "red"
+        }
+    }
 }
 
 void LobbyContext::createPlayersEntities() {
