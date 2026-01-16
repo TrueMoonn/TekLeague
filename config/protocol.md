@@ -80,6 +80,7 @@ Every code (1 ... 255) is on ONE BYTE only
 44  BAD LOBBY CODE              [NO DATA]                                                 ->  Respond to 30 if invalid code given
 45  NOT ADMIN                   [NO DATA]                                                 ->  Send if client that sent 35 or 68 is not admin of the lobby
 47  TEAM FULL                   [NO DATA]                                                 ->  Respond to 41 if the team is full
+48  PLAYERS NOT IN TEAM         [NO DATA]                                                 ->  Respond to 36 if some players are not in a team
 ```
 
 ### 50 ... 89 → in game codes
