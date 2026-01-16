@@ -88,11 +88,12 @@ Every code (1 ... 255) is on ONE BYTE only
 ```
 51  PLAYERS INIT            [X times (4B id + 4B entity + 1B team + 4B x + 4B y + 1B champ)]
 52  BUILDINGS INIT          [X times (4B id + 1B team + 4B x + 4B y + 8B hp + 4B type + 4B range)]
+53  ENTITIES CREATED        [X times (4B entity + 4B x + 4B y + 32B type)]
 
 61  PLAYERS UPDATES         [X times (4B id + 4B x + 4B y + 4B vel_x + 4B vel_y + 4B direction_x + 4B direction_y + 4B hp + 4B mana + 1B level)]
 62  BUILDINGS UPDATES       [X times (4B id + 8B hp)]
 63  CREATURES UPDATES       [X times (4B id + 1B team + 4B x + 4B y + 1B direction + 8B hp + 4B type + 16 times (1B effect) )]
-64  PROJECTILES UPDATES     [X times (4B id + 4B x + 4B y + 4B type)]
+64  PROJECTILES UPDATES     [X times (4B entity + 4B x + 4B y)]
 65  COLLECTIBLES UPDATES    [X times (4B id + 4B x + 4B y + 4B type)]
 66  INVENTORIES UPDATES     [X times (4B playerid + 6 times (4B itemid) + 4B gold)]
 67  STATS UPDATES           [X times (4B playerid + 4B ad + 4B ap + 4B armor + 4B resist + 4B cdr mov speed + 4B atk speed + 4B range)]

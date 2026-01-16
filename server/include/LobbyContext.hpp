@@ -23,6 +23,7 @@ class LobbyContext {
     ////// Timestamp default latency in seconds //////
     static constexpr float PLAYERS_UPDATES_DEFAULT_LATENCY = 1.0f / 120.0f;
     static constexpr float BUILDINGS_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
+    static constexpr float ENTITIES_CREATED_DEFAULT_LATENCY = 1.0f / 50.0f;
     static constexpr float CREATURES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
     static constexpr float PROJECTILES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
     static constexpr float COLLECTIBLES_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
@@ -112,6 +113,12 @@ class LobbyContext {
     net::BUILDINGS_INIT getBuildingsInit();
 
     /**
+     * @brief Try to get entities created if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::ENTITIES_CREATED> tryGetEntitiesCreated();
+
+    /**
      * @brief Try to get player updates if the timestamp delay has passed
      * @return std::optional containing the message if ready, std::nullopt otherwise
      */
@@ -172,6 +179,13 @@ class LobbyContext {
     std::optional<net::SCOREBOARD> tryGetScoreboard();
 
     ////// setters //////
+
+    /**
+     * @brief Set how often to send entities created (in seconds)
+     */
+    void setEntitiesCreatedFrequency(float freq) {
+        entities_created.delay = size_t(SEC_TO_MICRO(freq));
+    }
 
     /**
      * @brief Set how often to send players updates (in seconds)
@@ -268,6 +282,8 @@ class LobbyContext {
         te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);
     te::Timestamp buildings_update =
         te::Timestamp(BUILDINGS_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp entities_created =
+        te::Timestamp(BUILDINGS_UPDATES_DEFAULT_LATENCY);
     te::Timestamp creatures_update =
         te::Timestamp(CREATURES_UPDATES_DEFAULT_LATENCY);
     te::Timestamp projectiles_update =
@@ -288,6 +304,12 @@ class LobbyContext {
 
     te::Timestamp players_list_update =
         te::Timestamp(PLAYERS_LIST_DEFAULT_LATENCY);
+
+    /**
+        * @brief Build the ENTITIES_CREATED message from the lobby's registry
+        * @return The constructed message
+        */
+    net::ENTITIES_CREATED getEntitiesCreated();
 
     /**
      * @brief Build the PLAYERS_UPDATES message from the lobby's registry

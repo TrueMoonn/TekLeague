@@ -23,8 +23,8 @@ void registerSpellCasting(Game& game) {
         ratios.fill(0);
         if (params["ratios"].is_array()) {
             const auto& raw_ratios = params["ratios"].as_array();
-            for (std::size_t i = 0; i < DamageType::DMGLIMIT; ++i)
-                ratios[i] = raw_ratios[i].value_or(0);
+            for (std::size_t i = 0; i < raw_ratios->size(); ++i)
+                ratios[i] = raw_ratios->at(i).value_or(0);
         }
         float cd = params["cooldown"].value_or(1.0);
         float ctime = params["cast_time"].value_or(0.5);

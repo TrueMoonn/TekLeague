@@ -101,5 +101,7 @@ class Client : public Game, public te::network::GameClient {
     void handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg);
     void handleTeamFull(const net::TEAM_FULL& msg);
     void handlePlayersInit(const net::PLAYERS_INIT& msg);
+    void handleEntitiesCreated(const net::ENTITIES_CREATED& msg);
     void handlePlayersUpdate(const net::PLAYERS_UPDATES& msg);
+    void handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg);
 };

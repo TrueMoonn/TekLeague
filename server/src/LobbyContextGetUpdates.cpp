@@ -14,6 +14,7 @@
 #include "components/stats/mana.hpp"
 #include "components/stats/stat_pool.hpp"
 #include "components/stats/xp.hpp"
+#include "components/competences/spells.hpp"
 #include "entity_spec/components/team.hpp"
 #include "LobbyContext.hpp"
 #include "my.hpp"
@@ -120,6 +121,26 @@ net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
     return msg;
 }
 
+net::ENTITIES_CREATED LobbyContext::getEntitiesCreated() {
+    net::ENTITIES_CREATED msg;
+
+    auto& game = getLobby();
+    auto& positions = game.getComponent<addon::physic::Position2>();
+
+    for (auto& entity : game.entities_queue) {
+        auto& pos = positions.getComponent(static_cast<uint32_t>(entity.first));
+        net::EntitiesCreated state {
+            .entity = static_cast<uint32_t>(entity.first),
+            .x = pos.x,
+            .y = pos.y,
+        };
+        std::strcpy(state.type, entity.second.data());
+        msg.entities.push_back(state);
+    }
+    game.entities_queue.clear();
+    return msg;
+}
+
 net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
     net::BUILDINGS_UPDATES msg;
 
@@ -177,19 +198,15 @@ net::PROJECTILES_UPDATES LobbyContext::getProjectilesUpdates() {
 
     auto& game = getLobby();
     auto& positions = game.getComponent<addon::physic::Position2>();
+    auto& spells = game.getComponent<Spell>();
 
-    for (auto&& [entity, position] :
-        ECS::IndexedDenseZipper(positions)) {
-        if (entity < eField::PROJECTILES_BEGIN ||
-           entity > eField::PROJECTILES_END)
-            continue;
+    for (auto&& [entity, position, _] :
+        ECS::IndexedDenseZipper(positions, spells)) {
 
-        // TODO(x): fill state with real all data
         net::ProjectileUpdate state {
-            .id = static_cast<uint32_t>(entity),
+            .entity = static_cast<uint32_t>(entity),
             .x = position.x,
             .y = position.y,
-            .type = 0
         };
 
         msg.projectiles.push_back(state);
@@ -310,6 +327,14 @@ net::SCOREBOARD LobbyContext::getScoreboard() {
     return msg;
 }
 
+std::optional<net::ENTITIES_CREATED> LobbyContext::tryGetEntitiesCreated() {
+    auto& game = getLobby();
+    if (!entities_created.checkDelay() || game.entities_queue.empty())
+        return std::nullopt;
+
+    return getEntitiesCreated();
+}
+
 std::optional<net::PLAYERS_UPDATES> LobbyContext::tryGetPlayerUpdates() {
     if (!players_update.checkDelay())
         return std::nullopt;
@@ -334,7 +359,7 @@ std::optional<net::CREATURES_UPDATES> LobbyContext::tryGetCreaturesUpdates() {
 std::optional<net::PROJECTILES_UPDATES>
 LobbyContext::tryGetProjectilesUpdates(
 ) {
-    if (!creatures_update.checkDelay())
+    if (!projectiles_update.checkDelay())
         return std::nullopt;
 
     return getProjectilesUpdates();

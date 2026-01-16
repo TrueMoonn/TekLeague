@@ -65,23 +65,24 @@ void setInGameScene(Client& game) {
         }
     });
     game.subForScene<te::Mouse>(idx, "mouse_input", [&game](te::Mouse mouse) {
-        game.mpos = mouse.position;
+        const auto& winSize = game.getComponent<addon::sfml::Window>()
+            .getComponent(static_cast<std::size_t>(SYSTEM_F)).win->getSize();
+        auto& posis = game.getComponent<addon::physic::Position2>();
+        auto& players = game.getComponent<addon::intact::Player>();
+        for (auto&& [_, pos] : ECS::DenseZipper(players, posis)) {
+            game.mpos.x = pos.x - (winSize.x / 2.f) + mouse.position.x;
+            game.mpos.y = pos.y - (winSize.y / 2.f) + mouse.position.y;
+        }
+
         if (mouse.type[te::MouseEvent::MouseRight]) {
             static te::Timestamp delta(0.02f);
             if (!delta.checkDelay())
                 return;
-            auto& posis = game.getComponent<addon::physic::Position2>();
-            auto& players = game.getComponent<addon::intact::Player>();
-            const auto& winSize = game.getComponent<addon::sfml::Window>()
-                .getComponent(static_cast<std::size_t>(SYSTEM_F)).win->getSize();
-
-            for (auto&& [_, pos] : ECS::DenseZipper(players, posis)) {
-                net::CLIENT_INPUTS msg;
-                msg.mouse_x = pos.x - (winSize.x / 2.f) + mouse.position.x;
-                msg.mouse_y = pos.y - (winSize.y / 2.f) + mouse.position.y;
-                msg.actions = static_cast<uint8_t>(ActionIG::MOVEMENT);
-                game.sendToServer(msg.serialize());
-            }
+            net::CLIENT_INPUTS msg;
+            msg.mouse_x = game.mpos.x;
+            msg.mouse_y = game.mpos.y;
+            msg.actions = static_cast<uint8_t>(ActionIG::MOVEMENT);
+            game.sendToServer(msg.serialize());
         }
     });
 }

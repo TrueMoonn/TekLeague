@@ -199,18 +199,32 @@ void Client::registerMessageHandlers() {
         emit("game:init_player");
     });
 
-    registerPacketHandler(88, [this](const std::vector<uint8_t>& data) {
-        std::println("[Client] Received ADMIN_GAME_PAUSED packet");
-        auto msg = net::ADMIN_GAME_PAUSED::deserialize(data);
+    registerPacketHandler(53, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received ENTITIES_CREATED packet");
+        auto msg = net::ENTITIES_CREATED::deserialize(data);
 
-        handleAdminGamePaused(msg);
-        emit("lobby:game_paused");
+        handleEntitiesCreated(msg);
+        emit("game:init_player");
     });
 
     registerPacketHandler(61, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received PLAYERS_UPDATES packet");
         auto msg = net::PLAYERS_UPDATES::deserialize(data);
         handlePlayersUpdate(msg);
+    });
+
+    registerPacketHandler(64, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received PROJECTILES_UPDATES packet");
+        auto msg = net::PROJECTILES_UPDATES::deserialize(data);
+        handleProjectilesUpdate(msg);
+    });
+
+    registerPacketHandler(88, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received ADMIN_GAME_PAUSED packet");
+        auto msg = net::ADMIN_GAME_PAUSED::deserialize(data);
+
+        handleAdminGamePaused(msg);
+        emit("lobby:game_paused");
     });
 }
 
