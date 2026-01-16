@@ -109,12 +109,19 @@
         }
       ]
     },
-    "ProjectileUpdate": {
+    "EntitiesCreated": {
       "fields": [
-        { "name": "id", "type": "uint32" },
+        { "name": "entity", "type": "uint32" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
-        { "name": "type", "type": "uint32" }
+        { "name": "type", "type": "string", "max_length": 32 }
+      ]
+    },
+    "ProjectileUpdate": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" }
       ]
     },
     "CollectibleUpdate": {
@@ -318,7 +325,16 @@
         }
       ]
     },
-
+    "ENTITIES_CREATED": {
+      "id": 53,
+      "fields": [
+        {
+          "name": "entities",
+          "type": "dynamic_array",
+          "element_type": "EntitiesCreated"
+        }
+      ]
+    },
     "PLAYERS_UPDATES": {
       "id": 61,
       "fields": [

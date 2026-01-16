@@ -432,7 +432,7 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
             auto& spell_id = game.getComponent<Spells>().
                 getComponent(e).spell_id[0];
             SPELLS.at(static_cast<SpellId>(spell_id))(
-                game, e, {msg.mouse_x, msg.mouse_y});
+                 game, e, {msg.mouse_x, msg.mouse_y});
         }
         if (msg.actions == static_cast<uint8_t>(ActionIG::SPELL2)) {
             auto& spell_id = game.getComponent<Spells>().

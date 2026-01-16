@@ -15,6 +15,7 @@
 #include <physic/components/velocity.hpp>
 
 #include "Client.hpp"
+#include "Network/generated_messages.hpp"
 #include "components/stats/health.hpp"
 #include "components/stats/mana.hpp"
 #include "components/stats/xp.hpp"
@@ -162,3 +163,19 @@ void Client::handlePlayersUpdate(const net::PLAYERS_UPDATES& msg) {
         manas.getComponent(e).amount = player.mana;
     }
 };
+
+void Client::handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg) {
+    auto& positions = getComponent<addon::physic::Position2>();
+
+    for (auto& entity : msg.projectiles) {
+        if (!positions.hasComponent(entity.entity))
+            continue;
+        positions.getComponent(entity.entity).x = entity.x;
+        positions.getComponent(entity.entity).y = entity.y;
+    }
+}
+
+void Client::handleEntitiesCreated(const net::ENTITIES_CREATED& msg) {
+    for (auto& entity : msg.entities)
+        createEntity(entity.entity, entity.type, {entity.x, entity.y});
+}

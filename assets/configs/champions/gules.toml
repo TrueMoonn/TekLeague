@@ -47,17 +47,19 @@ indexs = [1, 2]
 [ENTITIES.gules_ball]
 position2 = true
 target = true
-team = true
+
+[ENTITIES.gules_ball.team]
+name = ""
 
 [ENTITIES.gules_ball.spell]
 name = "gules1"
 base = 10
 damage_type = 1
 ratios = [0, 40]
-cooldown = 7.0
+cooldown = 1.0
 cast_time = 0.0
-spell_target = 0
-mana_cost = 40
+target = 0
+mana_cost = 0
 speed = 500
 range = 500
 
