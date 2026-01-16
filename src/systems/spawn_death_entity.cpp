@@ -18,15 +18,9 @@ void spawnDeathEntity(Game &game) {
         auto& pos = game.getComponent<addon::physic::Position2>();
         auto& on_death = game.getComponent<onDeath>();
 
-        // for (auto &&[e, od] : ECS::IndexedDenseZipper(on_death)) {
-        //     std::cout << e << ": Will spawn " << od.name << " on death" << std::endl;
-        //     auto v = game.getAllEntityToKill();
-        //     if (std::find(v.begin(), v.end(), e) != v.end())
-        //         std::cout << "I'm gonna die" << std::endl;
-        // }
         for (auto e : game.getAllEntityToKill()) {
             if (!on_death.hasComponent(e))
-                return;
+                continue;
             auto &od = on_death.getComponent(e);
             if (pos.hasComponent(e)) {
                 auto &posval = pos.getComponent(e);
