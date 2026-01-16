@@ -92,6 +92,7 @@ class LobbyContext {
     const std::unordered_map<uint32_t, net::Address>& getClients() const;
     bool isFull() const;
     void createPlayersEntities();
+    void createOtherEntities();
 
     /**
      * @brief Get the entity associated with a player's client ID

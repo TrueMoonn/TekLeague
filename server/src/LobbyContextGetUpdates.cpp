@@ -1,4 +1,5 @@
 #include <vector>
+#include <print>
 
 #include <Network/generated_messages.hpp>
 #include <Network/Address.hpp>
@@ -7,6 +8,7 @@
 #include <entity_spec/components/health.hpp>
 #include <interaction/components/player.hpp>
 
+#include "components/building.hpp"
 #include "components/champion.hpp"
 #include "components/competences/target.hpp"
 #include "components/stats/gold.hpp"
@@ -65,24 +67,24 @@ net::BUILDINGS_INIT LobbyContext::getBuildingsInit() {
 
     auto& game = getLobby();
     auto& positions = game.getComponent<addon::physic::Position2>();
-    auto& healths = game.getComponent<Health>();
     auto& teams = game.getComponent<addon::eSpec::Team>();
-    // get le component building
+    auto& buildings = game.getComponent<Building>();
 
-    for (auto&& [entity, pos, health, team] :
-        ECS::IndexedDenseZipper(positions, healths, teams)) {
-        if (entity < eField::BUILDINGS_BEGIN || entity > eField::BUILDINGS_END)
-            continue;
+    for (auto&& [entity, pos, team, building] :
+        ECS::IndexedDenseZipper(positions, teams, buildings)) {
 
-        // TODO(x): fill state with real all data
         net::BuildingInit state;
         std::memset(&state, 0, sizeof(state));
-        state.id = static_cast<uint32_t>(entity),
+        state.entity = static_cast<uint32_t>(entity),
         state.x = pos.x,
         state.y = pos.y,
-        state.hp = static_cast<double>(health.amount),
         state.team = 0;
-        // state.team = team.name;  // TODO(PIERRE): conversion team name, uint8_t
+        for (std::size_t i = 0; i < TEAMS.size(); ++i) {
+            if (team.name == TEAMS[i])
+               state.team = i;
+        }
+        std::strncpy(state.type, building.name.data(), sizeof(state.type) - 1);
+        state.type[sizeof(state.type) - 1] = '\0';
         msg.buildings.push_back(state);
     }
 
@@ -150,16 +152,13 @@ net::BUILDINGS_UPDATES LobbyContext::getBuildingsUpdates() {
 
     auto& game = getLobby();
     auto& healths = game.getComponent<Health>();
-    // Get component building puis regarder le name pour tower/nexus
+    auto& buildings = game.getComponent<Building>();
 
-    for (auto&& [entity, health] :
-        ECS::IndexedDenseZipper(healths)) {
-        if (entity < eField::BUILDINGS_BEGIN || entity > eField::BUILDINGS_END)
-            continue;
-
+    for (auto&& [entity, health, _] :
+        ECS::IndexedDenseZipper(healths, buildings)) {
         net::BuildingsUpdate state;
         std::memset(&state, 0, sizeof(state));
-        state.id = static_cast<uint32_t>(entity);
+        state.entity = static_cast<uint32_t>(entity);
         state.hp = static_cast<double>(health.amount);
 
         msg.buildings.push_back(state);

@@ -7,6 +7,7 @@
 
 #pragma once
 
+    #include "maths/Vector.hpp"
     #include <array>
     #include <string>
 
@@ -45,3 +46,15 @@ enum class ActionIG {
     BACK,
     SHOP,
 };
+
+ #define NB_BUILDINGS 6
+
+static const std::array<std::pair<std::string, mat::Vector2f>, NB_BUILDINGS> BUILDINGS = {{
+    {std::string("tower"), mat::Vector2f(1400.0f, 1200.0f)},   // Blue top tower
+    {std::string("tower"), mat::Vector2f(1100.0f, 1800.0f)},   // Blue mid tower
+    {std::string("tower"), mat::Vector2f(1400.0f, 2400.0f)},   // Blue bot tower
+
+    {std::string("tower"), mat::Vector2f(6792.0f, 1200.0f)},   // Red top tower
+    {std::string("tower"), mat::Vector2f(7092.0f, 1800.0f)},   // Red mid tower
+    {std::string("tower"), mat::Vector2f(6792.0f, 2400.0f)}    // Red bot tower
+}};

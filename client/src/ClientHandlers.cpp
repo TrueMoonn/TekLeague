@@ -142,6 +142,30 @@ void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
     }
 }
 
+void Client::handleBuildingsInit(const net::BUILDINGS_INIT& msg) {
+    auto& teams = getComponent<addon::eSpec::Team>();
+    auto& positions = getComponent<addon::physic::Position2>();
+
+    for (auto& building : msg.buildings) {
+        ECS::Entity e = building.entity;
+
+        std::string tower_config;
+        if (building.team == 1) {
+            tower_config = "tower_blue";
+        } else if (building.team == 2) {
+            tower_config = "tower_red";
+        } else {
+            tower_config = "tower_blue";
+        }
+
+        createEntity(e, tower_config, {building.x, building.y});
+
+        teams.getComponent(e).name = TEAMS[building.team];
+        positions.getComponent(e).x = building.x;
+        positions.getComponent(e).y = building.y;
+    }
+}
+
 void Client::handlePlayersUpdate(const net::PLAYERS_UPDATES& msg) {
     auto& pos = getComponent<addon::physic::Position2>();
     auto& vels = getComponent<addon::physic::Velocity2>();
@@ -172,6 +196,17 @@ void Client::handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg) {
             continue;
         positions.getComponent(entity.entity).x = entity.x;
         positions.getComponent(entity.entity).y = entity.y;
+    }
+}
+
+void Client::handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg) {
+    auto& healths = getComponent<Health>();
+    
+    for (auto& building : msg.buildings) {
+        ECS::Entity e = building.entity;
+        if (healths.hasComponent(e)) {
+            healths.getComponent(e).amount = building.hp;
+        }
     }
 }
 

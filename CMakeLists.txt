@@ -33,6 +33,7 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/Game.cpp
 
     # COMPONENTS
+    ${GAME_SRC_DIR}/components/building.cpp
     ${GAME_SRC_DIR}/components/champion.cpp
     ${GAME_SRC_DIR}/components/gules.cpp
 

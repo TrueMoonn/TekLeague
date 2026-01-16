@@ -14,6 +14,7 @@ static const std::vector<std::string> CONFIG_PATHS {
     "assets/configs/champions/ethan.toml",
     "assets/configs/champions/goatier.toml",
     "assets/configs/champions/gules.toml",
+    "assets/config/buildings/tower.toml",
 };
 
 static const std::vector<std::string> CLIENT_CONFIG_PATHS {

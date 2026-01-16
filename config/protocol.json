@@ -42,13 +42,11 @@
     },
     "BuildingInit": {
       "fields": [
-        { "name": "id", "type": "uint32" },
+        { "name": "entity", "type": "uint32" },
         { "name": "team", "type": "uint8" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
-        { "name": "hp", "type": "double" },
-        { "name": "type", "type": "uint32" },
-        { "name": "range", "type": "uint32" }
+        { "name": "type", "type": "string", "max_length": 16 }
       ]
     },
     "TeamScore": {
@@ -88,7 +86,7 @@
     },
     "BuildingsUpdate": {
       "fields": [
-        { "name": "id", "type": "uint32" },
+        { "name": "entity", "type": "uint32" },
         { "name": "hp", "type": "double" }
       ]
     },

@@ -12,6 +12,7 @@
 
     #include "Game.hpp"
 
+    #include "components/building.hpp"
     #include "components/champion.hpp"
     #include "components/gules.hpp"
     #include "components/competences/auto_attack.hpp"
@@ -42,4 +43,5 @@ static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerStatPool,
     &registerTarget,
     &registerXp,
+    &registerBuilding
 };

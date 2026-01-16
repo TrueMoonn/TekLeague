@@ -199,6 +199,12 @@ void Client::registerMessageHandlers() {
         emit("game:init_player");
     });
 
+    registerPacketHandler(52, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received BUILDINGS_INIT packet");
+        auto msg = net::BUILDINGS_INIT::deserialize(data);
+        handleBuildingsInit(msg);
+    });
+
     registerPacketHandler(53, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received ENTITIES_CREATED packet");
         auto msg = net::ENTITIES_CREATED::deserialize(data);
@@ -211,6 +217,12 @@ void Client::registerMessageHandlers() {
         std::println("[Client] Received PLAYERS_UPDATES packet");
         auto msg = net::PLAYERS_UPDATES::deserialize(data);
         handlePlayersUpdate(msg);
+    });
+
+    registerPacketHandler(62, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received BUILDINGS_UPDATES packet");
+        auto msg = net::BUILDINGS_UPDATES::deserialize(data);
+        handleBuildingsUpdate(msg);
     });
 
     registerPacketHandler(64, [this](const std::vector<uint8_t>& data) {
