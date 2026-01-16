@@ -240,7 +240,7 @@ void Server::handleCreateLobby(const std::vector<uint8_t>& data,
     std::println("[Server::handleCreateLobby] Client {} ({}) creating lobby",
         client.id, client.username);
 
-    uint lobby_id = createLobby(10, sender);
+    uint lobby_id = createLobby(6, sender);
 
     std::string lobby_code;
     {
@@ -297,10 +297,16 @@ void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
     std::println("[Server] handleAdminStartGame: Starting game for lobby {}",
         lobby_id);
 
-    // Change lobby state to IN_GAME
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         if (lobbies.find(lobby_id) != lobbies.end()) {
+            for (auto& player : lobbies.at(lobby_id).getLobby().getPlayers())
+                if (player.team == 0) {
+                    std::println("[Server] handleAdminStartGame: Players in lobby {} are not in team",
+                        lobby_id);
+                    sendPlayersNotInTeam(sender);
+                    return;
+                }
             lobbies.at(lobby_id).setGameState(LobbyGameState::IN_GAME);
             std::println("[Server] handleAdminStartGame: Lobby {} state changed to IN_GAME",
                 lobby_id);

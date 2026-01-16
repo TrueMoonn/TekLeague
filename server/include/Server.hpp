@@ -171,6 +171,7 @@ class Server : public te::network::GameServer {
     void sendBadLobbyCode(const net::Address& address);
     void sendNotAdmin(const net::Address& address);
     void sendTeamFull(const net::Address& address);
+    void sendPlayersNotInTeam(const net::Address& address);
     void sendAdminGamePaused(uint lobby_id);
     void sendGameEnded(uint lobby_id);
     void sendPlayersInit(uint lobby_id);
