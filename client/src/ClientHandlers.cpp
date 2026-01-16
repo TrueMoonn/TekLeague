@@ -201,7 +201,7 @@ void Client::handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg) {
 
 void Client::handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg) {
     auto& healths = getComponent<Health>();
-    
+
     for (auto& building : msg.buildings) {
         ECS::Entity e = building.entity;
         if (healths.hasComponent(e)) {
@@ -213,4 +213,9 @@ void Client::handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg) {
 void Client::handleEntitiesCreated(const net::ENTITIES_CREATED& msg) {
     for (auto& entity : msg.entities)
         createEntity(entity.entity, entity.type, {entity.x, entity.y});
+}
+
+void Client::handleEntitiesDestroyed(const net::ENTITIES_DESTROYED& msg) {
+    for (auto& entity : msg.entities)
+        popEntity(entity);
 }
