@@ -62,15 +62,19 @@ position2 = true
     size = [128, 128]
     scale = [256, 256]
     origin = [64, 64]
-    layer = 2
+    layer = 10
 
     [ENTITIES.tower_projectiles_explosion.animation]
     frames = [
-        [[0, 0], 10, 0.1, false]
+        [[0, 0], 10, 0.2, false]
     ]
 
     [ENTITIES.tower_projectiles_explosion.timeout]
-    duration = 1.0
+    duration = 2.0
+
+    [ENTITIES.tower_projectiles_explosion.sound]
+    path = "client/assets/audio/boom.mp3"
+    play = true
 
 [ENTITIES.tower_projectiles_red.hitbox]
 left = 0.0
