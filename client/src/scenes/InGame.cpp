@@ -16,6 +16,7 @@
 #include <entity_spec/components/team.hpp>
 
 #include "components/champion.hpp"
+#include "components/circle_hitbox.hpp"
 #include "components/competences/target.hpp"
 #include "entities.hpp"
 #include "scenes.hpp"
@@ -25,6 +26,7 @@ void setInGameScene(Client& game) {
     ingame.systems = {{
         {"poll_event"},  // INPUT
         {"play_sound", "champion_movement", "auto_attacks", "track_target",
+            "circle_pushback",
             "deal_damage", "handle_timeout", "spawn_death_entity",
             "kill_all_entity"},  // PRE UPDATE
         {"animate", "entity_direction", "movement2"},  // UPDATE
@@ -37,10 +39,11 @@ void setInGameScene(Client& game) {
         {game.nextEntity(eType::MAP), "sumoners_rift_nash_zone"},
         {game.nextEntity(eType::MAP), "sumoners_rift_jungle"},
         {game.nextEntity(eType::MAP), "sumoners_rift_walls"},
+        {game.nextEntity(eType::MAP), "circle_collisions", {800, 2200}},
         {game.nextEntity(eType::BUILDINGS), "tower_blue", {1400, 1000}},
         {game.nextEntity(eType::BUILDINGS), "tower_red", {6792, 1000}},
         {game.nextEntity(eType::BUILDINGS), "zone_left_enemy", {6792, 1000}},
-        {game.nextEntity(eType::CHAMPION), "Gules", {200, 1100}},
+        {game.nextEntity(eType::CHAMPION), "Gules", {400, 2200}},
     };
 
     ingame.on_activate = [&game](){

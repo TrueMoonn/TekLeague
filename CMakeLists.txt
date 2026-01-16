@@ -34,6 +34,7 @@ add_library(${PROJECT_NAME} STATIC
 
     # COMPONENTS
     ${GAME_SRC_DIR}/components/champion.cpp
+    ${GAME_SRC_DIR}/components/circle_hitbox.cpp
     ${GAME_SRC_DIR}/components/on_death.cpp
 
     ${GAME_SRC_DIR}/components/competences/target.cpp
@@ -63,6 +64,7 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/systems/auto_attacks.cpp
     ${GAME_SRC_DIR}/systems/track_target.cpp
     ${GAME_SRC_DIR}/systems/deal_damage.cpp
+    ${GAME_SRC_DIR}/systems/circle_pushback.cpp
     ${GAME_SRC_DIR}/systems/handle_timeout.cpp
     ${GAME_SRC_DIR}/systems/spawn_death_entity.cpp
     ${GAME_SRC_DIR}/systems/kill_all_entity.cpp

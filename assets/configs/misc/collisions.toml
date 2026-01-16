@@ -1,0 +1,7 @@
+[ENTITIES.circle_collisions]
+position2 = true
+stationary = true
+
+[ENTITIES.circle_collisions.circle_hitbox]
+radius = 100
+pushback = true
