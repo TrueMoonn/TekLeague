@@ -14,8 +14,11 @@
 
 #include "Network/generated_messages.hpp"
 #include "Server.hpp"
+#include "components/competences/spells.hpp"
 #include "components/competences/target.hpp"
 #include "my.hpp"
+#include "physic/components/position.hpp"
+#include "spells.hpp"
 
 bool Server::setPacketsHandlers() {
     registerPacketHandler(2, [this](const std::vector<uint8_t>& data,
@@ -424,6 +427,18 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
             auto& target = game.getComponent<Target>();
             target.getComponent(e).x = msg.mouse_x;
             target.getComponent(e).y = msg.mouse_y;
+        }
+        if (msg.actions == static_cast<uint8_t>(ActionIG::SPELL1)) {
+            auto& spell_id = game.getComponent<Spells>().
+                getComponent(e).spell_id[0];
+            SPELLS.at(static_cast<SpellId>(spell_id))(
+                game, e, {msg.mouse_x, msg.mouse_y});
+        }
+        if (msg.actions == static_cast<uint8_t>(ActionIG::SPELL2)) {
+            auto& spell_id = game.getComponent<Spells>().
+                getComponent(e).spell_id[1];
+            SPELLS.at(static_cast<SpellId>(spell_id))(
+                game, e, {msg.mouse_x, msg.mouse_y});
         }
     }
 }
