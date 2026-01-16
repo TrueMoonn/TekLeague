@@ -13,6 +13,7 @@
     #include "Game.hpp"
 
     #include "components/champion.hpp"
+    #include "components/on_death.hpp"
     #include "components/competences/auto_attack.hpp"
     #include "components/competences/auto_track.hpp"
     #include "components/competences/target.hpp"
@@ -28,6 +29,7 @@
 static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerAutoAttack,
     &registerAutoTrack,
+    &registerOnDeath,
     &registerButton,
     &registerChampion,
     &registerGold,

@@ -9,6 +9,9 @@ scale = [258, 430]
 origin = [193.5, 420]
 layer = 10
 
+[ENTITIES.Gules.on_death]
+entity = "dead_gules"
+
 [ENTITIES.Gules.animation]
 frames = [
     # IDLE
@@ -43,5 +46,24 @@ frames = [
     [[0, 20], 4, 0.2, false],
 
     # DEATH
+    [[0, 21], 5, 0.4, false],
+]
+
+[ENTITIES.dead_gules]
+drawable = true
+player = true
+
+[ENTITIES.dead_gules.sprite]
+path = "client/assets/images/champions/gules/Gules.png"
+size = [387, 644]
+scale = [258, 430]
+origin = [193.5, 420]
+layer = 10
+
+[ENTITIES.dead_gules.timeout]
+delay = 2.0
+
+[ENTITIES.dead_gules.animation]
+frames = [
     [[0, 21], 5, 0.4, false],
 ]

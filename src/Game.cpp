@@ -35,12 +35,13 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
     _nextEntities[eType::CREATURES] = eField::CREATURES_BEGIN;
     _nextEntities[eType::BUILDINGS] = eField::BUILDINGS_BEGIN;
     _nextEntities[eType::PROJECTILES] = eField::PROJECTILES_BEGIN;
+    _nextEntities[eType::ONDEATH] = eField::ONDEATH_BEGIN;
 
     sub("closed", [this]() {_running = false;});
     _running = true;
 }
 
-Game::Game(uint max_players, const std::string& code, const std::string& ppath) 
+Game::Game(uint max_players, const std::string& code, const std::string& ppath)
     : Game(ppath) {
     _max_players = max_players;
     _code = code;
@@ -74,6 +75,9 @@ ECS::Entity Game::nextEntity(eType type) {
                 break;
             case eType::PROJECTILES:
                 _nextEntities[type] = eField::PROJECTILES_BEGIN;
+                break;
+            case eType::ONDEATH:
+                _nextEntities[type] = eField::ONDEATH_BEGIN;
                 break;
         }
     }
