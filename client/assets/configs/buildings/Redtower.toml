@@ -47,6 +47,31 @@ y = 0
 ad = 10
 ap = 0
 
+[ENTITIES.tower_projectiles_red.on_death]
+entity = "tower_projectiles_explosion"
+
+
+[ENTITIES.tower_projectiles_explosion]
+drawable = true
+position2 = true
+
+    [ENTITIES.tower_projectiles_explosion.sprite]
+    path = "client/assets/images/buildings/boom.png"
+    # size = [16, 16]
+    # center = true
+    size = [128, 128]
+    scale = [256, 256]
+    origin = [64, 64]
+    layer = 2
+
+    [ENTITIES.tower_projectiles_explosion.animation]
+    frames = [
+        [[0, 0], 10, 0.1, false]
+    ]
+
+    [ENTITIES.tower_projectiles_explosion.timeout]
+    duration = 1.0
+
 [ENTITIES.tower_projectiles_red.hitbox]
 left = 0.0
 top = 0.0

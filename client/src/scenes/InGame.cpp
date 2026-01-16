@@ -20,12 +20,14 @@
 #include "entities.hpp"
 #include "scenes.hpp"
 
-
 void setInGameScene(Client& game) {
     te::Scene ingame;
     ingame.systems = {{
         {"poll_event"},  // INPUT
-        {"champion_movement", "auto_attacks", "track_target", "deal_damage", "kill_all_entity"},  // PRE UPDATE
+        {"champion_movement", "auto_attacks", "track_target", "deal_damage",
+             "handle_timeout",
+              "spawn_death_entity",
+              "kill_all_entity"},  // PRE UPDATE
         {"animate", "entity_direction", "movement2"},  // UPDATE
         {"follow_player"},  // POST UPDATE
         {"draw", "display"}  // RENDER
