@@ -39,7 +39,14 @@ class Server : public te::network::GameServer {
     void run();
 
     /**
+     * @brief Request server to stop (signal-safe)
+     * Only sets the stop flag, doesn't join threads
+     */
+    void requestStop() { _should_run.store(false); }
+
+    /**
      * @brief Stop the server gracefully
+     * Performs cleanup and joins threads
      */
     void stop();
 
