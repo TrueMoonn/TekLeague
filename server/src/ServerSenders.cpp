@@ -250,6 +250,11 @@ void Server::sendTeamFull(const net::Address& address) {
     sendTo(address, msg.serialize());
 }
 
+void Server::sendPlayersNotInTeam(const net::Address& address) {
+    net::PLAYERS_NOT_IN_TEAM msg;
+    sendTo(address, msg.serialize());
+}
+
 void Server::sendAdminGamePaused(uint lobby_id) {
     net::ADMIN_GAME_PAUSED msg;
     broadcastToLobby(lobby_id, msg.serialize());

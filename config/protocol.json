@@ -285,6 +285,10 @@
       "id": 47,
       "fields": []
     },
+    "PLAYERS_NOT_IN_TEAM": {
+      "id": 48,
+      "fields": []
+    },
     "CLIENT_INPUTS": {
       "id": 50,
       "fields": [

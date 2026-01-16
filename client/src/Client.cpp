@@ -231,6 +231,12 @@ void Client::registerMessageHandlers() {
         handleBuildingsUpdate(msg);
     });
 
+    registerPacketHandler(63, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received BUILDINGS_UPDATES packet");
+        auto msg = net::BUILDINGS_UPDATES::deserialize(data);
+        handleBuildingsUpdate(msg);
+    });
+
     registerPacketHandler(64, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received PROJECTILES_UPDATES packet");
         auto msg = net::PROJECTILES_UPDATES::deserialize(data);
