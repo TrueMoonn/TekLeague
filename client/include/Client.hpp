@@ -14,6 +14,7 @@
 
     #include "Game.hpp"
     #include "Network/generated_messages.hpp"
+#include "clock.hpp"
 
 class Client : public Game, public te::network::GameClient {
  public:
@@ -71,6 +72,7 @@ class Client : public Game, public te::network::GameClient {
     std::optional<net::PlayerListEntry> getMyInfos();
 
     mat::Vector2i mpos;
+    te::Timestamp inputLimit{0.08f};
  private:
     std::string _username;
     uint32_t _client_id = 0;

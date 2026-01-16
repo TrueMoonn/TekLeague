@@ -428,6 +428,7 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
             auto& target = game.getComponent<Target>();
             target.getComponent(e).x = msg.mouse_x;
             target.getComponent(e).y = msg.mouse_y;
+            target.getComponent(e).to_attack = msg.target;
         }
         if (msg.actions == static_cast<uint8_t>(ActionIG::SPELL1)) {
             auto& spell_id = game.getComponent<Spells>().
@@ -440,6 +441,13 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
                 getComponent(e).spell_id[1];
             SPELLS.at(static_cast<SpellId>(spell_id))(
                 game, e, {msg.mouse_x, msg.mouse_y});
+        }
+        if (msg.actions == static_cast<uint8_t>(ActionIG::AA)) {
+            auto& target = game.getComponent<Target>();
+            target.getComponent(e).x = msg.mouse_x;
+            target.getComponent(e).y = msg.mouse_y;
+            target.getComponent(e).to_attack = msg.target;
+            std::cout << "auto attack on " << msg.target << "\n";
         }
     }
 }

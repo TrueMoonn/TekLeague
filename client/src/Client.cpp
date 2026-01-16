@@ -210,7 +210,13 @@ void Client::registerMessageHandlers() {
         auto msg = net::ENTITIES_CREATED::deserialize(data);
 
         handleEntitiesCreated(msg);
-        emit("game:init_player");
+    });
+
+    registerPacketHandler(54, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received ENTITIES_DESTROYED packet");
+        auto msg = net::ENTITIES_DESTROYED::deserialize(data);
+
+        handleEntitiesDestroyed(msg);
     });
 
     registerPacketHandler(61, [this](const std::vector<uint8_t>& data) {

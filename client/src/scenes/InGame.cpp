@@ -17,6 +17,7 @@
 #include <entity_spec/components/team.hpp>
 
 #include "Network/generated_messages.hpp"
+#include "components/competences/target.hpp"
 #include "entities.hpp"
 #include "my.hpp"
 #include "scenes.hpp"
@@ -75,14 +76,34 @@ void setInGameScene(Client& game) {
         }
 
         if (mouse.type[te::MouseEvent::MouseRight]) {
-            static te::Timestamp delta(0.02f);
-            if (!delta.checkDelay())
+            if (!game.inputLimit.checkDelay())
                 return;
             net::CLIENT_INPUTS msg;
             msg.mouse_x = game.mpos.x;
             msg.mouse_y = game.mpos.y;
+            msg.target = 0;
             msg.actions = static_cast<uint8_t>(ActionIG::MOVEMENT);
             game.sendToServer(msg.serialize());
+        }
+    });
+    game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
+        if (!game.inputLimit.checkDelay())
+            return;
+        auto& players = game.getComponent<addon::intact::Player>();
+        auto& teams = game.getComponent<addon::eSpec::Team>();
+        auto& targets = game.getComponent<Target>();
+        if (teams.hasComponent(e)) {
+            for (auto&& [_, team, tag] :
+                ECS::DenseZipper(players, teams, targets)) {
+                if (team.name != teams.getComponent(e).name) {
+                    net::CLIENT_INPUTS msg;
+                    msg.mouse_x = game.mpos.x;
+                    msg.mouse_y = game.mpos.y;
+                    msg.target = e;
+                    msg.actions = static_cast<uint8_t>(ActionIG::AA);
+                    game.sendToServer(msg.serialize());
+                }
+            }
         }
     });
 }

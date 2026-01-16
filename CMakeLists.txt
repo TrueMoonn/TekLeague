@@ -64,11 +64,11 @@ add_library(${PROJECT_NAME} STATIC
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp
-    ${GAME_SRC_DIR}/systems/entity_direction.cpp
     ${GAME_SRC_DIR}/systems/auto_attacks.cpp
     ${GAME_SRC_DIR}/systems/track_target.cpp
     ${GAME_SRC_DIR}/systems/deal_damage.cpp
     ${GAME_SRC_DIR}/systems/kill_all_entity.cpp
+    ${GAME_SRC_DIR}/systems/targeted_damage.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

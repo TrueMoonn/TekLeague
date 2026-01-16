@@ -290,7 +290,8 @@
       "fields": [
         { "name": "actions", "type": "uint8" },
         { "name": "mouse_x", "type": "float" },
-        { "name": "mouse_y", "type": "float" }
+        { "name": "mouse_y", "type": "float" },
+        { "name": "target", "type": "uint32" }
       ]
     },
     "PLAYERS_INIT": {
