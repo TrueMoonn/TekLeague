@@ -88,7 +88,7 @@ cast_time = 0.0
 target = 0
 mana_cost = 0
 speed = 500
-range = 100
+range = 500
 
 [ENTITIES.gules_ball.velocity2]
 x = 0
