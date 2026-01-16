@@ -30,7 +30,7 @@
 
 static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerGulesCmpts,
-    &registerAutoAttack,
+    &registerAttack,
     &registerAutoTrack,
     &registerSpellCasting,
     &registerButton,

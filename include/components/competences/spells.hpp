@@ -12,6 +12,7 @@
     #include <clock.hpp>
     #include <maths/Vector.hpp>
 
+#include "ECS/Entity.hpp"
     #include "Game.hpp"
 
 enum DamageType : std::size_t {
@@ -44,6 +45,7 @@ struct Spell {
         castTime(cast), target(to), mana_cost(mc), spellSpeed(spd), range(r) {}
 
     std::string name;
+    ECS::Entity from = 0;
 
     std::size_t base;
     EffectType dmgType;

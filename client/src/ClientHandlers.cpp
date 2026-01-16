@@ -216,6 +216,7 @@ void Client::handleEntitiesCreated(const net::ENTITIES_CREATED& msg) {
 }
 
 void Client::handleEntitiesDestroyed(const net::ENTITIES_DESTROYED& msg) {
-    for (auto& entity : msg.entities)
-        popEntity(entity);
+    for (auto& entity : msg.entities) {
+        removeEntity(entity);
+    }
 }

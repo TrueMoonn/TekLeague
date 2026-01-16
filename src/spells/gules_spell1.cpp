@@ -54,5 +54,4 @@ void gulesSpell1(Game& game, ECS::Entity e, const mat::Vector2f& mpos) {
     }
     targets.getComponent(gball_idx).x = mpos.x;
     targets.getComponent(gball_idx).y = mpos.y;
-    std::cout << mpos.x << " " << mpos.y << std::endl;
 }

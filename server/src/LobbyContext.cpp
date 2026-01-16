@@ -58,24 +58,10 @@ bool LobbyContext::isFull() const {
 void LobbyContext::createOtherEntities() {
     auto& game = getLobby();
 
-    auto& teams = game.getComponent<addon::eSpec::Team>();
-    auto& positions = game.getComponent<addon::physic::Position2>();
-
-
     for (size_t i = 0; i < BUILDINGS.size(); ++i) {
         const auto& [tower_name, tower_pos] = BUILDINGS[i];
-
         ECS::Entity e = game.nextEntity(eType::BUILDINGS);
-        game.createEntity(e, tower_name.c_str());
-
-        positions.getComponent(e).x = tower_pos.x;
-        positions.getComponent(e).y = tower_pos.y;
-
-        if (i < 3) {
-            teams.getComponent(e).name = TEAMS[1];  // "blue"
-        } else {
-            teams.getComponent(e).name = TEAMS[2];  // "red"
-        }
+        game.createEntity(e, tower_name, {tower_pos.x, tower_pos.y});
     }
 }
 

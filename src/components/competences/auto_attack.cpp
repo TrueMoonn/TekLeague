@@ -7,9 +7,11 @@
 
 #include "components/competences/auto_attack.hpp"
 
-void registerAutoAttack(Game& game) {
-    game.registerComponent<AutoAttack>("auto_attack",
-        [&game](ECS::Entity e, const toml::table &) {
-            game.createComponent<AutoAttack>(e);
+void registerAttack(Game& game) {
+    game.registerComponent<Attack>("attack",
+        [&game](ECS::Entity e, const toml::table& params) {
+            const std::string& attack = params["name"].value_or("unkown");
+            bool aa = params["auto"].value_or(false);
+            game.createComponent<Attack>(e, attack, aa);
     });
 }

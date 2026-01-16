@@ -14,7 +14,7 @@ static const std::vector<std::string> CONFIG_PATHS {
     "assets/configs/champions/ethan.toml",
     "assets/configs/champions/goatier.toml",
     "assets/configs/champions/gules.toml",
-    "assets/config/buildings/tower.toml",
+    "assets/configs/buildings/tower.toml",
 };
 
 static const std::vector<std::string> CLIENT_CONFIG_PATHS {
@@ -39,10 +39,8 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     /* == Parameters == */
     "client/assets/configs/ui/parameters/background.toml",
     "client/assets/configs/ui/parameters/button.toml",
-    /* == Tower Interaction == */
-    "client/assets/configs/buildings/Bluetower.toml",
-    "client/assets/configs/buildings/Redtower.toml",
-    "client/assets/configs/buildings/zone_enemy.toml",
+    /* == Buildings == */
+    "client/assets/configs/buildings/tower.toml",
 };
 
 static const std::vector<std::string> MAP_PATHS {
