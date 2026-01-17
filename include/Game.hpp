@@ -11,6 +11,8 @@
     #include <string>
     #include <chrono>
     #include <vector>
+    #include <algorithm>
+    #include <cstdint>
 
     #include <ECS/Entity.hpp>
     #include <GameTool.hpp>
@@ -30,7 +32,7 @@ enum class LobbyGameState {
 class Game : public te::GameTool {
  public:
     Game(const std::string& ppath);
-    Game(uint max_players, const std::string& code, const std::string& ppath);
+    Game(uint32_t max_players, const std::string& code, const std::string& ppath);
 
     ECS::Entity nextEntity(eType type);
 
@@ -50,7 +52,7 @@ class Game : public te::GameTool {
     virtual void run();
 
     ////// Lobby Data //////
-    std::chrono::_V2::system_clock::time_point game_start_time =
+    std::chrono::system_clock::time_point game_start_time =
         std::chrono::system_clock::now();
 
     net::TeamScore teams[2];
@@ -60,7 +62,7 @@ class Game : public te::GameTool {
     ////// Lobby Management //////
     const std::string& getCode() const;
     void setCode(const std::string& code);
-    const uint getMaxPlayers() const;
+    uint32_t getMaxPlayers() const;
 
     ////// Game State Management //////
 
@@ -125,7 +127,7 @@ class Game : public te::GameTool {
     std::unordered_map<eType, ECS::Entity> _nextEntities;
 
     ////// Lobby Data //////
-    uint _max_players = 0;
+    uint32_t _max_players = 0;
     std::string _code;
 
     // Game state

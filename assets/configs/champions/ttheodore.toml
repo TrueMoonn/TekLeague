@@ -1,0 +1,70 @@
+[ENTITIES.Ttheodore]
+position2 = true
+target = true
+
+[ENTITIES.Ttheodore.champion]
+name = "Ttheodore"
+
+[ENTITIES.Ttheodore.attack]
+name = "ttheodore_aa"
+auto = false
+
+[ENTITIES.Ttheodore.team]
+name = ""
+
+[ENTITIES.Ttheodore.velocity2]
+x = 0
+y = 0
+
+[ENTITIES.Ttheodore.health]
+amount = 600
+max = 600
+regen = 3
+
+[ENTITIES.Ttheodore.mana]
+amount = 300
+max = 300
+regen = 3
+
+[ENTITIES.Ttheodore.xp]
+amount = 0
+
+[ENTITIES.Ttheodore.hitbox]
+left = 0.0
+top = 0.0
+width = 144.3
+height = 192.3
+
+[ENTITIES.Ttheodore.stat_pool]
+ad = 67
+ap = 0
+atk_speed = 1.5
+atk_range = 350
+cdr = 0
+armor = 34
+magic_resist = 25
+mov_speed = 1000
+
+[ENTITIES.Ttheodore.spells]
+indexs = [0, 0]
+
+# --------------------
+
+[ENTITIES.ttheodore_aa]
+position2 = true
+velocity2 = true
+target = true
+
+[ENTITIES.ttheodore_aa.team]
+name = ""
+
+[ENTITIES.ttheodore_aa.spell]
+name = "ttheodore_aa"
+base = 0
+damage_type = 0
+ratios = [1.0, 0.0]
+cooldown = 2.0
+cast_time = 1.0
+target = 0
+mana_cost = 0
+speed = 500
