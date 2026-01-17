@@ -80,6 +80,7 @@ add_library(${PROJECT_NAME} STATIC
 
     # SPELLS
     ${GAME_SRC_DIR}/spells/gules_spell1.cpp
+    ${GAME_SRC_DIR}/spells/gules_spell2.cpp
     ${GAME_SRC_DIR}/spells/no_spell.cpp
 
     # SYSTEMS
