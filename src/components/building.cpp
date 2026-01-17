@@ -5,6 +5,8 @@
 ** building.cpp
 */
 
+#include <string>
+
 #include "components/building.hpp"
 #include "ECS/Entity.hpp"
 

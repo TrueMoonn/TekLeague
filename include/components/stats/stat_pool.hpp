@@ -15,7 +15,7 @@ struct StatPool {
     StatPool(int ad_, int ap_, float as, int atkr,
         int cdr, int ar, int mr, int mv) :
         ad(ad_), ap(ap_), atk_speed(as), atk_range(atkr), cdr(cdr),
-        armor(ar), magic_resist(mr), mov_speed(mv) {};
+        armor(ar), magic_resist(mr), mov_speed(mv) {}
     int ad;
     int ap;
     te::Timestamp atk_speed;

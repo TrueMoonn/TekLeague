@@ -10,7 +10,7 @@
     #include "Game.hpp"
 
 struct Button {
-    short val = 0;
+    int16_t val = 0;
 };
 
 void registerButton(Game& game);
