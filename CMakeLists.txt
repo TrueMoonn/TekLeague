@@ -14,7 +14,7 @@ set(GAME_SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 set(GAME_HDR_DIR "${PROJECT_SOURCE_DIR}/include")
 set(TE_PLUGIN_PATH "${PROJECT_SOURCE_DIR}/Release")
 
-if(MSVC)
+if(WIN32)
     add_compile_definitions(NOMINMAX)
     add_compile_definitions(WIN32_LEAN_AND_MEAN)
     add_compile_definitions(_WINSOCK_DEPRECATED_NO_WARNINGS)
