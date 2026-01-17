@@ -1,6 +1,7 @@
 #include <unordered_map>
 #include <string>
 #include <print>
+#include <vector>
 
 #include <Network/generated_messages.hpp>
 #include <Network/Address.hpp>
@@ -99,4 +100,31 @@ void LobbyContext::createPlayersEntities() {
 ECS::Entity LobbyContext::getPlayerEntity(uint32_t client_id) const {
     auto it = _player_entities.find(client_id);
     return it->second;
+}
+
+std::vector<uint8_t> LobbyContext::forceGetData(u_int8_t code) {
+    switch (code) {
+        case static_cast<uint8_t>(net::PLAYERS_UPDATES::ID):
+            return getPlayerUpdates().serialize();
+        case static_cast<uint8_t>(net::BUILDINGS_UPDATES::ID):
+            return getBuildingsUpdates().serialize();
+        case static_cast<uint8_t>(net::CREATURES_UPDATES::ID):
+            return getCreaturesUpdates().serialize();
+        case static_cast<uint8_t>(net::PROJECTILES_UPDATES::ID):
+            return getProjectilesUpdates().serialize();
+        case static_cast<uint8_t>(net::COLLECTIBLES_UPDATES::ID):
+            return getCollectiblesUpdates().serialize();
+        case static_cast<uint8_t>(net::INVENTORIES_UPDATES::ID):
+            return getInventoriesUpdates().serialize();
+        case static_cast<uint8_t>(net::STATS_UPDATES::ID):
+            return getStatsUpdates().serialize();
+        case static_cast<uint8_t>(net::SCORE::ID):
+            return getScore().serialize();
+        case static_cast<uint8_t>(net::GAME_DURATION::ID):
+            return getGameDuration().serialize();
+        case static_cast<uint8_t>(net::SCOREBOARD::ID):
+            return getScoreboard().serialize();
+        default:
+            return {};
+    }
 }
