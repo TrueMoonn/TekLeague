@@ -89,6 +89,8 @@ target = 0
 mana_cost = 0
 speed = 500
 range = 500
+aoe_radius = 100.0
+persistent = true
 
 [ENTITIES.gules_ball.velocity2]
 x = 0
