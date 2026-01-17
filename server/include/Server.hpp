@@ -18,7 +18,7 @@
     #include <atomic>
 
     #include <clock.hpp>
-    #include <network/GameServer.hpp>
+    #include <network1/GameServer.hpp>
     #include <Network/ProtocolManager.hpp>
     #include <Network/Address.hpp>
     #include "LobbyContext.hpp"
@@ -26,7 +26,7 @@
 struct PlayerInfo {
     uint32_t id;
     std::string username;
-    uint lobby_id = 0;  // 0 means not in a lobby
+    uint32_t lobby_id = 0;  // 0 means not in a lobby
     bool in_lobby = false;
     uint8_t team = 0;  // 0 = no team, 1 = team 1, 2 = team 2
     net::Address address;
@@ -74,7 +74,7 @@ class Server : public te::network::GameServer {
     // username -> address
     std::unordered_map<std::string, net::Address> usernames;
     // lobby_id -> admin address
-    std::unordered_map<uint, net::Address> lobby_admins;
+    std::unordered_map<uint32_t, net::Address> lobby_admins;
     uint32_t next_client_id = 1;
 
     uint32_t generateClientId();
@@ -83,13 +83,13 @@ class Server : public te::network::GameServer {
     std::optional<std::reference_wrapper
         <PlayerInfo>> getClientById(uint32_t client_id);
     bool isUsernameAvailable(const std::string& username);
-    bool isAdmin(const net::Address& address, uint lobby_id);
+    bool isAdmin(const net::Address& address, uint32_t lobby_id);
 
     ////// Lobbies //////
-    std::unordered_map<uint, LobbyContext> lobbies;
-    std::unordered_map<std::string, uint> lobby_codes;
-    std::unordered_set<uint> public_lobbies;
-    uint next_lobby_id = 1;
+    std::unordered_map<uint32_t, LobbyContext> lobbies;
+    std::unordered_map<std::string, uint32_t> lobby_codes;
+    std::unordered_set<uint32_t> public_lobbies;
+    uint32_t next_lobby_id = 1;
     std::mutex lobbies_mutex;  // Protects lobbies, lobby_codes, public_lobbies
 
     ////// Server Control //////
@@ -97,16 +97,16 @@ class Server : public te::network::GameServer {
 
      te::Timestamp lobbies_list_timestamp{2.0f};
 
-    uint createLobby(uint max_clients, const net::Address& admin);
-    void destroyLobby(uint lobby_id);
+    uint32_t createLobby(uint32_t max_clients, const net::Address& admin);
+    void destroyLobby(uint32_t lobby_id);
     // NOTE: This function assumes lobbies_mutex is already locked!
-    void destroyLobbyUnsafe(uint lobby_id);
-    void broadcastToLobby(uint lobby_id, const std::vector<uint8_t>& data);
-    void sendToLobby(uint lobby_id,
+    void destroyLobbyUnsafe(uint32_t lobby_id);
+    void broadcastToLobby(uint32_t lobby_id, const std::vector<uint8_t>& data);
+    void sendToLobby(uint32_t lobby_id,
         const std::vector<uint8_t>& data, const net::Address& exclude);
 
     // NOTE: This function assumes lobbies_mutex is already locked!
-    void broadcastToLobbyUnsafe(uint lobby_id,
+    void broadcastToLobbyUnsafe(uint32_t lobby_id,
         const std::vector<uint8_t>& data);
 
     /**
@@ -161,21 +161,21 @@ class Server : public te::network::GameServer {
     // NOTE: Assumes lobbies_mutex is already locked!
     void sendLobbiesListUnsafe();
     void sendLobbiesList(const net::Address& address);
-    void sendGameStarting(uint lobby_id);
-    void sendPlayersList(uint lobby_id);
+    void sendGameStarting(uint32_t lobby_id);
+    void sendPlayersList(uint32_t lobby_id);
       // NOTE: Assumes lobbies_mutex is already locked!
-    void sendPlayersListUnsafe(uint lobby_id);
-    void sendLobbyVisibilityChanged(uint lobby_id, bool is_public);
-    void sendLobbyDestroyed(uint lobby_id);
+    void sendPlayersListUnsafe(uint32_t lobby_id);
+    void sendLobbyVisibilityChanged(uint32_t lobby_id, bool is_public);
+    void sendLobbyDestroyed(uint32_t lobby_id);
     void sendLobbyFull(const net::Address& address);
     void sendBadLobbyCode(const net::Address& address);
     void sendNotAdmin(const net::Address& address);
     void sendTeamFull(const net::Address& address);
     void sendPlayersNotInTeam(const net::Address& address);
-    void sendAdminGamePaused(uint lobby_id);
-    void sendGameEnded(uint lobby_id);
-    void sendPlayersInit(uint lobby_id);
-    void sendBuildingsInit(uint lobby_id);
+    void sendAdminGamePaused(uint32_t lobby_id);
+    void sendGameEnded(uint32_t lobby_id);
+    void sendPlayersInit(uint32_t lobby_id);
+    void sendBuildingsInit(uint32_t lobby_id);
 
     ////// Lobby State Queries //////
 
@@ -184,20 +184,20 @@ class Server : public te::network::GameServer {
      * @param lobby_id The lobby ID to query
      * @return Optional LobbyGameState if lobby exists
      */
-    std::optional<LobbyGameState> getLobbyGameState(uint lobby_id);
+    std::optional<LobbyGameState> getLobbyGameState(uint32_t lobby_id);
 
     /**
      * @brief Check if a lobby is in pre-game state
      */
-    bool isLobbyPreGame(uint lobby_id);
+    bool isLobbyPreGame(uint32_t lobby_id);
 
     /**
      * @brief Check if a lobby is in game
      */
-    bool isLobbyInGame(uint lobby_id);
+    bool isLobbyInGame(uint32_t lobby_id);
 
     /**
      * @brief Check if a lobby game has ended
      */
-    bool isLobbyEndGame(uint lobby_id);
+    bool isLobbyEndGame(uint32_t lobby_id);
 };

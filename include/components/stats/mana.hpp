@@ -10,12 +10,12 @@
     #include "Game.hpp"
 
 struct Mana {
-    Mana(int amount, int regen, int max) :
-        amount(amount), regen(regen), max(max) {};
+    Mana(int amount, int max_amount, int regen) :
+        amount(amount), max_amount(max_amount), regen(regen) {};
 
     int amount;
+    int max_amount;
     int regen;
-    int max;
 };
 
 void registerMana(Game& game);

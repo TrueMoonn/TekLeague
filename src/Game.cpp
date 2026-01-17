@@ -42,7 +42,7 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
     _running = true;
 }
 
-Game::Game(uint max_players, const std::string& code, const std::string& ppath)
+Game::Game(uint32_t max_players, const std::string& code, const std::string& ppath) 
     : Game(ppath) {
     _max_players = max_players;
     _code = code;
@@ -101,6 +101,6 @@ void Game::setCode(const std::string& new_code) {
     _code = new_code;
 }
 
-const uint Game::getMaxPlayers() const {
+uint32_t Game::getMaxPlayers() const {
     return _max_players;
 }

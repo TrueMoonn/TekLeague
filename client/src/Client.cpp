@@ -6,7 +6,9 @@
 */
 
 #include <print>
+#ifndef _WIN32
 #include <sys/socket.h>
+#endif
 #include <thread>
 #include <unordered_map>
 
