@@ -25,6 +25,10 @@ bool Server::setPacketsHandlers() {
         const net::Address& sender) {
         handleDisconnection(data, sender);
     });
+    registerPacketHandler(static_cast<uint8_t>(net::PACKET_LOSS::ID),
+        [this](const std::vector<uint8_t>& data, const net::Address& sender) {
+        handlePacketLoss(data, sender);
+    });
     registerPacketHandler(6, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
         handlePing(data, sender);
@@ -577,8 +581,9 @@ void Server::handleAdminEndGame(const std::vector<uint8_t>& data,
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         if (lobbies.find(lobby_id) != lobbies.end()) {
             lobbies.at(lobby_id).setGameState(LobbyGameState::END_GAME);
-            std::println("[Server] handleAdminEndGame: Lobby {} state changed to END_GAME",
-                lobby_id);
+            std::println(
+            "[Server] handleAdminEndGame: Lobby {} state changed to END_GAME",
+            lobby_id);
         }
     }
 
@@ -586,4 +591,46 @@ void Server::handleAdminEndGame(const std::vector<uint8_t>& data,
         lobby_id);
     sendGameEnded(lobby_id);
     std::println("[Server] handleAdminEndGame: sendGameEnded completed");
+}
+
+void Server::handlePacketLoss(const std::vector<uint8_t>& data,
+    const net::Address& sender) {
+    net::PACKET_LOSS msg = net::PACKET_LOSS::deserialize(data);
+
+    std::println("[Server] handlePacketLoss: Request from {}:{}",
+        sender.getIP(), sender.getPort());
+
+    auto client_opt = getClient(sender);
+    if (!client_opt) {
+        std::println("[Server] handlePacketLoss: Client not found");
+        return;
+    }
+
+    auto& client = client_opt->get();
+    if (!client.in_lobby) {
+        std::println("[Server] handlePacketLoss: Client not in lobby");
+        return;
+    }
+
+    uint32_t lobby_id = client.lobby_id;
+
+    std::vector<uint8_t> claimedData = {};
+
+    {
+        std::lock_guard<std::mutex> lock(lobbies_mutex);
+        if (lobbies.find(lobby_id) != lobbies.end()) {
+            claimedData =
+                lobbies.at(lobby_id).forceGetData(msg.code);
+        } else {
+            return;
+        }
+    }
+
+    if (claimedData.empty()) {
+        std::println("[Server] handlePacketLoss: No data found for code {}",
+            msg.code);
+        return;
+    }
+
+    sendTo(sender, claimedData);
 }
