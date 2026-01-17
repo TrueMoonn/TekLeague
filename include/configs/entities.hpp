@@ -42,6 +42,9 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     "client/assets/configs/buildings/Bluetower.toml",
     "client/assets/configs/buildings/Redtower.toml",
     "client/assets/configs/buildings/zone_enemy.toml",
+    /* == Monster == */
+    "client/assets/configs/creaps/range_red_creap.toml",
+    "client/assets/configs/creaps/range_blue_creap.toml",
 };
 
 static const std::vector<std::string> MAP_PATHS {

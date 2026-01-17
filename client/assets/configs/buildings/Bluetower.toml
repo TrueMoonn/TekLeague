@@ -23,9 +23,9 @@ magic_resist = 20
 mov_speed = 300
 
 [ENTITIES.tower_blue.health]
-health = 1
-health_max = 200
-health_regen = 3
+amount = 1
+max = 200
+regen = 3
 
 [ENTITIES.tower_blue.mana]
 mana = 300
