@@ -68,11 +68,15 @@ void dealDamage(Game &game) {
         auto& champions = game.getComponent<Champion>();
         auto& pools = game.getComponent<StatPool>();
         auto& healths = game.getComponent<Health>();
+        auto& vels = game.getComponent<addon::physic::Velocity2>();
         std::vector<ECS::Entity> deads;
 
-        for (auto&& [e, _, pool, hp] : ECS::IndexedDenseZipper(champions, pools, healths)) {
+        for (auto&& [e, _, hp] : ECS::IndexedDenseZipper(champions, healths)) {
             for (auto& hit : entity_hit_team(game, e)) {
-                hp.reduceSafely(pool.ad);
+                if (!pools.hasComponent(hit))
+                    return;
+                auto& damage = pools.getComponent(hit);
+                hp.reduceSafely(damage.ad);
                 if (hp.amount <= 0) {
                     deads.push_back(e);
                 }

@@ -24,8 +24,10 @@ void setInGameScene(Client& game) {
     te::Scene ingame;
     ingame.systems = {{
         {"poll_event"},  // INPUT
-        {"champion_movement", "auto_attacks", "track_target", "deal_damage", "kill_all_entity"},  // PRE UPDATE
-        {"animate", "entity_direction", "movement2"},  // UPDATE
+        {"champion_movement", "auto_attacks", "track_target", "track_stat",
+            "deal_damage", "kill_all_entity"},  // PRE UPDATE
+        {"animate", "entity_direction","minion_movement", "movement2",
+            "update_sticky"},  // UPDATE
         {"follow_player"},  // POST UPDATE
         {"draw", "display"}  // RENDER
     }};
@@ -38,8 +40,12 @@ void setInGameScene(Client& game) {
         {game.nextEntity(eType::BUILDINGS), "tower_blue", {1400, 1000}},
         {game.nextEntity(eType::BUILDINGS), "tower_red", {6792, 1000}},
         {game.nextEntity(eType::BUILDINGS), "zone_left_enemy", {6792, 1000}},
-        {game.nextEntity(eType::CHAMPION), "Gules", {200, 1100}},
+        {game.nextEntity(eType::CHAMPION), "Gules", {6792, 1100}},
+        {game.nextEntity(eType::HUD), "Gules_health", {200, 1200}},
+        {game.nextEntity(eType::CREATURES), "range_red_creap", {1400, 1000}},
+        {game.nextEntity(eType::CREATURES), "range_blue_creap", {6792, 1000}},
     };
+
 
     ingame.on_activate = [&game](){
         auto& champs = game.getComponent<Champion>();

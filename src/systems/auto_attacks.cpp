@@ -18,11 +18,11 @@
 #include "components/stats/stat_pool.hpp"
 #include "configs/systems.hpp"
 
-static void shootAt(Game &game, const addon::physic::Position2 &towerPos,
+static void shootAt(Game &game, const addon::physic::Position2 &pos,
     const addon::physic::Position2 &playerPos, ECS::Entity Player)
 {
     auto e = game.nextEntity(eType::PROJECTILES);
-    game.createEntity(e, "tower_projectiles_red", towerPos);
+    game.createEntity(e, "tower_projectiles_red", pos);
     auto& track = game.getComponent<AutoTrack>().getComponent(e);
     track.toFollow = Player;
 }

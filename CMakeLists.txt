@@ -50,11 +50,15 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/components/stats/gold.cpp
 
     ${GAME_SRC_DIR}/components/ui/button.cpp
+    ${GAME_SRC_DIR}/components/ui/game/sticky.cpp
+    ${GAME_SRC_DIR}/components/ui/game/track_stat.cpp
     ${GAME_SRC_DIR}/components/stats/stat_pool.cpp
     ${GAME_SRC_DIR}/components/items/inventory.cpp
     ${GAME_SRC_DIR}/components/items/item.cpp
     ${GAME_SRC_DIR}/components/competences/target.cpp
     ${GAME_SRC_DIR}/components/competences/auto_track.cpp
+    ${GAME_SRC_DIR}/components/minions/minions.cpp
+    ${GAME_SRC_DIR}/components/minions/minionsRoute.cpp
 
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp
@@ -63,6 +67,10 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/systems/track_target.cpp
     ${GAME_SRC_DIR}/systems/deal_damage.cpp
     ${GAME_SRC_DIR}/systems/kill_all_entity.cpp
+    ${GAME_SRC_DIR}/systems/TrackStat.cpp
+    ${GAME_SRC_DIR}/systems/updateSticky.cpp
+    ${GAME_SRC_DIR}/systems/minions_mov.cpp
+
 )
 
 target_include_directories(${PROJECT_NAME}
