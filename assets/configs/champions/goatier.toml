@@ -6,7 +6,7 @@ target = true
 name = "Goatier"
 
 [ENTITIES.Goatier.attack]
-name = "Goatier_aa"
+name = "goatier_aa"
 auto = false
 
 [ENTITIES.Goatier.team]

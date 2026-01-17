@@ -75,7 +75,7 @@ void LobbyContext::createPlayersEntities() {
 
     for (auto& player : players) {
         ECS::Entity e = game.nextEntity(eType::CHAMPION);
-        game.createEntity(e, "Gules");
+        game.createEntity(e, CHAMPIONS[player.champion]);
 
         _player_entities[player.id] = e;
 

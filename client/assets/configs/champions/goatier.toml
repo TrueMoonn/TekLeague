@@ -7,45 +7,45 @@ name = "Goatier"
 [ENTITIES.Goatier.sprite]
 path = "client/assets/images/champions/goatier/Goatier.png"
 size = [386, 646]
-scale = [144.3, 192.3]
-origin = [193, 646]
+scale = [258, 430]
+origin = [193.5, 420]
 layer = 10
 
 [ENTITIES.Goatier.animation]
 frames = [
     # IDLE
-    [[0, 0], 4, 0.4, true],
+    [[0, 0], 5, 0.4, true],
 
     # MOVEMENT
-    [[0, 5], 4, 0.4, true],
-    [[0, 6], 4, 0.4, true],
-    [[0, 7], 4, 0.4, true],
-    [[0, 8], 4, 0.4, true],
-    [[0, 9], 4, 0.4, true],
+    [[0, 1], 4, 0.1, true],
+    [[0, 2], 4, 0.1, true],
+    [[0, 3], 4, 0.1, true],
+    [[0, 4], 4, 0.1, true],
+    [[0, 5], 4, 0.1, true],
 
     # AUTO ATTACK
-    [[0, 10], 5, 0.4, false],
-    [[0, 11], 5, 0.4, false],
-    [[0, 12], 5, 0.4, false],
-    [[0, 13], 5, 0.4, false],
-    [[0, 14], 5, 0.4, false],
+    [[0, 6], 5, 0.2, false],
+    [[0, 7], 5, 0.2, false],
+    [[0, 8], 5, 0.2, false],
+    [[0, 9], 5, 0.2, false],
+    [[0, 10], 5, 0.2, false],
 
     # SPELL 1
-    [[0, 15], 8, 0.4, false],
-    [[0, 16], 8, 0.4, false],
-    [[0, 17], 8, 0.4, false],
-    [[0, 18], 8, 0.4, false],
-    [[0, 19], 8, 0.4, false],
+    [[0, 11], 8, 0.2, false],
+    [[0, 12], 8, 0.2, false],
+    [[0, 13], 8, 0.2, false],
+    [[0, 14], 8, 0.2, false],
+    [[0, 15], 8, 0.2, false],
 
     # SPELL 2
-    [[0, 20], 4, 0.4, false],
-    [[0, 21], 4, 0.4, false],
-    [[0, 22], 4, 0.4, false],
-    [[0, 23], 4, 0.4, false],
-    [[0, 24], 4, 0.4, false],
+    [[0, 16], 5, 0.2, false],
+    [[0, 17], 5, 0.2, false],
+    [[0, 18], 4, 0.2, false],
+    [[0, 19], 4, 0.2, false],
+    [[0, 20], 4, 0.2, false],
 
     # DEATH
-    [[0, 25], 6, 0.4, false]
+    [[0, 21], 6, 0.4, false]
 ]
 
 # --------------------------

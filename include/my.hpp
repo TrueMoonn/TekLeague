@@ -22,8 +22,8 @@
 static const std::array<std::string, NB_CHAMPIONS> CHAMPIONS = {
     "Gules",
     "Goatier",
-    "TTheodore",
-    "Crloy",
+    "Ttheodore",
+    "Croly",
     "",
     "",
     "",

@@ -14,6 +14,9 @@ static const std::vector<std::string> CONFIG_PATHS {
     "assets/configs/champions/ethan.toml",
     "assets/configs/champions/goatier.toml",
     "assets/configs/champions/gules.toml",
+    "assets/configs/champions/croly.toml",
+    "assets/configs/champions/ttheodore.toml",
+    //
     "assets/configs/buildings/tower.toml",
 };
 
@@ -26,6 +29,8 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     "client/assets/configs/champions/ethan.toml",
     "client/assets/configs/champions/goatier.toml",
     "client/assets/configs/champions/gules.toml",
+    "client/assets/configs/champions/ttheodore.toml",
+    "client/assets/configs/champions/croly.toml",
 
     /* === UI === */
     "client/assets/configs/ui/buttons.toml",
