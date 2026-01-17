@@ -7,13 +7,13 @@
 
 #pragma once
 
-    #include <optional>
+#include <optional>
 
-    #include <maths/Vector.hpp>
-    #include <network/GameClient.hpp>
+#include <maths/Vector.hpp>
+#include <network1/GameClient.hpp>
 
-    #include "Game.hpp"
-    #include "Network/generated_messages.hpp"
+#include "Game.hpp"
+#include "Network/generated_messages.hpp"
 #include "clock.hpp"
 
 class Client : public Game, public te::network::GameClient {

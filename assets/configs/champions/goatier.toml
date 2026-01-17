@@ -1,15 +1,70 @@
-[ENTITIES.goatier]
+[ENTITIES.Goatier]
 position2 = true
-champion = true
+target = true
 
-[ENTITIES.goatier.velocity2]
+[ENTITIES.Goatier.champion]
+name = "Goatier"
+
+[ENTITIES.Goatier.attack]
+name = "Goatier_aa"
+auto = false
+
+[ENTITIES.Goatier.team]
+name = ""
+
+[ENTITIES.Goatier.velocity2]
 x = 0
 y = 0
 
-[ENTITIES.goatier.stat_pool]
-ad = 10
+[ENTITIES.Goatier.health]
+amount = 600
+max = 600
+regen = 3
+
+[ENTITIES.Goatier.mana]
+amount = 300
+max = 300
+regen = 3
+
+[ENTITIES.Goatier.xp]
+amount = 0
+
+[ENTITIES.Goatier.hitbox]
+left = 0.0
+top = 0.0
+width = 144.3
+height = 192.3
+
+[ENTITIES.Goatier.stat_pool]
+ad = 67
 ap = 0
-atk_speed = 1.0
-armor = 20
-magic_resist = 20
-mov_speed = 300
+atk_speed = 1.5
+atk_range = 350
+cdr = 0
+armor = 34
+magic_resist = 25
+mov_speed = 1000
+
+[ENTITIES.Goatier.spells]
+indexs = [0, 0]
+
+# --------------------
+
+[ENTITIES.goatier_aa]
+position2 = true
+velocity2 = true
+target = true
+
+[ENTITIES.goatier_aa.team]
+name = ""
+
+[ENTITIES.goatier_aa.spell]
+name = "goatier_aa"
+base = 0
+damage_type = 0
+ratios = [1.0, 0.0]
+cooldown = 2.0
+cast_time = 1.0
+target = 0
+mana_cost = 0
+speed = 500

@@ -1,24 +1,20 @@
-[ENTITIES.goatier]
+[ENTITIES.Goatier]
 drawable = true
 
-[ENTITIES.goatier.champion]
+[ENTITIES.Goatier.champion]
 name = "Goatier"
 
-[ENTITIES.goatier.sprite]
+[ENTITIES.Goatier.sprite]
 path = "client/assets/images/champions/goatier/Goatier.png"
 size = [386, 646]
 scale = [144.3, 192.3]
 origin = [193, 646]
 layer = 10
 
-[ENTITIES.goatier.animation]
+[ENTITIES.Goatier.animation]
 frames = [
     # IDLE
     [[0, 0], 4, 0.4, true],
-    [[0, 1], 4, 0.4, true],
-    [[0, 2], 4, 0.4, true],
-    [[0, 3], 4, 0.4, true],
-    [[0, 4], 4, 0.4, true],
 
     # MOVEMENT
     [[0, 5], 4, 0.4, true],
@@ -50,4 +46,20 @@ frames = [
 
     # DEATH
     [[0, 25], 6, 0.4, false]
+]
+
+# --------------------------
+
+[ENTITIES.goatier_aa]
+drawable = true
+
+[ENTITIES.goatier_aa.sprite]
+path = "client/assets/images/buildings/tower_projectile.png"
+size = [16, 16]
+origin = [8, 8]
+layer = 10
+
+[ENTITIES.goatier_aa.animation]
+frames = [
+    [[0, 0], 3, 0.4, true]
 ]
