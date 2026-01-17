@@ -40,35 +40,12 @@ void setChampionSelection(Client& game) {
 
     std::size_t idx = game.addScene(cselect);
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
-        switch (e) {
-            case LOBBY_SELECT_CHAMP_LIST:
-                game.updateScene(te::sStatus::RESUME, SCAST(SCENES::IN_LOBBY));
-                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SELECT_CHAMP));
-                net::SELECT_CHAMPION msg1;
-                msg1.champion = 0;
-                game.sendToServer(msg1.serialize());
-                break;
-            case LOBBY_SELECT_CHAMP_LIST + 1:
-                game.updateScene(te::sStatus::RESUME, SCAST(SCENES::IN_LOBBY));
-                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SELECT_CHAMP));
-                net::SELECT_CHAMPION msg2;
-                msg2.champion = 1;
-                game.sendToServer(msg2.serialize());
-                break;
-            case LOBBY_SELECT_CHAMP_LIST + 2:
-                game.updateScene(te::sStatus::RESUME, SCAST(SCENES::IN_LOBBY));
-                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SELECT_CHAMP));
-                net::SELECT_CHAMPION msg3;
-                msg3.champion = 2;
-                game.sendToServer(msg3.serialize());
-                break;
-            case LOBBY_SELECT_CHAMP_LIST + 3:
-                game.updateScene(te::sStatus::RESUME, SCAST(SCENES::IN_LOBBY));
-                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SELECT_CHAMP));
-                net::SELECT_CHAMPION msg4;
-                msg4.champion = 3;
-                game.sendToServer(msg4.serialize());
-                break;
+        if (e >= LOBBY_SELECT_CHAMP_LIST && e <= LOBBY_SELECT_CHAMP_LIST + 3) {
+            game.updateScene(te::sStatus::RESUME, SCAST(SCENES::IN_LOBBY));
+            game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SELECT_CHAMP));
+            net::SELECT_CHAMPION msg;
+            msg.champion = e - LOBBY_SELECT_CHAMP_LIST;
+            game.sendToServer(msg.serialize());
         }
     });
 }
