@@ -48,12 +48,12 @@ endif()
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/plugins
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${TE_PLUGIN_PATH}/physic${PLUGIN_EXT}
+        $<TARGET_FILE:addon::physic>
         ${CMAKE_CURRENT_SOURCE_DIR}/plugins/physic${PLUGIN_EXT}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${TE_PLUGIN_PATH}/interaction${PLUGIN_EXT}
-        ${CMAKE_CURRENT_SOURCE_DIR}/plugins/interaction${PLUGIN_EXT}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${TE_PLUGIN_PATH}/entity_spec${PLUGIN_EXT}
+        $<TARGET_FILE:addon::entity_spec>
         ${CMAKE_CURRENT_SOURCE_DIR}/plugins/entity_spec${PLUGIN_EXT}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:addon::interaction>
+        ${CMAKE_CURRENT_SOURCE_DIR}/plugins/interaction${PLUGIN_EXT}
 )
