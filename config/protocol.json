@@ -33,23 +33,20 @@
     "PlayerInit": {
       "fields": [
         { "name": "id", "type": "uint32" },
+        { "name": "entity", "type": "uint32" },
+        { "name": "team", "type": "uint8" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
-        { "name": "direction", "type": "uint8" },
-        { "name": "hp", "type": "double" },
-        { "name": "mana", "type": "double" },
         { "name": "champ", "type": "uint8" }
       ]
     },
     "BuildingInit": {
       "fields": [
-        { "name": "id", "type": "uint32" },
+        { "name": "entity", "type": "uint32" },
         { "name": "team", "type": "uint8" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
-        { "name": "hp", "type": "double" },
-        { "name": "type", "type": "uint32" },
-        { "name": "range", "type": "uint32" }
+        { "name": "type", "type": "string", "max_length": 16 }
       ]
     },
     "TeamScore": {
@@ -69,12 +66,15 @@
     },
     "PlayerUpdate": {
       "fields": [
-        { "name": "id", "type": "uint32" },
+        { "name": "entity", "type": "uint32" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
-        { "name": "direction", "type": "uint8" },
-        { "name": "hp", "type": "double" },
-        { "name": "mana", "type": "double" },
+        { "name": "vel_x", "type": "float" },
+        { "name": "vel_y", "type": "float" },
+        { "name": "direction_x", "type": "float" },
+        { "name": "direction_y", "type": "float" },
+        { "name": "hp", "type": "uint32" },
+        { "name": "mana", "type": "uint32" },
         { "name": "level", "type": "uint8" },
         {
           "name": "effects",
@@ -86,41 +86,38 @@
     },
     "BuildingsUpdate": {
       "fields": [
-        { "name": "id", "type": "uint32" },
-        { "name": "hp", "type": "double" }
+        { "name": "entity", "type": "uint32" },
+        { "name": "hp", "type": "uint32" }
       ]
     },
     "CreatureUpdate": {
       "fields": [
-        { "name": "id", "type": "uint32" },
-        { "name": "team", "type": "uint8" },
+        { "name": "entity", "type": "uint32" },
         { "name": "x", "type": "float" },
         { "name": "y", "type": "float" },
-        { "name": "direction", "type": "uint8" },
-        { "name": "hp", "type": "double" },
-        { "name": "type", "type": "uint32" },
-        {
-          "name": "effects",
-          "type": "fixed_array",
-          "element_type": "uint8",
-          "max_size": 16
-        }
+        { "name": "hp", "type": "uint32" }
+      ]
+    },
+    "EntitiesCreated": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "type", "type": "string", "max_length": 32 }
       ]
     },
     "ProjectileUpdate": {
       "fields": [
-        { "name": "id", "type": "uint32" },
+        { "name": "entity", "type": "uint32" },
         { "name": "x", "type": "float" },
-        { "name": "y", "type": "float" },
-        { "name": "type", "type": "uint32" }
+        { "name": "y", "type": "float" }
       ]
     },
     "CollectibleUpdate": {
       "fields": [
         { "name": "id", "type": "uint32" },
         { "name": "x", "type": "float" },
-        { "name": "y", "type": "float" },
-        { "name": "type", "type": "uint32" }
+        { "name": "y", "type": "float" }
       ]
     },
     "InventoryUpdate": {
@@ -288,25 +285,17 @@
       "id": 47,
       "fields": []
     },
+    "PLAYERS_NOT_IN_TEAM": {
+      "id": 48,
+      "fields": []
+    },
     "CLIENT_INPUTS": {
       "id": 50,
       "fields": [
-        { "name": "keyboard_input_count", "type": "uint8" },
-        {
-          "name": "keyboard_inputs",
-          "type": "fixed_array",
-          "element_type": "uint8",
-          "max_size": 102
-        },
-        { "name": "mouse_input_count", "type": "uint8" },
-        {
-          "name": "mouse_inputs",
-          "type": "fixed_array",
-          "element_type": "uint8",
-          "max_size": 3
-        },
-        { "name": "mouse_x", "type": "uint32" },
-        { "name": "mouse_y", "type": "uint32" }
+        { "name": "actions", "type": "uint8" },
+        { "name": "mouse_x", "type": "float" },
+        { "name": "mouse_y", "type": "float" },
+        { "name": "target", "type": "uint32" }
       ]
     },
     "PLAYERS_INIT": {
@@ -329,7 +318,26 @@
         }
       ]
     },
-
+    "ENTITIES_CREATED": {
+      "id": 53,
+      "fields": [
+        {
+          "name": "entities",
+          "type": "dynamic_array",
+          "element_type": "EntitiesCreated"
+        }
+      ]
+    },
+    "ENTITIES_DESTROYED": {
+      "id": 54,
+      "fields": [
+        {
+          "name": "entities",
+          "type": "dynamic_array",
+          "element_type": "uint32"
+        }
+      ]
+    },
     "PLAYERS_UPDATES": {
       "id": 61,
       "fields": [

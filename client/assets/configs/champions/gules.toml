@@ -1,6 +1,5 @@
 [ENTITIES.Gules]
 drawable = true
-player = true
 
 [ENTITIES.Gules.sprite]
 path = "client/assets/images/champions/gules/Gules.png"
@@ -45,3 +44,31 @@ frames = [
     # DEATH
     [[0, 21], 5, 0.4, false],
 ]
+
+# --------------------------
+
+[ENTITIES.gules_aa]
+drawable = true
+
+[ENTITIES.gules_aa.sprite]
+path = "client/assets/images/buildings/tower_projectile.png"
+size = [16, 16]
+origin = [8, 8]
+layer = 10
+
+[ENTITIES.gules_aa.animation]
+frames = [
+    [[0, 0], 3, 0.4, true]
+]
+
+# --------------------------
+
+[ENTITIES.gules_ball]
+drawable = true
+
+[ENTITIES.gules_ball.sprite]
+path = "client/assets/images/mobs/sbires/range/cropped/idle/idle1-removebg-preview.png"
+size = [387, 644]
+scale = [50, 50]
+origin = [193.5, 322]
+layer = 10

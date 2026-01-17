@@ -23,6 +23,8 @@ class LobbyContext {
     ////// Timestamp default latency in seconds //////
     static constexpr float PLAYERS_UPDATES_DEFAULT_LATENCY = 1.0f / 120.0f;
     static constexpr float BUILDINGS_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
+    static constexpr float ENTITIES_CREATED_DEFAULT_LATENCY = 1.0f / 50.0f;
+    static constexpr float ENTITIES_DESTROYED_DEFAULT_LATENCY = 1.0f / 50.0f;
     static constexpr float CREATURES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
     static constexpr float PROJECTILES_UPDATES_DEFAULT_LATENCY = 1.0f / 60.0f;
     static constexpr float COLLECTIBLES_UPDATES_DEFAULT_LATENCY = 1.0f / 10.0f;
@@ -38,7 +40,7 @@ class LobbyContext {
     static constexpr std::string PLUGINS_PATH = "server/plugins";
 
  public:
-    LobbyContext(uint max_players, const std::string& code);
+    LobbyContext(uint32_t max_players, const std::string& code);
 
     void run();
     const std::string& getCode();
@@ -90,11 +92,20 @@ class LobbyContext {
     void removeClient(uint32_t client_id);
     const std::unordered_map<uint32_t, net::Address>& getClients() const;
     bool isFull() const;
+    void createPlayersEntities();
+    void createOtherEntities();
 
     /**
-        * @brief Build the PLAYERS_INIT message from the lobby's registry
-        * @return The constructed message
-        */
+     * @brief Get the entity associated with a player's client ID
+     * @param client_id The client ID of the player
+     * @return std::optional containing the entity if found, std::nullopt otherwise
+     */
+    ECS::Entity getPlayerEntity(uint32_t client_id) const;
+
+    /**
+     * @brief Build the PLAYERS_INIT message from the lobby's registry
+     * @return The constructed message
+     */
     net::PLAYERS_INIT getPlayersInit();
 
     /**
@@ -102,6 +113,18 @@ class LobbyContext {
     * @return The constructed message
     */
     net::BUILDINGS_INIT getBuildingsInit();
+
+    /**
+     * @brief Try to get entities created if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::ENTITIES_CREATED> tryGetEntitiesCreated();
+
+    /**
+     * @brief Try to get entities destroyed if the timestamp delay has passed
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::ENTITIES_DESTROYED> tryGetEntitiesDestroyed();
 
     /**
      * @brief Try to get player updates if the timestamp delay has passed
@@ -164,6 +187,13 @@ class LobbyContext {
     std::optional<net::SCOREBOARD> tryGetScoreboard();
 
     ////// setters //////
+
+    /**
+     * @brief Set how often to send entities created (in seconds)
+     */
+    void setEntitiesCreatedFrequency(float freq) {
+        entities_created.delay = size_t(SEC_TO_MICRO(freq));
+    }
 
     /**
      * @brief Set how often to send players updates (in seconds)
@@ -253,12 +283,17 @@ class LobbyContext {
 
     ////// Network //////
     std::unordered_map<uint32_t, net::Address> connected_players;
-    uint max_clients;
+    uint32_t max_clients;
+    std::unordered_map<uint32_t, ECS::Entity> _player_entities;
 
     te::Timestamp players_update =
         te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);
     te::Timestamp buildings_update =
         te::Timestamp(BUILDINGS_UPDATES_DEFAULT_LATENCY);
+    te::Timestamp entities_created =
+        te::Timestamp(ENTITIES_CREATED_DEFAULT_LATENCY);
+    te::Timestamp entities_destroyed =
+        te::Timestamp(ENTITIES_DESTROYED_DEFAULT_LATENCY);
     te::Timestamp creatures_update =
         te::Timestamp(CREATURES_UPDATES_DEFAULT_LATENCY);
     te::Timestamp projectiles_update =
@@ -279,6 +314,18 @@ class LobbyContext {
 
     te::Timestamp players_list_update =
         te::Timestamp(PLAYERS_LIST_DEFAULT_LATENCY);
+
+    /**
+        * @brief Build the ENTITIES_CREATED message from the lobby's registry
+        * @return The constructed message
+        */
+    net::ENTITIES_CREATED getEntitiesCreated();
+
+    /**
+        * @brief Build the ENTITIES_DESTROYED message from the lobby's registry
+        * @return The constructed message
+        */
+    net::ENTITIES_DESTROYED getEntitiesDestroyed();
 
     /**
      * @brief Build the PLAYERS_UPDATES message from the lobby's registry
