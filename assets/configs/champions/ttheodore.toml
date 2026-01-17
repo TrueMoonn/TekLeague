@@ -1,41 +1,41 @@
-[ENTITIES.Goatier]
+[ENTITIES.Ttheodore]
 position2 = true
 target = true
 
-[ENTITIES.Goatier.champion]
-name = "Goatier"
+[ENTITIES.Ttheodore.champion]
+name = "Ttheodore"
 
-[ENTITIES.Goatier.attack]
-name = "Goatier_aa"
+[ENTITIES.Ttheodore.attack]
+name = "ttheodore_aa"
 auto = false
 
-[ENTITIES.Goatier.team]
+[ENTITIES.Ttheodore.team]
 name = ""
 
-[ENTITIES.Goatier.velocity2]
+[ENTITIES.Ttheodore.velocity2]
 x = 0
 y = 0
 
-[ENTITIES.Goatier.health]
+[ENTITIES.Ttheodore.health]
 amount = 600
 max = 600
 regen = 3
 
-[ENTITIES.Goatier.mana]
+[ENTITIES.Ttheodore.mana]
 amount = 300
 max = 300
 regen = 3
 
-[ENTITIES.Goatier.xp]
+[ENTITIES.Ttheodore.xp]
 amount = 0
 
-[ENTITIES.Goatier.hitbox]
+[ENTITIES.Ttheodore.hitbox]
 left = 0.0
 top = 0.0
 width = 144.3
 height = 192.3
 
-[ENTITIES.Goatier.stat_pool]
+[ENTITIES.Ttheodore.stat_pool]
 ad = 67
 ap = 0
 atk_speed = 1.5
@@ -45,21 +45,21 @@ armor = 34
 magic_resist = 25
 mov_speed = 1000
 
-[ENTITIES.Goatier.spells]
+[ENTITIES.Ttheodore.spells]
 indexs = [0, 0]
 
 # --------------------
 
-[ENTITIES.goatier_aa]
+[ENTITIES.ttheodore_aa]
 position2 = true
 velocity2 = true
 target = true
 
-[ENTITIES.goatier_aa.team]
+[ENTITIES.ttheodore_aa.team]
 name = ""
 
-[ENTITIES.goatier_aa.spell]
-name = "goatier_aa"
+[ENTITIES.ttheodore_aa.spell]
+name = "ttheodore_aa"
 base = 0
 damage_type = 0
 ratios = [1.0, 0.0]
