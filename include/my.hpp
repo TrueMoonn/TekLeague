@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** GameTwo
 ** File description:
-** my.hpp
+** my.hpp  ... tek1 nostalgie
 */
 
 #pragma once
@@ -23,7 +23,7 @@ static const std::array<std::string, NB_CHAMPIONS> CHAMPIONS = {
     "Gules",
     "Goatier",
     "TTheodore",
-    "",
+    "Crloy",
     "",
     "",
     "",
