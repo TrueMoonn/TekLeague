@@ -11,6 +11,7 @@
     #include <optional>
     #include <string>
     #include <unordered_map>
+    #include <vector>
 
     #include <Network/generated_messages.hpp>
     #include <Network/Address.hpp>
@@ -261,6 +262,14 @@ class LobbyContext {
      * @return true if players list should be sent, false otherwise
      */
     bool shouldSendPlayersList();
+
+    /**
+    * @brief Force get data without checking timestamp 
+    * due to packet loss signaled by client
+    * @param code The code of the missing packet
+    * @return true
+    */
+    std::vector<uint8_t> forceGetData(u_int8_t code);
 
  private:
     Game lobby;
