@@ -1,41 +1,41 @@
-[ENTITIES.Goatier]
+[ENTITIES.Croly]
 position2 = true
 target = true
 
-[ENTITIES.Goatier.champion]
-name = "Goatier"
+[ENTITIES.Croly.champion]
+name = "Croly"
 
-[ENTITIES.Goatier.attack]
-name = "Goatier_aa"
+[ENTITIES.Croly.attack]
+name = "croly_aa"
 auto = false
 
-[ENTITIES.Goatier.team]
+[ENTITIES.Croly.team]
 name = ""
 
-[ENTITIES.Goatier.velocity2]
+[ENTITIES.Croly.velocity2]
 x = 0
 y = 0
 
-[ENTITIES.Goatier.health]
+[ENTITIES.Croly.health]
 amount = 600
 max = 600
 regen = 3
 
-[ENTITIES.Goatier.mana]
+[ENTITIES.Croly.mana]
 amount = 300
 max = 300
 regen = 3
 
-[ENTITIES.Goatier.xp]
+[ENTITIES.Croly.xp]
 amount = 0
 
-[ENTITIES.Goatier.hitbox]
+[ENTITIES.Croly.hitbox]
 left = 0.0
 top = 0.0
 width = 144.3
 height = 192.3
 
-[ENTITIES.Goatier.stat_pool]
+[ENTITIES.Croly.stat_pool]
 ad = 67
 ap = 0
 atk_speed = 1.5
@@ -45,21 +45,21 @@ armor = 34
 magic_resist = 25
 mov_speed = 1000
 
-[ENTITIES.Goatier.spells]
+[ENTITIES.Croly.spells]
 indexs = [0, 0]
 
 # --------------------
 
-[ENTITIES.goatier_aa]
+[ENTITIES.croly_aa]
 position2 = true
 velocity2 = true
 target = true
 
-[ENTITIES.goatier_aa.team]
+[ENTITIES.croly_aa.team]
 name = ""
 
-[ENTITIES.goatier_aa.spell]
-name = "goatier_aa"
+[ENTITIES.croly_aa.spell]
+name = "croly_aa"
 base = 0
 damage_type = 0
 ratios = [1.0, 0.0]
