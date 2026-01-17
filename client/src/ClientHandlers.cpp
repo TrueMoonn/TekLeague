@@ -7,6 +7,7 @@
 
 #include <print>
 #include <cstring>
+#include <string>
 
 #include <entity_spec/components/team.hpp>
 #include <interaction/components/player.hpp>
@@ -32,7 +33,8 @@ void Client::handleLoggedOut(const net::LOGGED_OUT& msg) {
     _client_id = 0;
 }
 
-void Client::handleUsernameAlreadyTaken(const net::USERNAME_ALREADY_TAKEN& msg) {
+void Client::handleUsernameAlreadyTaken(
+    const net::USERNAME_ALREADY_TAKEN& msg) {
     std::println("[Client] Username already taken");
     _username.clear();
 }
@@ -59,7 +61,8 @@ void Client::handleLobbyFull(const net::LOBBY_FULL& msg) {
 
 void Client::handlePlayersList(const net::PLAYERS_LIST& msg) {
     setPlayers(msg.players);
-    std::println("[Client] Players list updated ({} players)", getPlayers().size());
+    std::println("[Client] Players list updated ({} players)",
+        getPlayers().size());
 
     _is_admin = false;
     for (const auto& player : getPlayers()) {
@@ -81,14 +84,16 @@ void Client::handlePlayersList(const net::PLAYERS_LIST& msg) {
 
 void Client::handleLobbiesList(const net::LOBBIES_LIST& msg) {
     _cached_lobbies_list = msg.lobby_codes;
-    std::println("[Client] Received lobbies list ({} lobbies)", _cached_lobbies_list.size());
+    std::println("[Client] Received lobbies list ({} lobbies)",
+        _cached_lobbies_list.size());
 
     for (const auto& code : _cached_lobbies_list) {
         std::println("  - {}", code);
     }
 }
 
-void Client::handleLobbyVisibilityChanged(const net::LOBBY_VISIBILITY_CHANGED& msg) {
+void Client::handleLobbyVisibilityChanged(
+    const net::LOBBY_VISIBILITY_CHANGED& msg) {
     setPublic(msg.is_public != 0);
     std::println("[Client] Lobby visibility changed to: {}",
             (isPublic() ? "PUBLIC" : "PRIVATE"));
@@ -186,7 +191,7 @@ void Client::handlePlayersUpdate(const net::PLAYERS_UPDATES& msg) {
         xps.getComponent(e).amount = player.level;
         manas.getComponent(e).amount = player.mana;
     }
-};
+}
 
 void Client::handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg) {
     auto& positions = getComponent<addon::physic::Position2>();

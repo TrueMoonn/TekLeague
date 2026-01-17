@@ -5,9 +5,9 @@
 ** InGame.cpp
 */
 
-#include <ECS/DenseZipper.hpp>
-
 #include <cstdint>
+
+#include <ECS/DenseZipper.hpp>
 #include <events.hpp>
 #include <clock.hpp>
 #include <maths/Vector.hpp>
