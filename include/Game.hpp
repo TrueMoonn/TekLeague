@@ -35,6 +35,7 @@ class Game : public te::GameTool {
     ECS::Entity nextEntity(eType type);
 
     void AddKillEntity(ECS::Entity e) {
+        removeEntity(e);
         this->_EntityToKill.push_back(e);
     };
     std::vector<ECS::Entity> getAllEntityToKill() {
@@ -49,7 +50,7 @@ class Game : public te::GameTool {
     virtual void run();
 
     ////// Lobby Data //////
-    std::chrono::_V2::system_clock::time_point game_start_time =
+    std::chrono::system_clock::time_point game_start_time =
         std::chrono::system_clock::now();
 
     net::TeamScore teams[2];
@@ -115,12 +116,13 @@ class Game : public te::GameTool {
      */
     void clearPlayers() { _players_in_lobby.clear(); }
 
+    std::vector<std::pair<ECS::Entity, std::string>> entities_queue;
+    std::vector<ECS::Entity> _EntityToKill;
  protected:
     bool _running;
     te::Timestamp _framelimit;
  private:
     std::unordered_map<eType, ECS::Entity> _nextEntities;
-    std::vector<ECS::Entity> _EntityToKill;
 
     ////// Lobby Data //////
     uint _max_players = 0;

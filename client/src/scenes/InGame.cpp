@@ -7,6 +7,7 @@
 
 #include <ECS/DenseZipper.hpp>
 
+#include <cstdint>
 #include <events.hpp>
 #include <clock.hpp>
 #include <maths/Vector.hpp>
@@ -15,9 +16,10 @@
 #include <sfml/components/window.hpp>
 #include <entity_spec/components/team.hpp>
 
-#include "components/champion.hpp"
+#include "Network/generated_messages.hpp"
 #include "components/competences/target.hpp"
 #include "entities.hpp"
+#include "my.hpp"
 #include "scenes.hpp"
 
 
@@ -25,10 +27,8 @@ void setInGameScene(Client& game) {
     te::Scene ingame;
     ingame.systems = {{
         {"poll_event"},  // INPUT
-        {"champion_movement", "auto_attacks", "track_target", "track_stat",
-            "deal_damage", "kill_all_entity"},  // PRE UPDATE
-        {"animate", "entity_direction","minion_movement", "movement2",
-            "update_sticky"},  // UPDATE
+        {"champion_movement"},  // PRE UPDATE
+        {"animate"},  // UPDATE
         {"follow_player"},  // POST UPDATE
         {"draw", "display"}  // RENDER
     }};
@@ -38,69 +38,68 @@ void setInGameScene(Client& game) {
         {game.nextEntity(eType::MAP), "sumoners_rift_nash_zone"},
         {game.nextEntity(eType::MAP), "sumoners_rift_jungle"},
         {game.nextEntity(eType::MAP), "sumoners_rift_walls"},
-        {game.nextEntity(eType::BUILDINGS), "tower_blue", {1400, 1000}},
-        {game.nextEntity(eType::BUILDINGS), "tower_red", {6792, 1000}},
-        {game.nextEntity(eType::BUILDINGS), "zone_left_enemy", {6792, 1000}},
-        {game.nextEntity(eType::CHAMPION), "Gules", {6792, 1100}},
-        {game.nextEntity(eType::HUD), "Gules_health", {200, 1200}},
-        {game.nextEntity(eType::CREATURES), "range_red_creap", {1400, 1000}},
-        {game.nextEntity(eType::CREATURES), "range_blue_creap", {6792, 1000}},
     };
 
-
-    ingame.on_activate = [&game](){
-        auto& champs = game.getComponent<Champion>();
-        auto& posis = game.getComponent<addon::physic::Position2>();
-        auto& targets = game.getComponent<Target>();
-        for (auto&& [_, pos, target] :
-            ECS::DenseZipper(champs, posis, targets)) {
-            target.x = pos.x;
-            target.y = pos.y;
-        }
-        auto& players = game.getComponent<addon::intact::Player>();
-        auto& teams = game.getComponent<addon::eSpec::Team>();
-        for (auto&& [e, team, player] : ECS::IndexedDenseZipper(teams, players)) {
-            const auto& players_lobby = game.getPlayers();
-            for (auto& pla : players_lobby) {
-                if (pla.id == game.getClientId()) {
-                    if (pla.team == 1)
-                        team.name = "blue";
-                    else
-                        team.name = "red";
-                }
-            }
-        }
-    };
+    ingame.on_activate = [&game](){};
 
     std::size_t idx = game.addScene(ingame);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape]) {
-            // game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::MAIN));
-            // game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
+            game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::PARAMETERS));
         }
-
-        // if (keys[te::Key::A]) {
-        //     auto& players = game.getComponent<addon::intact::Player>();
-        //     auto& stats = game.getComponent<StatPool>();
-        //     static te::Timestamp();
-        // }
+        if (keys[te::Key::A]) {
+            net::CLIENT_INPUTS msg;
+            msg.mouse_x = game.mpos.x;
+            msg.mouse_y = game.mpos.y;
+            msg.actions = static_cast<uint8_t>(ActionIG::SPELL1);
+            game.sendToServer(msg.serialize());
+        }
+        if (keys[te::Key::Z]) {
+            net::CLIENT_INPUTS msg;
+            msg.mouse_x = game.mpos.x;
+            msg.mouse_y = game.mpos.y;
+            msg.actions = static_cast<uint8_t>(ActionIG::SPELL2);
+            game.sendToServer(msg.serialize());
+        }
     });
     game.subForScene<te::Mouse>(idx, "mouse_input", [&game](te::Mouse mouse) {
-        if (mouse.type[te::MouseEvent::MouseRight]) {
-            static te::Timestamp delta(0.02f);
-            if (!delta.checkDelay())
-                return;
-            auto& targets = game.getComponent<Target>();
-            auto& posis = game.getComponent<addon::physic::Position2>();
-            auto& players = game.getComponent<addon::intact::Player>();
-            auto& wins = game.getComponent<addon::sfml::Window>();
-            const auto& winSize = wins.getComponent(
-                static_cast<std::size_t>(SYSTEM_F)).win->getSize();
+        const auto& winSize = game.getComponent<addon::sfml::Window>()
+            .getComponent(static_cast<std::size_t>(SYSTEM_F)).win->getSize();
+        auto& posis = game.getComponent<addon::physic::Position2>();
+        auto& players = game.getComponent<addon::intact::Player>();
+        for (auto&& [_, pos] : ECS::DenseZipper(players, posis)) {
+            game.mpos.x = pos.x - (winSize.x / 2.f) + mouse.position.x;
+            game.mpos.y = pos.y - (winSize.y / 2.f) + mouse.position.y;
+        }
 
-            for (auto&& [_, dir, pos] :
-                ECS::DenseZipper(players, targets, posis)) {
-                    dir.x = pos.x - (winSize.x / 2.f) + mouse.position.x;
-                    dir.y = pos.y - (winSize.y / 2.f) + mouse.position.y;
+        if (mouse.type[te::MouseEvent::MouseRight]) {
+            if (!game.inputLimit.checkDelay())
+                return;
+            net::CLIENT_INPUTS msg;
+            msg.mouse_x = game.mpos.x;
+            msg.mouse_y = game.mpos.y;
+            msg.target = 0;
+            msg.actions = static_cast<uint8_t>(ActionIG::MOVEMENT);
+            game.sendToServer(msg.serialize());
+        }
+    });
+    game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
+        if (!game.inputLimit.checkDelay())
+            return;
+        auto& players = game.getComponent<addon::intact::Player>();
+        auto& teams = game.getComponent<addon::eSpec::Team>();
+        auto& targets = game.getComponent<Target>();
+        if (teams.hasComponent(e)) {
+            for (auto&& [_, team, tag] :
+                ECS::DenseZipper(players, teams, targets)) {
+                if (team.name != teams.getComponent(e).name) {
+                    net::CLIENT_INPUTS msg;
+                    msg.mouse_x = game.mpos.x;
+                    msg.mouse_y = game.mpos.y;
+                    msg.target = e;
+                    msg.actions = static_cast<uint8_t>(ActionIG::AA);
+                    game.sendToServer(msg.serialize());
+                }
             }
         }
     });

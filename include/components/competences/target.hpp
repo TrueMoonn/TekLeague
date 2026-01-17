@@ -11,6 +11,8 @@
 
     #include "Game.hpp"
 
-struct Target : mat::Vector2f {};
+struct Target : mat::Vector2f {
+    ECS::Entity to_attack = 0;
+};
 
 void registerTarget(Game& game);

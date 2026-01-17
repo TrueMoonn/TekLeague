@@ -18,7 +18,7 @@
     #include <atomic>
 
     #include <clock.hpp>
-    #include <network/GameServer.hpp>
+    #include <network1/GameServer.hpp>
     #include <Network/ProtocolManager.hpp>
     #include <Network/Address.hpp>
     #include "LobbyContext.hpp"
@@ -39,7 +39,14 @@ class Server : public te::network::GameServer {
     void run();
 
     /**
+     * @brief Request server to stop (signal-safe)
+     * Only sets the stop flag, doesn't join threads
+     */
+    void requestStop() { _should_run.store(false); }
+
+    /**
      * @brief Stop the server gracefully
+     * Performs cleanup and joins threads
      */
     void stop();
 
@@ -133,6 +140,8 @@ class Server : public te::network::GameServer {
         const net::Address& sender);
     void handleWantThisTeam(const std::vector<uint8_t>& data,
         const net::Address& sender);
+    void handleClientInput(const std::vector<uint8_t>& data,
+        const net::Address& sender);
     void handleAdminPauseGame(const std::vector<uint8_t>& data,
         const net::Address& sender);
     void handleAdminEndGame(const std::vector<uint8_t>& data,
@@ -162,6 +171,7 @@ class Server : public te::network::GameServer {
     void sendBadLobbyCode(const net::Address& address);
     void sendNotAdmin(const net::Address& address);
     void sendTeamFull(const net::Address& address);
+    void sendPlayersNotInTeam(const net::Address& address);
     void sendAdminGamePaused(uint lobby_id);
     void sendGameEnded(uint lobby_id);
     void sendPlayersInit(uint lobby_id);

@@ -9,8 +9,11 @@
 
     #include <Game.hpp>
 
-struct AutoAttack {
-    short aa = 0;
+struct Attack {
+    Attack(const std::string& attack_name, bool aa) :
+        name(attack_name), automatic(aa) {}
+    std::string name;
+    bool automatic;
 };
 
-void registerAutoAttack(Game& game);
+void registerAttack(Game& game);

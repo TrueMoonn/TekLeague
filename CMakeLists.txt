@@ -33,7 +33,9 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/Game.cpp
 
     # COMPONENTS
+    ${GAME_SRC_DIR}/components/building.cpp
     ${GAME_SRC_DIR}/components/champion.cpp
+    ${GAME_SRC_DIR}/components/gules.cpp
 
     ${GAME_SRC_DIR}/components/competences/target.cpp
     ${GAME_SRC_DIR}/components/competences/auto_attack.cpp
@@ -60,9 +62,12 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/components/minions/minions.cpp
     ${GAME_SRC_DIR}/components/minions/minionsRoute.cpp
 
+    # SPELLS
+    ${GAME_SRC_DIR}/spells/gules_spell1.cpp
+    ${GAME_SRC_DIR}/spells/no_spell.cpp
+
     # SYSTEMS
     ${GAME_SRC_DIR}/systems/champ_mov.cpp
-    ${GAME_SRC_DIR}/systems/entity_direction.cpp
     ${GAME_SRC_DIR}/systems/auto_attacks.cpp
     ${GAME_SRC_DIR}/systems/track_target.cpp
     ${GAME_SRC_DIR}/systems/deal_damage.cpp
@@ -70,7 +75,7 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/systems/TrackStat.cpp
     ${GAME_SRC_DIR}/systems/updateSticky.cpp
     ${GAME_SRC_DIR}/systems/minions_mov.cpp
-
+    ${GAME_SRC_DIR}/systems/targeted_damage.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
