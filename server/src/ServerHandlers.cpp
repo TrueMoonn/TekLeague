@@ -105,7 +105,8 @@ void Server::handleDisconnection(const std::vector<uint8_t>& data,
     }
 
     clients.erase(sender);
-    std::println("[Server::handleDisconnection] Client removed from clients map");
+    std::println(
+        "[Server::handleDisconnection] Client removed from clients map");
 }
 
 void Server::handlePing(const std::vector<uint8_t>& data,
@@ -306,14 +307,16 @@ void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
         if (lobbies.find(lobby_id) != lobbies.end()) {
             for (auto& player : lobbies.at(lobby_id).getLobby().getPlayers())
                 if (player.team == 0) {
-                    std::println("[Server] handleAdminStartGame: Players in lobby {} are not in team",
+                    std::print("[Server] handleAdminStartGame: ");
+                    std::println("Players in lobby {} are not in team",
                         lobby_id);
                     sendPlayersNotInTeam(sender);
                     return;
                 }
             lobbies.at(lobby_id).setGameState(LobbyGameState::IN_GAME);
-            std::println("[Server] handleAdminStartGame: Lobby {} state changed to IN_GAME",
-                lobby_id);
+            std::println(
+            "[Server] handleAdminStartGame: Lobby {} state changed to IN_GAME",
+            lobby_id);
         }
     }
 
@@ -357,7 +360,8 @@ void Server::handleLeaveLobby(const std::vector<uint8_t>& data,
         }
 
         if (lobby_is_empty) {
-            std::println("[Server] handleLeaveLobby: Lobby {} is now empty, cleaning up",
+            std::println(
+                "[Server] handleLeaveLobby: Lobby {} is now empty, cleaning up",
                 lobby_id);
             std::string code = lobby_ctx.getCode();
             lobby_codes.erase(code);
@@ -457,7 +461,7 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
             target.getComponent(e).x = msg.mouse_x;
             target.getComponent(e).y = msg.mouse_y;
             target.getComponent(e).to_attack = msg.target;
-            std::cout << "auto attack on " << msg.target << "\n";
+            // std::cout << "auto attack on " << msg.target << "\n";
         }
     }
 }
@@ -495,7 +499,8 @@ void Server::handleWantThisTeam(const std::vector<uint8_t>& data,
     int team_count = 0;
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
-        for (const auto& [other_id, other_addr] : lobbies.at(lobby_id).getClients()) {
+        for (const auto& [other_id, other_addr] :
+            lobbies.at(lobby_id).getClients()) {
             auto other_client_opt = getClient(other_addr);
             if (other_client_opt) {
                 auto& other_client = other_client_opt->get();

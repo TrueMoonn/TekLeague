@@ -27,7 +27,8 @@ std::optional<std::reference_wrapper<Server>> g_server;
 void signalHandler(int signal) {
     const char* msg = nullptr;
     if (signal == SIGINT) {
-        msg = "\n[SERVER] Received SIGINT (Ctrl+C), shutting down gracefully...\n";
+        msg =
+        "\n[SERVER] Received SIGINT (Ctrl+C), shutting down gracefully...\n";
     } else if (signal == SIGTERM) {
         msg = "\n[SERVER] Received SIGTERM, shutting down gracefully...\n";
     }
@@ -60,7 +61,8 @@ int main(int ac, char **av) {
     std::print("╔════════════════════════════════════════╗\n");
     std::print("║         TekLeague Server               ║\n");
     std::print("╚════════════════════════════════════════╝\n\n");
-    std::println("[SERVER] Starting on port {} with protocol {}", port, protocol);
+    std::println("[SERVER] Starting on port {} with protocol {}",
+        port, protocol);
     std::println("[SERVER] Press Ctrl+C to stop gracefully\n");
 
     try {
@@ -74,7 +76,6 @@ int main(int ac, char **av) {
         game.run();
 
         game.stop();
-
     } catch (const std::exception& e) {
         std::println(stderr, "[SERVER] Fatal error: {}", e.what());
         g_server.reset();
