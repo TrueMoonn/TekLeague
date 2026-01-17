@@ -5,7 +5,9 @@
 ** mana.hpp
 */
 
-#include "Game.hpp"
+#pragma once
+
+    #include "Game.hpp"
 
 struct Mana {
     Mana(int amount, int regen, int max) :

@@ -45,16 +45,17 @@ struct SpellEntities {
 struct Casting {
     Casting(const std::string& name, std::size_t base, EffectType dtype,
         const std::array<std::size_t, DamageType::DMGLIMIT>& ratio,
-        float cd, float cast, SpellTarget to,
+        float cd, float cast, SpellTarget to, std::size_t mc,
         const std::vector<SpellEntities>& es) :
         name(name), base(base), dmgType(dtype), ratios(ratio), cooldown(cd),
-        castTime(cast), target(to), entities(es) {}
+        castTime(cast), target(to), mana_cost(mc), entities(es) {}
 
     std::string name;
 
     std::size_t base;
     EffectType dmgType;
     std::array<std::size_t, DamageType::DMGLIMIT> ratios;
+    std::size_t mana_cost;
 
     te::Timestamp cooldown;
     te::Timestamp castTime;

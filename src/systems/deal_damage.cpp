@@ -50,7 +50,7 @@ static std::vector<ECS::Entity> entity_hit_team(Game& reg,
 
     auto e_hit = true_hitbox(positions.getComponent(entity),
         hitboxs.getComponent(entity));
-        auto& e_team = teams.getComponent(entity);
+    auto& e_team = teams.getComponent(entity);
 
     for (auto &&[e, pos, hit, tm, _]
         : ECS::IndexedDenseZipper(positions, hitboxs, teams, track)) {

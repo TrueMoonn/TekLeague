@@ -6,7 +6,7 @@ target = true
 name = "Gules"
 
 [ENTITIES.Gules.team]
-name = "blue"
+name = ""
 
 [ENTITIES.Gules.velocity2]
 x = 0
@@ -42,6 +42,7 @@ mov_speed = 350
 name = "name"
 base = 50
 damage_type = 0
+mana_cost = 20
 cooldown = 5.0
 cast_time = 0.2
 target = 0
@@ -54,6 +55,7 @@ entities = [
 name = "name"
 base = 50
 damage_type = 0
+mana_cost = 20
 cooldown = 5.0
 cast_time = 0.2
 target = 0

@@ -13,11 +13,12 @@
 #include <physic/components/position.hpp>
 #include <interaction/components/player.hpp>
 #include <sfml/components/window.hpp>
+#include <entity_spec/components/team.hpp>
 
 #include "components/champion.hpp"
+#include "components/competences/target.hpp"
 #include "entities.hpp"
 #include "scenes.hpp"
-#include "components/competences/target.hpp"
 
 
 void setInGameScene(Client& game) {
@@ -55,6 +56,19 @@ void setInGameScene(Client& game) {
             ECS::DenseZipper(champs, posis, targets)) {
             target.x = pos.x;
             target.y = pos.y;
+        }
+        auto& players = game.getComponent<addon::intact::Player>();
+        auto& teams = game.getComponent<addon::eSpec::Team>();
+        for (auto&& [e, team, player] : ECS::IndexedDenseZipper(teams, players)) {
+            const auto& players_lobby = game.getPlayers();
+            for (auto& pla : players_lobby) {
+                if (pla.id == game.getClientId()) {
+                    if (pla.team == 1)
+                        team.name = "blue";
+                    else
+                        team.name = "red";
+                }
+            }
         }
     };
 

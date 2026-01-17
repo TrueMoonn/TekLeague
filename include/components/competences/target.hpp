@@ -9,10 +9,8 @@
 
     #include <maths/Vector.hpp>
 
-    #include "physic/components/position.hpp"
-
     #include "Game.hpp"
 
-struct Target : addon::physic::Position2 {};
+struct Target : mat::Vector2f {};
 
 void registerTarget(Game& game);

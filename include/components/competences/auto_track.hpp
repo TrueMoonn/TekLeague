@@ -7,9 +7,7 @@
 
 #pragma once
 
-    #include "ECS/Entity.hpp"
-#include "Game.hpp"
-#include "maths/Vector.hpp"
+    #include "Game.hpp"
 
 struct AutoTrack {
     AutoTrack(float vel, bool track) : vel(vel), track(track) {}
