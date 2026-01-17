@@ -1,0 +1,46 @@
+[ENTITIES.Croly]
+drawable = true
+
+[ENTITIES.Croly.sprite]
+path = "client/assets/images/champions/Croly/Croly.png"
+size = [386, 646]
+scale = [258, 430]
+origin = [193.5, 420]
+layer = 10
+
+[ENTITIES.Croly.animation]
+frames = [
+    # IDLE
+    [[0, 0], 6, 0.4, true],
+
+    # MOVEMENT
+    [[0, 1], 5, 0.2, true],
+    [[0, 2], 5, 0.2, true],
+    [[0, 3], 5, 0.2, true],
+    [[0, 4], 5, 0.2, true],
+    [[0, 5], 4, 0.2, true],
+
+    # AUTO ATTACK
+    [[0, 0], 3, 0.2, false],
+    [[0, 0], 3, 0.2, false],
+    [[0, 0], 3, 0.2, false],
+    [[0, 0], 3, 0.2, false],
+    [[0, 0], 3, 0.2, false],
+
+    # SPELL 1
+    [[0, 6], 9, 0.2, false],
+    [[0, 6], 9, 0.2, false],
+    [[0, 6], 9, 0.2, false],
+    [[0, 6], 9, 0.2, false],
+    [[0, 6], 9, 0.2, false],
+
+    # SPELL 2
+    [[0, 7], 5, 0.2, false],
+    [[0, 8], 5, 0.2, false],
+    [[0, 9], 5, 0.2, false],
+    [[0, 10], 5, 0.2, false],
+    [[0, 11], 5, 0.2, false],
+
+    # DEATH
+    [[0, 0], 6, 0.4, false],
+]
