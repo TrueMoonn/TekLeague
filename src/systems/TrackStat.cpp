@@ -67,5 +67,5 @@ void TrackStats(Game& game) {
                 }
             }
         }
-    });
+    }, false);
 }

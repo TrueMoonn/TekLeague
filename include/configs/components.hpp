@@ -12,13 +12,16 @@
 
     #include "Game.hpp"
 
+    #include "components/building.hpp"
     #include "components/champion.hpp"
+    #include "components/gules.hpp"
     #include "components/competences/auto_attack.hpp"
+    #include "components/competences/spells.hpp"
     #include "components/competences/auto_track.hpp"
     #include "components/competences/target.hpp"
     #include "components/items/inventory.hpp"
     #include "components/items/item.hpp"
-#include "components/minions/minions.hpp"
+    #include "components/minions/minions.hpp"
     #include "components/stats/gold.hpp"
     #include "components/stats/health.hpp"
     #include "components/stats/mana.hpp"
@@ -30,8 +33,10 @@
     #include "components/minions/minionsRoute.hpp"
 
 static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
-    &registerAutoAttack,
+    &registerGulesCmpts,
+    &registerAttack,
     &registerAutoTrack,
+    &registerSpellCasting,
     &registerButton,
     &registerChampion,
     &registerGold,
@@ -46,4 +51,5 @@ static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerTrackStat,
     &registerMinions,
     &registerMinionRoute,
+    &registerBuilding
 };

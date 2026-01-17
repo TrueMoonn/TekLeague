@@ -61,12 +61,18 @@ void Client::disconnect() {
 
 void Client::receiveMessages() {
     update(0);
+    checkPacketTrackers();
 }
 
-void Client::updateGame() {
-    if (_framelimit.checkDelay()) {
-        runSystems();
-    }
+void Client::registerPacketTrackers() {
+    std::unordered_map<uint8_t, uint32_t> packetsToTrace = {
+        {net::PLAYERS_UPDATES::ID, 1000 / 120}
+    };
+
+    initPacketTrackers(packetsToTrace, [this](uint8_t code) {
+        std::println("[Client] Packet {} missing, requesting resend...", code);
+        sendPacketLoss(code);
+    });
 }
 
 void Client::registerMessageHandlers() {
@@ -137,7 +143,7 @@ void Client::registerMessageHandlers() {
         auto msg = net::GAME_STARTING::deserialize(data);
 
         handleGameStarting(msg);
-        emit("lobby:game_starting");
+        emit("game:game_starting");
     });
 
     registerPacketHandler(38, [this](const std::vector<uint8_t>& data) {
@@ -197,19 +203,64 @@ void Client::registerMessageHandlers() {
         emit("lobby:team_full");
     });
 
+    registerPacketHandler(51, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received PLAYER_INIT packet");
+        auto msg = net::PLAYERS_INIT::deserialize(data);
+
+        handlePlayersInit(msg);
+        emit("game:init_player");
+    });
+
+    registerPacketHandler(52, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received BUILDINGS_INIT packet");
+        auto msg = net::BUILDINGS_INIT::deserialize(data);
+        handleBuildingsInit(msg);
+    });
+
+    registerPacketHandler(53, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received ENTITIES_CREATED packet");
+        auto msg = net::ENTITIES_CREATED::deserialize(data);
+
+        handleEntitiesCreated(msg);
+    });
+
+    registerPacketHandler(54, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received ENTITIES_DESTROYED packet");
+        auto msg = net::ENTITIES_DESTROYED::deserialize(data);
+
+        handleEntitiesDestroyed(msg);
+    });
+
+    registerPacketHandler(61, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received PLAYERS_UPDATES packet");
+        auto msg = net::PLAYERS_UPDATES::deserialize(data);
+        handlePlayersUpdate(msg);
+    });
+
+    registerPacketHandler(62, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received BUILDINGS_UPDATES packet");
+        auto msg = net::BUILDINGS_UPDATES::deserialize(data);
+        handleBuildingsUpdate(msg);
+    });
+
+    registerPacketHandler(63, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received CREATURES_UPDATES packet");
+        auto msg = net::CREATURES_UPDATES::deserialize(data);
+        handleCreaturesUpdate(msg);
+    });
+
+    registerPacketHandler(64, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received PROJECTILES_UPDATES packet");
+        auto msg = net::PROJECTILES_UPDATES::deserialize(data);
+        handleProjectilesUpdate(msg);
+    });
+
     registerPacketHandler(88, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received ADMIN_GAME_PAUSED packet");
         auto msg = net::ADMIN_GAME_PAUSED::deserialize(data);
 
         handleAdminGamePaused(msg);
         emit("lobby:game_paused");
-    });
-
-    registerPacketHandler(61, [this](const std::vector<uint8_t>& data) {
-        std::println("[Client] Received PLAYERS_UPDATES packet");
-        // TODO(Pierre): Handle PLAYERS_UPDATES when in game
-        auto msg = net::PLAYERS_UPDATES::deserialize(data);
-        // Update game state with player positions, hp, etc.
     });
 }
 

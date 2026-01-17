@@ -27,5 +27,5 @@ void updateSticky(Game& game) {
             position.x = pos.x + sticky.x;
             position.y = pos.y + sticky.y;
         }
-    });
+    }, false);
 }

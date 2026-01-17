@@ -12,8 +12,6 @@
 
     #include "Game.hpp"
 
-void championMovement(Game& game);
-void entityDirection(Game& game);
 void autoAttacks(Game& game);
 void trackTarget(Game& game);
 void killAllEntity(Game &game);
@@ -21,10 +19,9 @@ void dealDamage(Game &game);
 void TrackStats(Game& game);
 void updateSticky(Game& game);
 void minionsMovement(Game& game);
+void targetedDamage(Game &game);
 
 static const std::vector<std::function<void(Game&)>> LOCAL_SYSTEMS = {
-    &championMovement,
-    &entityDirection,
     &autoAttacks,
     &trackTarget,
     &killAllEntity,
@@ -32,4 +29,5 @@ static const std::vector<std::function<void(Game&)>> LOCAL_SYSTEMS = {
     &TrackStats,
     &updateSticky,
     &minionsMovement,
+    &targetedDamage,
 };

@@ -8,7 +8,18 @@
 #include <print>
 #include <cstring>
 
+#include <entity_spec/components/team.hpp>
+#include <interaction/components/player.hpp>
+#include <components/competences/target.hpp>
+#include <physic/components/position.hpp>
+#include <physic/components/velocity.hpp>
+
 #include "Client.hpp"
+#include "Network/generated_messages.hpp"
+#include "components/stats/health.hpp"
+#include "components/stats/mana.hpp"
+#include "components/stats/xp.hpp"
+#include "my.hpp"
 
 void Client::handleLoggedIn(const net::LOGGED_IN& msg) {
     _client_id = msg.id;
@@ -114,4 +125,109 @@ void Client::handlePing() {
 
 void Client::handlePong() {
     // TODO(PIERRE): si ca fait longtemps = deco
+}
+
+void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
+    auto& targets = getComponent<Target>();
+    auto& teams = getComponent<addon::eSpec::Team>();
+    for (auto& player : msg.players) {
+        ECS::Entity e = player.entity;
+        createEntity(e, CHAMPIONS[player.champ], {player.x, player.y});
+        targets.getComponent(e).x = player.x;
+        targets.getComponent(e).y = player.y;
+        teams.getComponent(e).name = TEAMS[player.team];
+        if (player.id == getClientId()) {
+            createComponent<addon::intact::Player>(e);
+        }
+    }
+}
+
+void Client::handleBuildingsInit(const net::BUILDINGS_INIT& msg) {
+    auto& teams = getComponent<addon::eSpec::Team>();
+    auto& positions = getComponent<addon::physic::Position2>();
+
+    for (auto& building : msg.buildings) {
+        ECS::Entity e = building.entity;
+
+        std::string tower_config;
+        if (building.team == 1) {
+            tower_config = "tower_blue";
+        } else if (building.team == 2) {
+            tower_config = "tower_red";
+        } else {
+            tower_config = "tower_blue";
+        }
+
+        createEntity(e, tower_config, {building.x, building.y});
+
+        teams.getComponent(e).name = TEAMS[building.team];
+        positions.getComponent(e).x = building.x;
+        positions.getComponent(e).y = building.y;
+    }
+}
+
+void Client::handlePlayersUpdate(const net::PLAYERS_UPDATES& msg) {
+    auto& pos = getComponent<addon::physic::Position2>();
+    auto& vels = getComponent<addon::physic::Velocity2>();
+    auto& targets = getComponent<Target>();
+    auto& healths = getComponent<Health>();
+    auto& xps = getComponent<Xp>();
+    auto& manas = getComponent<Mana>();
+
+    for (auto& player : msg.players) {
+        ECS::Entity e = player.entity;
+        targets.getComponent(e).x = player.direction_x;
+        targets.getComponent(e).y = player.direction_y;
+        vels.getComponent(e).x = player.vel_x;
+        vels.getComponent(e).y = player.vel_y;
+        pos.getComponent(e).x = player.x;
+        pos.getComponent(e).y = player.y;
+        healths.getComponent(e).amount = player.hp;
+        xps.getComponent(e).amount = player.level;
+        manas.getComponent(e).amount = player.mana;
+    }
+};
+
+void Client::handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg) {
+    auto& positions = getComponent<addon::physic::Position2>();
+
+    for (auto& entity : msg.projectiles) {
+        if (!positions.hasComponent(entity.entity))
+            continue;
+        positions.getComponent(entity.entity).x = entity.x;
+        positions.getComponent(entity.entity).y = entity.y;
+    }
+}
+
+void Client::handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg) {
+    auto& healths = getComponent<Health>();
+
+    for (auto& building : msg.buildings) {
+        ECS::Entity e = building.entity;
+        if (healths.hasComponent(e)) {
+            healths.getComponent(e).amount = building.hp;
+        }
+    }
+}
+
+void Client::handleCreaturesUpdate(const net::CREATURES_UPDATES& msg) {
+    auto& healths = getComponent<Health>();
+
+    for (auto& creatures : msg.creatures) {
+        ECS::Entity e = creatures.entity;
+        if (healths.hasComponent(e)) {
+            healths.getComponent(e).amount = creatures.hp;
+        }
+    }
+}
+
+void Client::handleEntitiesCreated(const net::ENTITIES_CREATED& msg) {
+    for (auto& entity : msg.entities)
+        createEntity(entity.entity, entity.type, {entity.x, entity.y});
+}
+
+void Client::handleEntitiesDestroyed(const net::ENTITIES_DESTROYED& msg) {
+    for (auto& entity : msg.entities) {
+        removeEntity(entity);
+    }
 }

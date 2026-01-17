@@ -44,7 +44,7 @@ Every code (1 ... 255) is on ONE BYTE only
 
 ### 50 ... 69 → in game codes
 ```
-50  CLIENT INPUTS       [4B spells + 4B x + 4B y]     ->  Spell and mouse position
+50  CLIENT INPUTS       [4B action + 4B x + 4B y]    ->  Action and mouse position
 87  ADMIN PAUSE GAME    [NO DATA]                     ->  Player asks to pause the game / Player asks to play the game, responded by 37 if you are not admin, 61 if ok
 ```
 
@@ -80,19 +80,21 @@ Every code (1 ... 255) is on ONE BYTE only
 44  BAD LOBBY CODE              [NO DATA]                                                 ->  Respond to 30 if invalid code given
 45  NOT ADMIN                   [NO DATA]                                                 ->  Send if client that sent 35 or 68 is not admin of the lobby
 47  TEAM FULL                   [NO DATA]                                                 ->  Respond to 41 if the team is full
+48  PLAYERS NOT IN TEAM         [NO DATA]                                                 ->  Respond to 36 if some players are not in a team
 ```
 
 ### 50 ... 89 → in game codes
 **these fields have fixed size, thus do not need parsing of any kind, and values are all packet together without separators**
 
 ```
-51  PLAYERS INIT            [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 8B mana + 1B champ)]
+51  PLAYERS INIT            [X times (4B id + 4B entity + 1B team + 4B x + 4B y + 1B champ)]
 52  BUILDINGS INIT          [X times (4B id + 1B team + 4B x + 4B y + 8B hp + 4B type + 4B range)]
+53  ENTITIES CREATED        [X times (4B entity + 4B x + 4B y + 32B type)]
 
-61  PLAYERS UPDATES         [X times (4B id + 4B x + 4B y + 1B direction + 8B hp + 8B mana + 1B level + 16 times (1B effect) )]
+61  PLAYERS UPDATES         [X times (4B id + 4B x + 4B y + 4B vel_x + 4B vel_y + 4B direction_x + 4B direction_y + 4B hp + 4B mana + 1B level)]
 62  BUILDINGS UPDATES       [X times (4B id + 8B hp)]
 63  CREATURES UPDATES       [X times (4B id + 1B team + 4B x + 4B y + 1B direction + 8B hp + 4B type + 16 times (1B effect) )]
-64  PROJECTILES UPDATES     [X times (4B id + 4B x + 4B y + 4B type)]
+64  PROJECTILES UPDATES     [X times (4B entity + 4B x + 4B y)]
 65  COLLECTIBLES UPDATES    [X times (4B id + 4B x + 4B y + 4B type)]
 66  INVENTORIES UPDATES     [X times (4B playerid + 6 times (4B itemid) + 4B gold)]
 67  STATS UPDATES           [X times (4B playerid + 4B ad + 4B ap + 4B armor + 4B resist + 4B cdr mov speed + 4B atk speed + 4B range)]

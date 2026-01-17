@@ -1,18 +1,5 @@
 [ENTITIES.range_blue_creap]
 drawable = true
-position2 = true
-target = true
-auto_attack = true
-
-[ENTITIES.range_blue_creap.velocity2]
-x = 0
-y = 0
-
-[ENTITIES.range_blue_creap.team]
-team = "blue"
-
-[ENTITIES.range_blue_creap.minions]
-name = "range_red"
 
 [ENTITIES.range_blue_creap.sprite]
 path = "client/assets/images/minions/range_blue.png"
@@ -20,26 +7,6 @@ size = [387, 644]
 scale = [77, 128]
 origin = [193.5, 322]
 layer = 11
-
-[ENTITIES.range_blue_creap.health]
-amount = 1
-max = 200
-regen = 3
-
-[ENTITIES.range_blue_creap.mana]
-amount = 1
-max = 200
-regen = 3
-
-[ENTITIES.range_blue_creap.stat_pool]
-ad = 3
-ap = 0
-atk_speed = 3
-atk_range = 50
-cdr = 0
-armor = 34
-magic_resist = 25
-mov_speed = 150
 
 [ENTITIES.range_blue_creap.animation]
 frames = [
@@ -77,12 +44,3 @@ frames = [
     # DEATH
     [[0, 21], 5, 0.4, false],
     ]
-
-[ENTITIES.range_blue_creap.minion_route]
-direction1 = [6792, 1000]
-direction2 = [6192, 700]
-direction3 = [4096, 1480]
-direction4 = [2000, 700]
-
-[ENTITIES.range_blue_creap.auto_track]
-speed = 300

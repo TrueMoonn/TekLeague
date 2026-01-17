@@ -1,6 +1,8 @@
 [ENTITIES.goatier]
 drawable = true
-player = true
+
+[ENTITIES.goatier.champion]
+name = "Goatier"
 
 [ENTITIES.goatier.sprite]
 path = "client/assets/images/champions/goatier/Goatier.png"
