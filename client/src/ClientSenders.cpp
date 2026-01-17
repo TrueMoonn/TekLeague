@@ -20,6 +20,14 @@ void Client::sendLogin(const std::string& username) {
     std::println("[Client] Sent LOGIN for: {}", username);
 }
 
+void Client::sendPacketLoss(uint8_t code) {
+    net::PACKET_LOSS msg;
+    msg.code = code;
+
+    sendToServer(msg.serialize());
+    std::println("[Client] Sent PACKET_LOSS");
+}
+
 void Client::sendLogout() {
     net::LOGOUT msg;
     sendToServer(msg.serialize());

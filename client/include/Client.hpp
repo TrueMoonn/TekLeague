@@ -59,6 +59,7 @@ class Client : public Game, public te::network::GameClient {
     void sendToggleVisibility();
     void sendPauseGame();
     void sendWantThisTeam(uint8_t team);
+    void sendPacketLoss(uint8_t code);
 
     ////// Getters //////
     const std::string& getUsername() const { return _username; }
@@ -79,6 +80,8 @@ class Client : public Game, public te::network::GameClient {
     bool _is_admin = false;
     std::vector<std::string> _cached_lobbies_list;
     net::Address _server_address;
+
+    void registerPacketTrackers();
 
     ////// Message handlers //////
     void registerMessageHandlers();
