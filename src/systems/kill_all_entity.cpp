@@ -18,7 +18,6 @@ void killAllEntity(Game &game) {
         [&game](ECS::Registry &) {
         for (auto& e : game.getAllEntityToKill()) {
             game.removeEntity(e);
-            game.popEntity(e);
         }
     });
 }

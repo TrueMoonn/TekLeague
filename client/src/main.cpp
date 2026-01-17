@@ -5,11 +5,16 @@
 ** main.cpp
 */
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define WIN32_LEAN_AND_MEAN
+
 #include <print>
 #include <string>
 #include <csignal>
 #include <atomic>
-#include <unistd.h>
+#ifndef _WIN32
+    #include <unistd.h>
+#endif
 #include "Client.hpp"
 #include "scenes.hpp"
 
@@ -70,7 +75,7 @@ int main(int ac, char **av) {
     try {
         while (g_running.load() && game.isRunning()) {
             game.receiveMessages();
-            game.updateGame();
+            game.run();
         }
 
         if (!g_running.load()) {

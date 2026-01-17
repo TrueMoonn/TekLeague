@@ -12,8 +12,11 @@
 
     #include "Game.hpp"
 
+    #include "components/building.hpp"
     #include "components/champion.hpp"
+    #include "components/gules.hpp"
     #include "components/competences/auto_attack.hpp"
+    #include "components/competences/spells.hpp"
     #include "components/competences/auto_track.hpp"
     #include "components/competences/target.hpp"
     #include "components/items/inventory.hpp"
@@ -26,8 +29,10 @@
     #include "components/ui/button.hpp"
 
 static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
-    &registerAutoAttack,
+    &registerGulesCmpts,
+    &registerAttack,
     &registerAutoTrack,
+    &registerSpellCasting,
     &registerButton,
     &registerChampion,
     &registerGold,
@@ -38,4 +43,5 @@ static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerStatPool,
     &registerTarget,
     &registerXp,
+    &registerBuilding
 };

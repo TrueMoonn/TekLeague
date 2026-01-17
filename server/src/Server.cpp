@@ -21,7 +21,7 @@
 #include <entity_spec/components/team.hpp>
 #include <interaction/components/player.hpp>
 
-#include <network/GameServer.hpp>
+#include <network1/GameServer.hpp>
 
 #include "Server.hpp"
 
@@ -66,17 +66,17 @@ bool Server::isUsernameAvailable(const std::string& username) {
     return usernames.find(username) == usernames.end();
 }
 
-bool Server::isAdmin(const net::Address& address, uint lobby_id) {
+bool Server::isAdmin(const net::Address& address, uint32_t lobby_id) {
     auto it = lobby_admins.find(lobby_id);
     if (it == lobby_admins.end())
         return false;
     return it->second == address;
 }
 
-uint Server::createLobby(uint max_clients, const net::Address& admin) {
+uint32_t Server::createLobby(uint32_t max_clients, const net::Address& admin) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     std::string code = generateUniqueLobbyCode();
-    uint lobby_id = next_lobby_id++;
+    uint32_t lobby_id = next_lobby_id++;
 
     std::println(
         "[Server::createLobby] Creating lobby {} with code {} for admin {}:{}",
@@ -94,12 +94,12 @@ uint Server::createLobby(uint max_clients, const net::Address& admin) {
     return lobby_id;
 }
 
-void Server::destroyLobby(uint lobby_id) {
+void Server::destroyLobby(uint32_t lobby_id) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     destroyLobbyUnsafe(lobby_id);
 }
 
-void Server::destroyLobbyUnsafe(uint lobby_id) {
+void Server::destroyLobbyUnsafe(uint32_t lobby_id) {
     if (lobbies.find(lobby_id) != lobbies.end()) {
         sendLobbyDestroyed(lobby_id);
 
@@ -119,13 +119,13 @@ void Server::destroyLobbyUnsafe(uint lobby_id) {
     }
 }
 
-void Server::broadcastToLobby(uint lobby_id, const std::vector<uint8_t>& data) {
+void Server::broadcastToLobby(uint32_t lobby_id, const std::vector<uint8_t>& data) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     broadcastToLobbyUnsafe(lobby_id, data);
 }
 
 void Server::broadcastToLobbyUnsafe(
-    uint lobby_id, const std::vector<uint8_t>& data) {
+    uint32_t lobby_id, const std::vector<uint8_t>& data) {
     if (lobbies.find(lobby_id) == lobbies.end()) {
         std::println("[Server] broadcastToLobby: Lobby {} not found!",
             lobby_id);
@@ -139,7 +139,7 @@ void Server::broadcastToLobbyUnsafe(
     }
 }
 
-void Server::sendToLobby(uint lobby_id, const std::vector<uint8_t>& data,
+void Server::sendToLobby(uint32_t lobby_id, const std::vector<uint8_t>& data,
     const net::Address& exclude) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     if (lobbies.find(lobby_id) == lobbies.end())
@@ -192,15 +192,8 @@ void Server::run() {
             try {
                 std::lock_guard<std::mutex> lock(lobbies_mutex);
                 if (!lobbies.empty()) {
-                    // Only log every 1000 iterations to reduce spam
-                    if (loop_count % 1000 == 0) {
-                        std::println(
-                            "[Server::run] Running {} lobby contexts",
-                            lobbies.size());
-                    }
                     for (auto& [id, ctx] : lobbies) {
-// TODO(PIERRE): Uncomment when Lobby scenes/systems are properly initialized
-                        // ctx.run();
+                        ctx.run();
                     }
                 }
             } catch (const std::exception& e) {
@@ -245,7 +238,7 @@ void Server::stop() {
     stopGameServer();
 }
 
-std::optional<LobbyGameState> Server::getLobbyGameState(uint lobby_id) {
+std::optional<LobbyGameState> Server::getLobbyGameState(uint32_t lobby_id) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     if (lobbies.find(lobby_id) != lobbies.end()) {
         return lobbies.at(lobby_id).getGameState();
@@ -253,7 +246,7 @@ std::optional<LobbyGameState> Server::getLobbyGameState(uint lobby_id) {
     return std::nullopt;
 }
 
-bool Server::isLobbyPreGame(uint lobby_id) {
+bool Server::isLobbyPreGame(uint32_t lobby_id) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     if (lobbies.find(lobby_id) != lobbies.end()) {
         return lobbies.at(lobby_id).isPreGame();
@@ -261,7 +254,7 @@ bool Server::isLobbyPreGame(uint lobby_id) {
     return false;
 }
 
-bool Server::isLobbyInGame(uint lobby_id) {
+bool Server::isLobbyInGame(uint32_t lobby_id) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     if (lobbies.find(lobby_id) != lobbies.end()) {
         return lobbies.at(lobby_id).isInGame();
@@ -269,7 +262,7 @@ bool Server::isLobbyInGame(uint lobby_id) {
     return false;
 }
 
-bool Server::isLobbyEndGame(uint lobby_id) {
+bool Server::isLobbyEndGame(uint32_t lobby_id) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     if (lobbies.find(lobby_id) != lobbies.end()) {
         return lobbies.at(lobby_id).isEndGame();

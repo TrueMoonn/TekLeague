@@ -14,6 +14,8 @@
 #include "Game.hpp"
 
 Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
+    std::memset(teams, 0, sizeof(teams));
+
     loadPlugins(ppath);
     std::srand(std::time(0));
 
@@ -40,7 +42,7 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
     _running = true;
 }
 
-Game::Game(uint max_players, const std::string& code, const std::string& ppath) 
+Game::Game(uint32_t max_players, const std::string& code, const std::string& ppath) 
     : Game(ppath) {
     _max_players = max_players;
     _code = code;
@@ -87,10 +89,8 @@ ECS::Entity Game::nextEntity(eType type) {
 }
 
 void Game::run() {
-    while (_running) {
-        if (_framelimit.checkDelay())
-            runSystems();
-    }
+    if (_framelimit.checkDelay())
+        runSystems();
 }
 
 const std::string& Game::getCode() const {
@@ -101,6 +101,6 @@ void Game::setCode(const std::string& new_code) {
     _code = new_code;
 }
 
-const uint Game::getMaxPlayers() const {
+uint32_t Game::getMaxPlayers() const {
     return _max_players;
 }
