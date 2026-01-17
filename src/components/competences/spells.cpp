@@ -20,6 +20,8 @@ void registerSpellCasting(Game& game) {
         std::size_t mc = params["mana_cost"].value_or(0);
         std::size_t spd = params["speed"].value_or(0);
         std::size_t r = params["range"].value_or(0);
+        float aoe = params["aoe_radius"].value_or(0.0f);
+        bool persist = params["persistent"].value_or(false);
         std::array<std::size_t, DamageType::DMGLIMIT> ratios;
         ratios.fill(0);
         if (params["ratios"].is_array()) {
@@ -32,7 +34,7 @@ void registerSpellCasting(Game& game) {
         std::size_t target = params["target"].value_or(SpellTarget::ANY);
         game.createComponent<Spell>(e, name, base,
             static_cast<EffectType>(dtype), ratios, cd, ctime,
-            static_cast<SpellTarget>(target), mc, spd, r);
+            static_cast<SpellTarget>(target), mc, spd, r, aoe, persist);
     });
     game.registerComponent<Spells>("spells",
         [&game](ECS::Entity e, const toml::table& params) {
