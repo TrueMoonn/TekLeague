@@ -16,6 +16,7 @@
 #include "configs/entities.hpp"
 #include "client_systems.hpp"
 #include "Client.hpp"
+#include "latencies.hpp"
 
 Client::Client()
     : Game(CLIENT_PLUGINS_PATH)
@@ -73,7 +74,31 @@ void Client::registerPacketTrackers() {
     std::unordered_map<uint8_t, uint32_t> packetsToTrace = {
         {
             static_cast<uint8_t>(net::PLAYERS_UPDATES::ID),
-            static_cast<uint32_t>(1000 / 120)
+            static_cast<uint32_t>(PLAYERS_UPDATES_DEFAULT_LATENCY * 1000)
+        },
+        {
+            static_cast<uint8_t>(net::BUILDINGS_UPDATES::ID),
+            static_cast<uint32_t>(BUILDINGS_UPDATES_DEFAULT_LATENCY * 1000)
+        },
+        {
+            static_cast<uint8_t>(net::CREATURES_UPDATES::ID),
+            static_cast<uint32_t>(CREATURES_UPDATES_DEFAULT_LATENCY * 1000)
+        },
+        {
+            static_cast<uint8_t>(net::PROJECTILES_UPDATES::ID),
+            static_cast<uint32_t>(PROJECTILES_UPDATES_DEFAULT_LATENCY * 1000)
+        },
+        {
+            static_cast<uint8_t>(net::COLLECTIBLES_UPDATES::ID),
+            static_cast<uint32_t>(COLLECTIBLES_UPDATES_DEFAULT_LATENCY * 1000)
+        },
+        {
+            static_cast<uint8_t>(net::INVENTORIES_UPDATES::ID),
+            static_cast<uint32_t>(INVENTORIES_UPDATES_DEFAULT_LATENCY * 1000)
+        },
+        {
+            static_cast<uint8_t>(net::STATS_UPDATES::ID),
+            static_cast<uint32_t>(STATS_UPDATES_DEFAULT_LATENCY * 1000)
         }
     };
 
