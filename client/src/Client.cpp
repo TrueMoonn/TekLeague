@@ -88,18 +88,18 @@ void Client::registerPacketTrackers() {
             static_cast<uint8_t>(net::PROJECTILES_UPDATES::ID),
             static_cast<uint32_t>(PROJECTILES_UPDATES_DEFAULT_LATENCY * 1000)
         },
-        {
-            static_cast<uint8_t>(net::COLLECTIBLES_UPDATES::ID),
-            static_cast<uint32_t>(COLLECTIBLES_UPDATES_DEFAULT_LATENCY * 1000)
-        },
-        {
-            static_cast<uint8_t>(net::INVENTORIES_UPDATES::ID),
-            static_cast<uint32_t>(INVENTORIES_UPDATES_DEFAULT_LATENCY * 1000)
-        },
-        {
-            static_cast<uint8_t>(net::STATS_UPDATES::ID),
-            static_cast<uint32_t>(STATS_UPDATES_DEFAULT_LATENCY * 1000)
-        }
+    // {
+    //     static_cast<uint8_t>(net::COLLECTIBLES_UPDATES::ID),
+    //     static_cast<uint32_t>(COLLECTIBLES_UPDATES_DEFAULT_LATENCY * 1000)
+    // },
+    // {
+    //     static_cast<uint8_t>(net::INVENTORIES_UPDATES::ID),
+    //     static_cast<uint32_t>(INVENTORIES_UPDATES_DEFAULT_LATENCY * 1000)
+    // },
+    // {
+    //     static_cast<uint8_t>(net::STATS_UPDATES::ID),
+    //     static_cast<uint32_t>(STATS_UPDATES_DEFAULT_LATENCY * 1000)
+    // }
     };
 
     initPacketTrackers(packetsToTrace, [this](uint8_t code) {
