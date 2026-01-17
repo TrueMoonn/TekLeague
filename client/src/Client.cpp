@@ -61,6 +61,18 @@ void Client::disconnect() {
 
 void Client::receiveMessages() {
     update(0);
+    checkPacketTrackers();
+}
+
+void Client::registerPacketTrackers() {
+    std::unordered_map<uint8_t, uint32_t> packetsToTrace = {
+        {net::PLAYERS_UPDATES::ID, 1000 / 120}
+    };
+
+    initPacketTrackers(packetsToTrace, [this](uint8_t code) {
+        std::println("[Client] Packet {} missing, requesting resend...", code);
+        sendPacketLoss(code);
+    });
 }
 
 void Client::registerMessageHandlers() {
