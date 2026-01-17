@@ -7,10 +7,10 @@
 
 #pragma once
 
-    #include "Game.hpp"
+    #include <Game.hpp>
 
 struct AutoAttack {
     short aa = 0;
 };
 
-void registerAutoAttack(Game &game);
+void registerAutoAttack(Game& game);

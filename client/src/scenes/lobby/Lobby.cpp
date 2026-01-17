@@ -42,8 +42,7 @@ void setLobbyScene(Client& game) {
                 game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
                 game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SEARCH_LOBBY));
                 game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
-                net::LEAVE_LOBBY msg;
-                game.sendToServer(msg.serialize());
+                game.sendLeaveLobby();
                 game.updateScene(te::sStatus::RESUME, SCAST(SCENES::MAIN));
                 break;
         }
@@ -54,8 +53,7 @@ void setLobbyScene(Client& game) {
             game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
             game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SEARCH_LOBBY));
             game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
-            net::LEAVE_LOBBY msg;
-            game.sendToServer(msg.serialize());
+            game.sendLeaveLobby();
             game.updateScene(te::sStatus::RESUME, SCAST(SCENES::MAIN));
         }
     });
