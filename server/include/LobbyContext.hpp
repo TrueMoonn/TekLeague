@@ -38,7 +38,7 @@ class LobbyContext {
     static constexpr std::string PLUGINS_PATH = "server/plugins";
 
  public:
-    LobbyContext(uint max_players, const std::string& code);
+    LobbyContext(uint32_t max_players, const std::string& code);
 
     void run();
     const std::string& getCode();
@@ -253,7 +253,7 @@ class LobbyContext {
 
     ////// Network //////
     std::unordered_map<uint32_t, net::Address> connected_players;
-    uint max_clients;
+    uint32_t max_clients;
 
     te::Timestamp players_update =
         te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);

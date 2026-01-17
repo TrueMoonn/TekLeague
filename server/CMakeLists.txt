@@ -27,20 +27,33 @@ target_link_libraries(${PROJECT_NAME}
         TrueEngine
 )
 
+# On Windows, ensure console window is shown for logs
+if(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        WIN32_EXECUTABLE FALSE
+    )
+endif()
+
 ########## GET PLUGINS ##########
 add_dependencies(${PROJECT_NAME} addon::physic)
 add_dependencies(${PROJECT_NAME} addon::interaction)
 add_dependencies(${PROJECT_NAME} addon::entity_spec)
 
+if(WIN32)
+    set(PLUGIN_EXT ".dll")
+else()
+    set(PLUGIN_EXT ".so")
+endif()
+
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/plugins
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${TE_PLUGIN_PATH}/physic.so
-        ${CMAKE_CURRENT_SOURCE_DIR}/plugins/physic.so
+        ${TE_PLUGIN_PATH}/physic${PLUGIN_EXT}
+        ${CMAKE_CURRENT_SOURCE_DIR}/plugins/physic${PLUGIN_EXT}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${TE_PLUGIN_PATH}/interaction.so
-        ${CMAKE_CURRENT_SOURCE_DIR}/plugins/interaction.so
+        ${TE_PLUGIN_PATH}/interaction${PLUGIN_EXT}
+        ${CMAKE_CURRENT_SOURCE_DIR}/plugins/interaction${PLUGIN_EXT}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${TE_PLUGIN_PATH}/entity_spec.so
-        ${CMAKE_CURRENT_SOURCE_DIR}/plugins/entity_spec.so
+        ${TE_PLUGIN_PATH}/entity_spec${PLUGIN_EXT}
+        ${CMAKE_CURRENT_SOURCE_DIR}/plugins/entity_spec${PLUGIN_EXT}
 )

@@ -10,7 +10,7 @@
 #include <vector>
 #include <print>
 
-#include <network/GameServer.hpp>
+#include <network1/GameServer.hpp>
 
 #include "Network/generated_messages.hpp"
 #include "Server.hpp"
@@ -172,7 +172,7 @@ void Server::handleJoinLobby(const std::vector<uint8_t>& data,
     std::println("[Server::handleJoinLobby] Client {} ({}) joining lobby",
         client.id, client.username);
 
-    uint lobby_id;
+    uint32_t lobby_id;
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         auto it = lobby_codes.find(lobby_code);
@@ -231,7 +231,7 @@ void Server::handleCreateLobby(const std::vector<uint8_t>& data,
     std::println("[Server::handleCreateLobby] Client {} ({}) creating lobby",
         client.id, client.username);
 
-    uint lobby_id = createLobby(10, sender);
+    uint32_t lobby_id = createLobby(10, sender);
 
     std::string lobby_code;
     {
@@ -275,7 +275,7 @@ void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
         return;
     }
 
-    uint lobby_id = client.lobby_id;
+    uint32_t lobby_id = client.lobby_id;
     std::println("[Server] handleAdminStartGame: Client {} is in lobby {}",
         client.id, lobby_id);
 
@@ -317,7 +317,7 @@ void Server::handleLeaveLobby(const std::vector<uint8_t>& data,
     if (!client.in_lobby)
         return;
 
-    uint lobby_id = client.lobby_id;
+    uint32_t lobby_id = client.lobby_id;
 
     bool lobby_is_empty = false;
     {
@@ -369,7 +369,7 @@ void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data,
     if (!client.in_lobby)
         return;
 
-    uint lobby_id = client.lobby_id;
+    uint32_t lobby_id = client.lobby_id;
 
     if (!isAdmin(sender, lobby_id)) {
         std::println("[Server] handleToggleLobbyVisibility: User is not admin");
@@ -422,7 +422,7 @@ void Server::handleWantThisTeam(const std::vector<uint8_t>& data,
         return;
     }
 
-    uint lobby_id = client.lobby_id;
+    uint32_t lobby_id = client.lobby_id;
 
     int team_count = 0;
     {
@@ -465,7 +465,7 @@ void Server::handleAdminPauseGame(
     if (!client.in_lobby)
         return;
 
-    uint lobby_id = client.lobby_id;
+    uint32_t lobby_id = client.lobby_id;
 
     if (!isAdmin(sender, lobby_id)) {
         std::println("[Server] handleAdminPauseGame: User is not admin");
@@ -498,7 +498,7 @@ void Server::handleAdminEndGame(const std::vector<uint8_t>& data,
         return;
     }
 
-    uint lobby_id = client.lobby_id;
+    uint32_t lobby_id = client.lobby_id;
     std::println("[Server] handleAdminEndGame: Client {} is in lobby {}",
         client.id, lobby_id);
 

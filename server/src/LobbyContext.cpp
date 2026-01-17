@@ -10,7 +10,7 @@
 
 #include "LobbyContext.hpp"
 
-LobbyContext::LobbyContext(uint max_players, const std::string& code)
+LobbyContext::LobbyContext(uint32_t max_players, const std::string& code)
     : lobby(max_players, code, PLUGINS_PATH), max_clients(max_players) {}
 
 void LobbyContext::run() {
