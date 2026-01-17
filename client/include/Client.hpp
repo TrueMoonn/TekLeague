@@ -11,7 +11,7 @@
 
     #include "Game.hpp"
     #include "Network/generated_messages.hpp"
-    #include <network/GameClient.hpp>
+    #include <network1/GameClient.hpp>
 
 class Client : public Game, public te::network::GameClient {
  public:

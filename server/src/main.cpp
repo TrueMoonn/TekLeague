@@ -8,7 +8,12 @@
 #include <string>
 #include <csignal>
 #include <print>
-#include <unistd.h>
+#include <cstdio>
+#define WIN32_LEAN_AND_MEAN
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#ifndef _WIN32
+    #include <unistd.h>
+#endif
 #include <cstring>
 #include <optional>
 #include <functional>
@@ -28,7 +33,12 @@ void signalHandler(int signal) {
     }
 
     if (msg) {
+#ifndef _WIN32
         write(STDOUT_FILENO, msg, strlen(msg));
+#else
+        fprintf(stdout, "%s", msg);
+        fflush(stdout);
+#endif
     }
 
     if (g_server.has_value()) {
