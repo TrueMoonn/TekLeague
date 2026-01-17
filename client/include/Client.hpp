@@ -7,7 +7,10 @@
 
 #pragma once
 
+    #include <optional>
+
     #include "Game.hpp"
+    #include "Network/generated_messages.hpp"
     #include <network/GameClient.hpp>
 
 class Client : public Game, public te::network::GameClient {
@@ -68,6 +71,7 @@ class Client : public Game, public te::network::GameClient {
         return _cached_lobbies_list; }
     bool isLoggedIn() const { return !_username.empty(); }
     bool isInLobby() const { return !getCode().empty(); }
+    std::optional<net::PlayerListEntry> getMyInfos();
 
  private:
     std::string _username;
