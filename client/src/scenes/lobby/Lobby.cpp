@@ -5,8 +5,6 @@
 ** Lobby.cpp
 */
 
-#include <print>
-
 #include <events.hpp>
 #include <sfml/components/text.hpp>
 
@@ -41,6 +39,7 @@ void setLobbyScene(Client& game) {
             case SEARCH_RETURN:
                 game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
                 game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SEARCH_LOBBY));
+                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SELECT_CHAMP));
                 game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
                 game.sendLeaveLobby();
                 game.updateScene(te::sStatus::RESUME, SCAST(SCENES::MAIN));
@@ -52,6 +51,7 @@ void setLobbyScene(Client& game) {
         if (keys[te::Key::Escape]) {
             game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
             game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SEARCH_LOBBY));
+            game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SELECT_CHAMP));
             game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
             game.sendLeaveLobby();
             game.updateScene(te::sStatus::RESUME, SCAST(SCENES::MAIN));

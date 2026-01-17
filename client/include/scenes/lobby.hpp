@@ -42,3 +42,10 @@
         MENU_BEGIN + 16)
     #define LOBBY_SELECT_TEAM_RED static_cast<std::size_t>(TEMP_SCENE\
         MENU_BEGIN + 17)
+    #define LOBBY_SELECT_CHAMP static_cast<std::size_t>(TEMP_SCENE\
+        MENU_BEGIN + 18)
+
+    #define LOBBY_SELECT_CHAMP_BG static_cast<std::size_t>(TEMP_SCENE\
+        MENU_BEGIN + 19)
+    #define LOBBY_SELECT_CHAMP_LIST static_cast<std::size_t>(TEMP_SCENE\
+        MENU_BEGIN + 20)

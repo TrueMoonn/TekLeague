@@ -69,6 +69,10 @@ bool Server::setPacketsHandlers() {
         const net::Address& sender) {
         handleToggleLobbyVisibility(data, sender);
     });
+    registerPacketHandler(49, [this](const std::vector<uint8_t>& data,
+        const net::Address& sender) {
+        handleChampionSelection(data, sender);
+    });
     registerPacketHandler(50, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
         handleClientInput(data, sender);
@@ -300,13 +304,14 @@ void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         if (lobbies.find(lobby_id) != lobbies.end()) {
-            for (auto& player : lobbies.at(lobby_id).getLobby().getPlayers())
+            for (auto& player : lobbies.at(lobby_id).getLobby().getPlayers()) {
                 if (player.team == 0) {
                     std::println("[Server] handleAdminStartGame: Players in lobby {} are not in team",
                         lobby_id);
                     sendPlayersNotInTeam(sender);
                     return;
                 }
+            }
             lobbies.at(lobby_id).setGameState(LobbyGameState::IN_GAME);
             std::println("[Server] handleAdminStartGame: Lobby {} state changed to IN_GAME",
                 lobby_id);
@@ -409,6 +414,17 @@ void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data,
     std::println("[Server] handleToggleLobbyVisibility: Lobby {} is now {}",
                  lobby_id, (is_public ? "PUBLIC" : "PRIVATE"));
     sendLobbyVisibilityChanged(lobby_id, is_public);
+}
+
+void Server::handleChampionSelection(const std::vector<uint8_t>& data,
+    const net::Address& sender) {
+    net::SELECT_CHAMPION msg = net::SELECT_CHAMPION::deserialize(data);
+    auto client_opt = getClient(sender);
+    if (!client_opt)
+        return;
+
+    auto& client = client_opt->get();
+    client.champion = msg.champion;
 }
 
 void Server::handleClientInput(const std::vector<uint8_t>& data,

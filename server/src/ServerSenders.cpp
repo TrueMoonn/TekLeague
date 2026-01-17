@@ -196,6 +196,7 @@ void Server::sendPlayersListUnsafe(uint32_t lobby_id) {
             entry.id = client.id;
             entry.is_admin = isAdmin(address, lobby_id) ? 1 : 0;
             entry.team = client.team;
+            entry.champion = client.champion;
             std::memcpy(entry.username, client.username.c_str(),
                 std::min(client.username.size(), size_t(32)));
             msg.players.push_back(entry);

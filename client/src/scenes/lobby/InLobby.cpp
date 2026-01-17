@@ -79,7 +79,8 @@ void setInLobbyScene(Client& game) {
         {LOBBY_USER_RED_3, "user_red_side_lobby", {980.f, 620.f}},
         {LOBBY_SELECT_TEAM_BLUE, "select_blue", {650.f, 320.f}},
         {LOBBY_SELECT_TEAM_RED, "select_red", {1100.f, 320.f}},
-        {LOBBY_LAUNCH_GAME, "launch_game", {1100.f, 750.f}},
+        {LOBBY_LAUNCH_GAME, "launch_game", {1140.f, 750.f}},
+        {LOBBY_SELECT_CHAMP, "champ_selection", {560.f, 740.f}},
     };
 
     inlobby.on_activate = [&game]() {
@@ -110,6 +111,10 @@ void setInLobbyScene(Client& game) {
                 break;
             case LOBBY_SELECT_TEAM_RED:
                 game.sendWantThisTeam(2);
+                break;
+            case LOBBY_SELECT_CHAMP:
+                game.updateScene(te::sStatus::PAUSE, SCAST(SCENES::IN_LOBBY));
+                game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::SELECT_CHAMP));
                 break;
         }
     });
