@@ -5,6 +5,8 @@
 ** auto_attack.cpp
 */
 
+#include <string>
+
 #include "components/competences/auto_attack.hpp"
 
 void registerAttack(Game& game) {

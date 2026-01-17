@@ -11,6 +11,8 @@
 #endif
 #include <thread>
 #include <unordered_map>
+#include <string>
+#include <vector>
 
 #include "Network/generated_messages.hpp"
 #include "configs/entities.hpp"
@@ -21,7 +23,6 @@
 Client::Client()
     : Game(CLIENT_PLUGINS_PATH)
     , te::network::GameClient(COM_DEFAULT_MODE, PROTOCOL_PATH) {
-
     for (auto& conf : CLIENT_CONFIG_PATHS)
         addConfig(conf);
     for (auto& sys : CLIENT_SYSTEMS)
@@ -121,7 +122,8 @@ void Client::registerMessageHandlers() {
     });
 
     registerPacketHandler(22, [this](const std::vector<uint8_t>& data) {
-        std::println("[Client] Received LOGGED_IN packet ({} bytes)", data.size());
+        std::println("[Client] Received LOGGED_IN packet ({} bytes)",
+            data.size());
         auto msg = net::LOGGED_IN::deserialize(data);
         std::println("[Client] Client ID: {}", msg.id);
 

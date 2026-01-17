@@ -5,6 +5,8 @@
 ** Game.cpp
 */
 
+#include <string>
+
 #include <ECS/Entity.hpp>
 
 #include "configs/entities.hpp"
@@ -42,7 +44,8 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
     _running = true;
 }
 
-Game::Game(uint32_t max_players, const std::string& code, const std::string& ppath) 
+Game::Game(uint32_t max_players, const std::string& code,
+    const std::string& ppath)
     : Game(ppath) {
     _max_players = max_players;
     _code = code;

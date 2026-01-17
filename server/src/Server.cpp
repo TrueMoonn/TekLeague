@@ -119,7 +119,8 @@ void Server::destroyLobbyUnsafe(uint32_t lobby_id) {
     }
 }
 
-void Server::broadcastToLobby(uint32_t lobby_id, const std::vector<uint8_t>& data) {
+void Server::broadcastToLobby(uint32_t lobby_id,
+    const std::vector<uint8_t>& data) {
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     broadcastToLobbyUnsafe(lobby_id, data);
 }

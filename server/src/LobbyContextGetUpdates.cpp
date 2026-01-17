@@ -32,8 +32,8 @@ net::PLAYERS_INIT LobbyContext::getPlayersInit() {
 
     for (auto&& [entity, pos, team, champ] :
         ECS::IndexedDenseZipper(positions, teams, champs)) {
-
         net::PlayerInit state;
+
         std::memset(&state, 0, sizeof(state));
         state.team = 0;
         for (std::size_t i = 0; i < TEAMS.size(); ++i) {
@@ -72,8 +72,8 @@ net::BUILDINGS_INIT LobbyContext::getBuildingsInit() {
 
     for (auto&& [entity, pos, team, building] :
         ECS::IndexedDenseZipper(positions, teams, buildings)) {
-
         net::BuildingInit state;
+
         std::memset(&state, 0, sizeof(state));
         state.entity = static_cast<uint32_t>(entity),
         state.x = pos.x,
@@ -104,9 +104,10 @@ net::PLAYERS_UPDATES LobbyContext::getPlayerUpdates() {
     auto& velocities = game.getComponent<addon::physic::Velocity2>();
 
     for (auto&& [entity, pos, health, champ, level, mana, target, vel] :
-        ECS::IndexedDenseZipper(positions, healths, champs, levels, manas, targets, velocities)) {
-
+        ECS::IndexedDenseZipper(
+            positions, healths, champs, levels, manas, targets, velocities)) {
         net::PlayerUpdate state;
+
         std::memset(&state, 0, sizeof(state));
         state.entity = static_cast<uint32_t>(entity),
         state.x = pos.x,
