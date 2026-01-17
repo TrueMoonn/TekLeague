@@ -22,10 +22,11 @@ enum class SpellId {
 
 void noSpell(Game&, ECS::Entity, const mat::Vector2f&);
 void gulesSpell1(Game&, ECS::Entity, const mat::Vector2f&);
+void gulesSpell2(Game&, ECS::Entity, const mat::Vector2f&);
 
 static const std::unordered_map<SpellId,
     std::function<void(Game&, ECS::Entity, const mat::Vector2f&)>> SPELLS = {
     {SpellId::NONE, &noSpell},
     {SpellId::GULES_1, &gulesSpell1},
-    {SpellId::GULES_2, &noSpell},
+    {SpellId::GULES_2, &gulesSpell2},
 };

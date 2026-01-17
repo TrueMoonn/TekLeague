@@ -80,7 +80,7 @@ name = ""
 
 [ENTITIES.gules_ball.spell]
 name = "gules1"
-base = 10
+base = 100
 damage_type = 1
 ratios = [0.0, 0.4]
 cooldown = 1.0
