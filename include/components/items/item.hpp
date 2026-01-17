@@ -22,7 +22,7 @@ static const std::vector<std::string> ITEMS = {
 };
 
 struct Item {
-    Item(std::size_t item_id) : id(item_id) {}
+    explicit Item(std::size_t item_id) : id(item_id) {}
 
     std::size_t id;
 };

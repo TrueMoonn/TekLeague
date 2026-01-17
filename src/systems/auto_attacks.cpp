@@ -5,8 +5,10 @@
 ** target_player.hpp
 */
 
-#include <ECS/DenseZipper.hpp>
 #include <cmath>
+#include <string>
+
+#include <ECS/DenseZipper.hpp>
 #include <physic/components/velocity.hpp>
 #include <physic/components/position.hpp>
 #include <display/components/animation.hpp>

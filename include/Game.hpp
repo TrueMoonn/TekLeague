@@ -31,23 +31,24 @@ enum class LobbyGameState {
 
 class Game : public te::GameTool {
  public:
-    Game(const std::string& ppath);
-    Game(uint32_t max_players, const std::string& code, const std::string& ppath);
+    explicit Game(const std::string& ppath);
+    Game(uint32_t max_players, const std::string& code,
+        const std::string& ppath);
 
     ECS::Entity nextEntity(eType type);
 
     void AddKillEntity(ECS::Entity e) {
         removeEntity(e);
         this->_EntityToKill.push_back(e);
-    };
+    }
     std::vector<ECS::Entity> getAllEntityToKill() {
         return this->_EntityToKill;
-    };
+    }
 
     void popEntity(ECS::Entity e) {
         this->_EntityToKill.erase(std::find(this->_EntityToKill.begin(),
             this->_EntityToKill.end(), e));
-    };
+    }
 
     virtual void run();
 
@@ -106,12 +107,15 @@ class Game : public te::GameTool {
     /**
      * @brief Get players in lobby
      */
-    const std::vector<net::PlayerListEntry>& getPlayers() const { return _players_in_lobby; }
+    const std::vector<net::PlayerListEntry>& getPlayers() const {
+        return _players_in_lobby;
+    }
 
     /**
      * @brief Set players list
      */
-    void setPlayers(const std::vector<net::PlayerListEntry>& players) { _players_in_lobby = players; }
+    void setPlayers(const std::vector<net::PlayerListEntry>& players) {
+        _players_in_lobby = players; }
 
     /**
      * @brief Clear players list
@@ -120,9 +124,11 @@ class Game : public te::GameTool {
 
     std::vector<std::pair<ECS::Entity, std::string>> entities_queue;
     std::vector<ECS::Entity> _EntityToKill;
+
  protected:
     bool _running;
     te::Timestamp _framelimit;
+
  private:
     std::unordered_map<eType, ECS::Entity> _nextEntities;
 

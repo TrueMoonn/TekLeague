@@ -7,9 +7,10 @@
 
 #pragma once
 
-    #include "maths/Vector.hpp"
     #include <array>
     #include <string>
+
+    #include "maths/Vector.hpp"
 
     #define BLUE_POS_X 750
     #define BLUE_POS_Y 1800

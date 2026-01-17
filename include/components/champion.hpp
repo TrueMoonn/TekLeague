@@ -7,6 +7,8 @@
 
 #pragma once
 
+    #include <string>
+
     #include "Game.hpp"
 
 enum class ChampState {
@@ -19,7 +21,7 @@ enum class ChampState {
 };
 
 struct Champion {
-    Champion(const std::string& name) : name(name) {}
+    explicit Champion(const std::string& name) : name(name) {}
     std::string name;
     ChampState state = ChampState::IDLE;
 };

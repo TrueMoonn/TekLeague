@@ -10,7 +10,7 @@
     #include "Game.hpp"
 
 struct Xp {
-    Xp(std::size_t am) : amount(am) {};
+    Xp(std::size_t am) : amount(am) {}
     std::size_t amount;
 };
 
