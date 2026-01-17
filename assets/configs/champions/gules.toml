@@ -5,6 +5,10 @@ target = true
 [ENTITIES.Gules.champion]
 name = "Gules"
 
+[ENTITIES.Gules.attack]
+name = "gules_aa"
+auto = false
+
 [ENTITIES.Gules.team]
 name = ""
 
@@ -13,14 +17,17 @@ x = 0
 y = 0
 
 [ENTITIES.Gules.health]
-amount = 200
-max = 200
+amount = 600
+max = 600
 regen = 3
 
 [ENTITIES.Gules.mana]
 amount = 300
 max = 300
 regen = 3
+
+[ENTITIES.Gules.xp]
+amount = 0
 
 [ENTITIES.Gules.hitbox]
 left = 0.0
@@ -32,40 +39,56 @@ height = 192.3
 ad = 67
 ap = 0
 atk_speed = 1.5
-atk_range = 200
+atk_range = 350
 cdr = 0
 armor = 34
 magic_resist = 25
-mov_speed = 350
+mov_speed = 1000
 
-[[ENTITIES.Gules.spells]]
-name = "name"
-base = 50
-damage_type = 0
-mana_cost = 20
-cooldown = 5.0
-cast_time = 0.2
-target = 0
-ratios = [100, 0]
-entities = [
-    "gules_ball"
-]
+[ENTITIES.Gules.spells]
+indexs = [1, 2]
 
-[[ENTITIES.Gules.spells]]
-name = "name"
-base = 50
+# --------------------
+
+[ENTITIES.gules_aa]
+position2 = true
+velocity2 = true
+target = true
+
+[ENTITIES.gules_aa.team]
+name = ""
+
+[ENTITIES.gules_aa.spell]
+name = "gules_aa"
+base = 0
 damage_type = 0
-mana_cost = 20
-cooldown = 5.0
-cast_time = 0.2
+ratios = [1.0, 0.0]
+cooldown = 2.0
+cast_time = 1.0
 target = 0
-ratios = [100, 0]
-entities = [
-    "gules_ball"
-]
+mana_cost = 0
+speed = 500
+
+# --------------------
 
 [ENTITIES.gules_ball]
 position2 = true
+target = true
+
+[ENTITIES.gules_ball.team]
+name = ""
+
+[ENTITIES.gules_ball.spell]
+name = "gules1"
+base = 10
+damage_type = 1
+ratios = [0.0, 0.4]
+cooldown = 1.0
+cast_time = 0.0
+target = 0
+mana_cost = 0
+speed = 500
+range = 500
 
 [ENTITIES.gules_ball.velocity2]
 x = 0
@@ -74,5 +97,5 @@ y = 0
 [ENTITIES.gules_ball.hitbox]
 top = 0
 left = 0
-width = 20
-height = 20
+width = 50
+height = 50

@@ -14,6 +14,11 @@
 
 #include "Network/generated_messages.hpp"
 #include "Server.hpp"
+#include "components/competences/spells.hpp"
+#include "components/competences/target.hpp"
+#include "my.hpp"
+#include "physic/components/position.hpp"
+#include "spells.hpp"
 
 bool Server::setPacketsHandlers() {
     registerPacketHandler(2, [this](const std::vector<uint8_t>& data,
@@ -63,6 +68,10 @@ bool Server::setPacketsHandlers() {
     registerPacketHandler(46, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
         handleToggleLobbyVisibility(data, sender);
+    });
+    registerPacketHandler(50, [this](const std::vector<uint8_t>& data,
+        const net::Address& sender) {
+        handleClientInput(data, sender);
     });
     registerPacketHandler(87, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
@@ -231,7 +240,7 @@ void Server::handleCreateLobby(const std::vector<uint8_t>& data,
     std::println("[Server::handleCreateLobby] Client {} ({}) creating lobby",
         client.id, client.username);
 
-    uint32_t lobby_id = createLobby(10, sender);
+    uint32_t lobby_id = createLobby(6, sender);
 
     std::string lobby_code;
     {
@@ -288,10 +297,16 @@ void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
     std::println("[Server] handleAdminStartGame: Starting game for lobby {}",
         lobby_id);
 
-    // Change lobby state to IN_GAME
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         if (lobbies.find(lobby_id) != lobbies.end()) {
+            for (auto& player : lobbies.at(lobby_id).getLobby().getPlayers())
+                if (player.team == 0) {
+                    std::println("[Server] handleAdminStartGame: Players in lobby {} are not in team",
+                        lobby_id);
+                    sendPlayersNotInTeam(sender);
+                    return;
+                }
             lobbies.at(lobby_id).setGameState(LobbyGameState::IN_GAME);
             std::println("[Server] handleAdminStartGame: Lobby {} state changed to IN_GAME",
                 lobby_id);
@@ -303,8 +318,10 @@ void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
 
     // TODO(Pierre): Initialize game state in lobby
     // lobbies.at(lobby_id).getLobby().startGame();
-    // sendPlayersInit(lobby_id);
-    // sendBuildingsInit(lobby_id);
+    lobbies.at(lobby_id).createPlayersEntities();
+    lobbies.at(lobby_id).createOtherEntities();
+    sendPlayersInit(lobby_id);
+    sendBuildingsInit(lobby_id);
 }
 
 void Server::handleLeaveLobby(const std::vector<uint8_t>& data,
@@ -392,6 +409,53 @@ void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data,
     std::println("[Server] handleToggleLobbyVisibility: Lobby {} is now {}",
                  lobby_id, (is_public ? "PUBLIC" : "PRIVATE"));
     sendLobbyVisibilityChanged(lobby_id, is_public);
+}
+
+void Server::handleClientInput(const std::vector<uint8_t>& data,
+    const net::Address& sender) {
+    net::CLIENT_INPUTS msg = net::CLIENT_INPUTS::deserialize(data);
+    auto client_opt = getClient(sender);
+    if (!client_opt)
+        return;
+
+    auto& client = client_opt->get();
+    if (!client.in_lobby)
+        return;
+
+    uint32_t lobby_id = client.lobby_id;
+
+    {
+        std::lock_guard<std::mutex> lock(lobbies_mutex);
+        auto& lobby_ctx = lobbies.at(lobby_id);
+        auto& game = lobby_ctx.getLobby();
+        auto e = lobby_ctx.getPlayerEntity(client.id);
+
+        if (msg.actions == static_cast<uint8_t>(ActionIG::MOVEMENT)) {
+            auto& target = game.getComponent<Target>();
+            target.getComponent(e).x = msg.mouse_x;
+            target.getComponent(e).y = msg.mouse_y;
+            target.getComponent(e).to_attack = msg.target;
+        }
+        if (msg.actions == static_cast<uint8_t>(ActionIG::SPELL1)) {
+            auto& spell_id = game.getComponent<Spells>().
+                getComponent(e).spell_id[0];
+            SPELLS.at(static_cast<SpellId>(spell_id))(
+                 game, e, {msg.mouse_x, msg.mouse_y});
+        }
+        if (msg.actions == static_cast<uint8_t>(ActionIG::SPELL2)) {
+            auto& spell_id = game.getComponent<Spells>().
+                getComponent(e).spell_id[1];
+            SPELLS.at(static_cast<SpellId>(spell_id))(
+                game, e, {msg.mouse_x, msg.mouse_y});
+        }
+        if (msg.actions == static_cast<uint8_t>(ActionIG::AA)) {
+            auto& target = game.getComponent<Target>();
+            target.getComponent(e).x = msg.mouse_x;
+            target.getComponent(e).y = msg.mouse_y;
+            target.getComponent(e).to_attack = msg.target;
+            std::cout << "auto attack on " << msg.target << "\n";
+        }
+    }
 }
 
 void Server::handleWantThisTeam(const std::vector<uint8_t>& data,

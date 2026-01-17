@@ -14,6 +14,8 @@
 #include "Game.hpp"
 
 Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
+    std::memset(teams, 0, sizeof(teams));
+
     loadPlugins(ppath);
     std::srand(std::time(0));
 
@@ -87,10 +89,8 @@ ECS::Entity Game::nextEntity(eType type) {
 }
 
 void Game::run() {
-    while (_running) {
-        if (_framelimit.checkDelay())
-            runSystems();
-    }
+    if (_framelimit.checkDelay())
+        runSystems();
 }
 
 const std::string& Game::getCode() const {

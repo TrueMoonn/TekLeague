@@ -192,15 +192,8 @@ void Server::run() {
             try {
                 std::lock_guard<std::mutex> lock(lobbies_mutex);
                 if (!lobbies.empty()) {
-                    // Only log every 1000 iterations to reduce spam
-                    if (loop_count % 1000 == 0) {
-                        std::println(
-                            "[Server::run] Running {} lobby contexts",
-                            lobbies.size());
-                    }
                     for (auto& [id, ctx] : lobbies) {
-// TODO(PIERRE): Uncomment when Lobby scenes/systems are properly initialized
-                        // ctx.run();
+                        ctx.run();
                     }
                 }
             } catch (const std::exception& e) {

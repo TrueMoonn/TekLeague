@@ -7,11 +7,11 @@
 
 #pragma once
 
-    #include <optional>
+#include <optional>
 
-    #include "Game.hpp"
-    #include "Network/generated_messages.hpp"
-    #include <network1/GameClient.hpp>
+#include "Game.hpp"
+#include "Network/generated_messages.hpp"
+#include <network1/GameClient.hpp>
 
 class Client : public Game, public te::network::GameClient {
  public:
@@ -45,11 +45,6 @@ class Client : public Game, public te::network::GameClient {
      */
     void receiveMessages();
 
-    /**
-     * @brief Update game logic
-     */
-    void updateGame();
-
     ////// Network senders //////
     void sendLogin(const std::string& username);
     void sendLogout();
@@ -61,6 +56,7 @@ class Client : public Game, public te::network::GameClient {
     void sendToggleVisibility();
     void sendPauseGame();
     void sendWantThisTeam(uint8_t team);
+    void sendPacketLoss(uint8_t code);
 
     ////// Getters //////
     const std::string& getUsername() const { return _username; }
@@ -73,12 +69,16 @@ class Client : public Game, public te::network::GameClient {
     bool isInLobby() const { return !getCode().empty(); }
     std::optional<net::PlayerListEntry> getMyInfos();
 
+    mat::Vector2i mpos;
+    te::Timestamp inputLimit{0.08f};
  private:
     std::string _username;
     uint32_t _client_id = 0;
     bool _is_admin = false;
     std::vector<std::string> _cached_lobbies_list;
     net::Address _server_address;
+
+    void registerPacketTrackers();
 
     ////// Message handlers //////
     void registerMessageHandlers();
@@ -102,4 +102,11 @@ class Client : public Game, public te::network::GameClient {
     void handleNotAdmin(const net::NOT_ADMIN& msg);
     void handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg);
     void handleTeamFull(const net::TEAM_FULL& msg);
+    void handlePlayersInit(const net::PLAYERS_INIT& msg);
+    void handleBuildingsInit(const net::BUILDINGS_INIT& msg);
+    void handleEntitiesCreated(const net::ENTITIES_CREATED& msg);
+    void handleEntitiesDestroyed(const net::ENTITIES_DESTROYED& msg);
+    void handlePlayersUpdate(const net::PLAYERS_UPDATES& msg);
+    void handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg);
+    void handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg);
 };
