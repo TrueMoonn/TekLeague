@@ -56,6 +56,7 @@ void gulesSpell1(Game& game, ECS::Entity e, const mat::Vector2f& mpos) {
         manas.getComponent(e).amount < spell_info.mana_cost) {
         return;
     }
+    spells.getComponent(gball_idx).arrived = false;
     targets.getComponent(gball_idx).x = mpos.x;
     targets.getComponent(gball_idx).y = mpos.y;
 }

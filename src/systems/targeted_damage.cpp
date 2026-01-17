@@ -37,6 +37,8 @@ void targetedDamage(Game& game) {
                 float dist = std::sqrt(std::pow(target_pos.x - pos.x, 2) +
                     std::pow(target_pos.y - pos.y, 2));
                 if (dist < 10) {
+                    if (spell.persistent && spell.arrived)
+                        continue;
                     if (healths.hasComponent(tag.to_attack) &&
                         stats.hasComponent(spell.from)) {
                         auto& st = stats.getComponent(spell.from);
@@ -44,8 +46,14 @@ void targetedDamage(Game& game) {
                         target_health.reduceSafely(spell.base +
                             st.ad * spell.ratios[PHYSIC_DMG] +
                             st.ap * spell.ratios[MAGICAL_DMG]);
+                        if (target_health.amount <= 0) {
+                            game.AddKillEntity(tag.to_attack);
+                        }
                     }
-                    game.AddKillEntity(e);
+                    spell.arrived = true;
+                    if (!spell.persistent) {
+                        game.AddKillEntity(e);
+                    }
                 }
             }
 
@@ -57,6 +65,9 @@ void targetedDamage(Game& game) {
                 if (dist_to_target < 10) {
                     if (!stats.hasComponent(spell.from) ||
                         !teams.hasComponent(e))
+                        continue;
+
+                    if (spell.persistent && spell.arrived)
                         continue;
 
                     auto& caster_stats = stats.getComponent(spell.from);
@@ -76,9 +87,14 @@ void targetedDamage(Game& game) {
                                 enemy_health.reduceSafely(spell.base +
                                     caster_stats.ad * spell.ratios[PHYSIC_DMG] +
                                     caster_stats.ap * spell.ratios[MAGICAL_DMG]);
+                                if (enemy_health.amount <= 0) {
+                                    game.AddKillEntity(enemy_e);
+                                }
                             }
                         }
                     }
+
+                    spell.arrived = true;
 
                     if (!spell.persistent) {
                         game.AddKillEntity(e);

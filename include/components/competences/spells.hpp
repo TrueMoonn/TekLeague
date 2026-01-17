@@ -62,6 +62,7 @@ struct Spell {
     SpellTarget target;
     float aoe_radius;
     bool persistent;
+    bool arrived = false;
 };
 
 struct Spells {
