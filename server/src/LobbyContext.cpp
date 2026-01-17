@@ -17,7 +17,7 @@
 #include "components/building.hpp"
 #include "my.hpp"
 
-LobbyContext::LobbyContext(uint max_players, const std::string& code)
+LobbyContext::LobbyContext(uint32_t max_players, const std::string& code)
     : lobby(max_players, code, PLUGINS_PATH), max_clients(max_players) {
     for (auto& sys : SERVER_SYSTEMS)
         lobby.createSystem(sys);
