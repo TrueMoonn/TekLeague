@@ -212,11 +212,21 @@ void Client::handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg) {
 
 void Client::handleCreaturesUpdate(const net::CREATURES_UPDATES& msg) {
     auto& healths = getComponent<Health>();
+    auto& positions = getComponent<addon::physic::Position2>();
+    auto& velocitys = getComponent<addon::physic::Velocity2>();
 
     for (auto& creatures : msg.creatures) {
         ECS::Entity e = creatures.entity;
         if (healths.hasComponent(e)) {
             healths.getComponent(e).amount = creatures.hp;
+        }
+        if (positions.hasComponent(e)) {
+            positions.getComponent(e).x = creatures.x;
+            positions.getComponent(e).y = creatures.y;
+        }
+        if (velocitys.hasComponent(e)) {
+            velocitys.getComponent(e).x = creatures.vel_x;
+            velocitys.getComponent(e).y = creatures.vel_y;
         }
     }
 }

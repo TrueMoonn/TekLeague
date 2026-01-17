@@ -15,6 +15,9 @@ static const std::vector<std::string> CONFIG_PATHS {
     "assets/configs/champions/goatier.toml",
     "assets/configs/champions/gules.toml",
     "assets/configs/buildings/tower.toml",
+    "assets/configs/creaps/range_blue_creap_down.toml",
+    "assets/configs/creaps/range_blue_creap_top.toml",
+    "assets/configs/creaps/range_red_creap.toml",
 };
 
 static const std::vector<std::string> CLIENT_CONFIG_PATHS {
@@ -41,7 +44,8 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     "client/assets/configs/ui/parameters/button.toml",
 
     "client/assets/configs/creaps/range_red_creap.toml",
-    "client/assets/configs/creaps/range_blue_creap.toml",
+    "client/assets/configs/creaps/range_blue_creap_top.toml",
+    "client/assets/configs/creaps/range_blue_creap_down.toml",
     /* == Buildings == */
     "client/assets/configs/buildings/tower.toml",
 };

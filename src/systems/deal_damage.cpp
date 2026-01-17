@@ -80,7 +80,6 @@ void dealDamage(Game &game) {
                 if (hp.amount <= 0) {
                     deads.push_back(e);
                 }
-                std::cout << "damage_dealed" << std::endl;
                 deads.push_back(hit);
             }
             for (auto& dead : deads) {

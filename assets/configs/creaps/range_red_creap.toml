@@ -1,21 +1,21 @@
 [ENTITIES.range_red_creap]
 position2 = true
 target = true
-auto_attack = true
+clickable = true
 
 [ENTITIES.range_red_creap.velocity2]
 x = 0
 y = 0
 
 [ENTITIES.range_red_creap.attack]
-name = ""
+name = "tower_projectile"
 auto = true
 
 [ENTITIES.range_red_creap.minions]
 name = "range_red"
 
 [ENTITIES.range_red_creap.team]
-team = "red"
+name = "red"
 
 [ENTITIES.range_red_creap.health]
 amount = 1
@@ -35,10 +35,10 @@ atk_range = 50
 cdr = 0
 armor = 34
 magic_resist = 25
-mov_speed = 150
+mov_speed = 200
 
 [ENTITIES.range_red_creap.minion_route]
-direction1 = [2000, 700]
-direction2 = [4096, 1480]
-direction3 = [6192, 700]
-direction4 = [6792, 1000]
+direction1 = [6792, 1000]
+direction2 = [6192, 700]
+direction3 = [4096, 1480]
+direction4 = [2000, 700]

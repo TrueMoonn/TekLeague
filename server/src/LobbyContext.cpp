@@ -20,15 +20,15 @@
 #include "components/building.hpp"
 #include "my.hpp"
 
-LobbyContext::LobbyContext(uint max_players, const std::string& code)
+LobbyContext::LobbyContext(uint32_t max_players, const std::string& code)
     : lobby(max_players, code, PLUGINS_PATH), max_clients(max_players) {
     for (auto& sys : SERVER_SYSTEMS)
         lobby.createSystem(sys);
 }
 
 void LobbyContext::run() {
-    SpawnCreeps();
     lobby.run();
+    SpawnCreeps();
 }
 
 void LobbyContext::SpawnCreeps() {
@@ -39,34 +39,48 @@ void LobbyContext::SpawnCreeps() {
     static te::Timestamp second_creep((float)0.5);
     static te::Timestamp third_creep(1.f);
     static te::Timestamp fourth_creep((float)1.5);
+    static bool create_1 = false;
+    static bool create_2 = false;
+    static bool create_3 = false;
 
     for (size_t i = 0; i < CREATURES.size(); ++i) {
         const auto& [mob_name, mob_pos] = CREATURES[i];
         auto& game = getLobby();
-        if (first_creep.checkDelay()) {
+        std::cout << mob_name << std::endl;
+        if (first_creep.checkDelay() && !create_1) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
 
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
             game.entities_queue.emplace_back(e, mob_name);
+            create_1 = true;
+            std::cout << "mob spawn 1\n";
         }
-        if (second_creep.checkDelay()) {
+        if (second_creep.checkDelay() && !create_2) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
 
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
             game.entities_queue.emplace_back(e, mob_name);
+            create_2 = true;
+            std::cout << "mob spawn 2\n";
         }
-        if (third_creep.checkDelay()) {
+        if (third_creep.checkDelay() && !create_3) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
 
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
             game.entities_queue.emplace_back(e, mob_name);
+            create_3 = true;
+            std::cout << "mob spawn 3\n";
         }
         if (fourth_creep.checkDelay()) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
 
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
             game.entities_queue.emplace_back(e, mob_name);
+            std::cout << "mob spawn 4\n";
             this->spawn_creap.restart();
+            create_1 = false;
+            create_2 = false;
+            create_3 = false;
         }
     }
 }
