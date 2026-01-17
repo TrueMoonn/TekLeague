@@ -75,7 +75,7 @@ int main(int ac, char **av) {
     try {
         while (g_running.load() && game.isRunning()) {
             game.receiveMessages();
-            game.updateGame();
+            game.run();
         }
 
         if (!g_running.load()) {

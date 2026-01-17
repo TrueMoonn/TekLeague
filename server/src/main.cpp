@@ -42,7 +42,7 @@ void signalHandler(int signal) {
     }
 
     if (g_server.has_value()) {
-        g_server->get().stop();
+        g_server->get().requestStop();
     }
 }
 
@@ -72,6 +72,8 @@ int main(int ac, char **av) {
         std::signal(SIGTERM, signalHandler);
 
         game.run();
+
+        game.stop();
 
     } catch (const std::exception& e) {
         std::println(stderr, "[SERVER] Fatal error: {}", e.what());

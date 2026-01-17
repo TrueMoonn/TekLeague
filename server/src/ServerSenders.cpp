@@ -53,6 +53,10 @@ void Server::sendAutomatic() {
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetBuildingsUpdates())
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetEntitiesCreated())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetEntitiesDestroyed())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetCreaturesUpdates())
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetProjectilesUpdates())
@@ -188,10 +192,10 @@ void Server::sendPlayersListUnsafe(uint32_t lobby_id) {
         if (client_opt) {
             auto& client = client_opt->get();
             net::PlayerListEntry entry;
+            std::memset(&entry, 0, sizeof(entry));
             entry.id = client.id;
             entry.is_admin = isAdmin(address, lobby_id) ? 1 : 0;
             entry.team = client.team;
-            std::memset(entry.username, 0, 32);
             std::memcpy(entry.username, client.username.c_str(),
                 std::min(client.username.size(), size_t(32)));
             msg.players.push_back(entry);
@@ -202,6 +206,7 @@ void Server::sendPlayersListUnsafe(uint32_t lobby_id) {
         "[Server::sendPlayersListUnsafe] Broadcasting to lobby with {} players",
         msg.players.size());
     broadcastToLobbyUnsafe(lobby_id, msg.serialize());
+    lobbies.at(lobby_id).getLobby().setPlayers(msg.players);
 }
 
 void Server::sendPlayersList(uint32_t lobby_id) {
@@ -242,6 +247,11 @@ void Server::sendNotAdmin(const net::Address& address) {
 
 void Server::sendTeamFull(const net::Address& address) {
     net::TEAM_FULL msg;
+    sendTo(address, msg.serialize());
+}
+
+void Server::sendPlayersNotInTeam(const net::Address& address) {
+    net::PLAYERS_NOT_IN_TEAM msg;
     sendTo(address, msg.serialize());
 }
 
