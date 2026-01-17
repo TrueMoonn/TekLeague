@@ -8,6 +8,7 @@
 #include <print>
 #include <sys/socket.h>
 #include <thread>
+#include <unordered_map>
 
 #include "Network/generated_messages.hpp"
 #include "configs/entities.hpp"
@@ -30,6 +31,7 @@ Client::Client()
     createSystem("animate");
 
     registerMessageHandlers();
+    registerPacketTrackers();
 }
 
 Client::~Client() {
@@ -61,16 +63,21 @@ void Client::disconnect() {
 
 void Client::receiveMessages() {
     update(0);
-    checkPacketTrackers();
+    if (getGameState() == LobbyGameState::IN_GAME)
+        checkPacketTrackers();
 }
 
 void Client::registerPacketTrackers() {
     std::unordered_map<uint8_t, uint32_t> packetsToTrace = {
-        {net::PLAYERS_UPDATES::ID, 1000 / 120}
+        {
+            static_cast<uint8_t>(net::PLAYERS_UPDATES::ID),
+            static_cast<uint32_t>(1000 / 120)
+        }
     };
 
     initPacketTrackers(packetsToTrace, [this](uint8_t code) {
-        std::println("[Client] Packet {} missing, requesting resend...", code);
+        // std::println("[Client] Packet {} missing, requesting resend...",
+        // code);
         sendPacketLoss(code);
     });
 }

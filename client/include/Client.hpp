@@ -10,7 +10,7 @@
     #include <optional>
 
     #include <maths/Vector.hpp>
-    #include <network/GameClient.hpp>
+    #include <network1/GameClient.hpp>
 
     #include "Game.hpp"
     #include "Network/generated_messages.hpp"
