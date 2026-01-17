@@ -15,6 +15,10 @@
 #include "components/champion.hpp"
 #include "configs/systems.hpp"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 void championMovement(Game &game) {
     game.createSystem("champion_movement", [&game](ECS::Registry&){
         auto& vels = game.getComponent<addon::physic::Velocity2>();

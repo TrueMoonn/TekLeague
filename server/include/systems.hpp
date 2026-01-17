@@ -13,6 +13,7 @@
 static const std::vector<std::string> SERVER_SYSTEMS = {
     "auto_attacks",
     "track_target",
+    "minion_movement",
     "movement2",
     "targeted_damage",
 };

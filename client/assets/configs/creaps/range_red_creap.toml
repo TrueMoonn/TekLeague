@@ -6,7 +6,7 @@ path = "client/assets/images/minions/range_red.png"
 size = [387, 644]
 scale = [77, 128]
 origin = [193.5, 322]
-layer = 11
+layer = 10
 
 [ENTITIES.range_red_creap.animation]
 frames = [

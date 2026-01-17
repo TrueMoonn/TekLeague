@@ -1,0 +1,46 @@
+[ENTITIES.Ttheodore]
+drawable = true
+
+[ENTITIES.Ttheodore.sprite]
+path = "client/assets/images/champions/TTheodore/Ttheodore.png"
+size = [386, 646]
+scale = [258, 430]
+origin = [193.5, 420]
+layer = 10
+
+[ENTITIES.Ttheodore.animation]
+frames = [
+    # IDLE
+    [[0, 0], 4, 0.4, true],
+
+    # MOVEMENT
+    [[0, 1], 4, 0.2, true],
+    [[0, 2], 4, 0.2, true],
+    [[0, 3], 4, 0.2, true],
+    [[0, 4], 4, 0.2, true],
+    [[0, 5], 4, 0.2, true],
+
+    # AUTO ATTACK
+    [[0, 6], 4, 0.2, false],
+    [[0, 7], 4, 0.2, false],
+    [[0, 8], 4, 0.2, false],
+    [[0, 9], 4, 0.2, false],
+    [[0, 10], 4, 0.2, false],
+
+    # SPELL 1
+    [[0, 0], 1, 0.2, false],
+    [[0, 0], 1, 0.2, false],
+    [[0, 0], 1, 0.2, false],
+    [[0, 0], 1, 0.2, false],
+    [[0, 0], 1, 0.2, false],
+
+    # SPELL 2
+    [[0, 11], 4, 0.2, false],
+    [[0, 12], 4, 0.2, false],
+    [[0, 13], 4, 0.2, false],
+    [[0, 14], 4, 0.2, false],
+    [[0, 15], 4, 0.2, false],
+
+    # DEATH
+    [[0, 16], 6, 0.4, false],
+]

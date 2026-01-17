@@ -37,8 +37,8 @@ void Server::sendAutomatic() {
             }
         }
 
-        std::vector<std::pair<uint, std::vector<uint8_t>>> ingame_updates;
-        std::vector<uint> pre_game_lobbies;
+        std::vector<std::pair<uint32_t, std::vector<uint8_t>>> ingame_updates;
+        std::vector<uint32_t> pre_game_lobbies;
 
         {
             std::lock_guard<std::mutex> lock(lobbies_mutex);
@@ -76,7 +76,7 @@ void Server::sendAutomatic() {
                 }
             }
 
-            for (uint lobby_id : pre_game_lobbies) {
+            for (uint32_t lobby_id : pre_game_lobbies) {
                 sendPlayersListUnsafe(lobby_id);
             }
 
@@ -139,7 +139,7 @@ void Server::sendLobbiesList(const net::Address& address) {
 
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
-        for (uint lobby_id : public_lobbies) {
+        for (uint32_t lobby_id : public_lobbies) {
             if (lobbies.find(lobby_id) != lobbies.end()) {
                 msg.lobby_codes.push_back(lobbies.at(lobby_id).getCode());
             }
@@ -152,7 +152,7 @@ void Server::sendLobbiesList(const net::Address& address) {
 void Server::sendLobbiesListUnsafe() {
     net::LOBBIES_LIST msg;
 
-    for (uint lobby_id : public_lobbies) {
+    for (uint32_t lobby_id : public_lobbies) {
         if (lobbies.find(lobby_id) != lobbies.end()) {
             msg.lobby_codes.push_back(lobbies.at(lobby_id).getCode());
         }
@@ -169,7 +169,7 @@ void Server::sendLobbiesListUnsafe() {
         "clients ({} lobbies)", msg.lobby_codes.size());
 }
 
-void Server::sendGameStarting(uint lobby_id) {
+void Server::sendGameStarting(uint32_t lobby_id) {
     std::println(
         "[Server] sendGameStarting: Broadcasting GAME_STARTING to lobby {}",
         lobby_id);
@@ -179,7 +179,7 @@ void Server::sendGameStarting(uint lobby_id) {
     std::println("[Server] sendGameStarting: Broadcast complete");
 }
 
-void Server::sendPlayersListUnsafe(uint lobby_id) {
+void Server::sendPlayersListUnsafe(uint32_t lobby_id) {
     if (lobbies.find(lobby_id) == lobbies.end()) {
         std::println("[Server::sendPlayersListUnsafe] Lobby not found");
         return;
@@ -209,7 +209,7 @@ void Server::sendPlayersListUnsafe(uint lobby_id) {
     lobbies.at(lobby_id).getLobby().setPlayers(msg.players);
 }
 
-void Server::sendPlayersList(uint lobby_id) {
+void Server::sendPlayersList(uint32_t lobby_id) {
     std::println("[Server::sendPlayersList] Entering for lobby {}", lobby_id);
     std::lock_guard<std::mutex> lock(lobbies_mutex);
     std::println("[Server::sendPlayersList] Lock acquired");
@@ -219,13 +219,13 @@ void Server::sendPlayersList(uint lobby_id) {
     std::println("[Server::sendPlayersList] Completed");
 }
 
-void Server::sendLobbyVisibilityChanged(uint lobby_id, bool is_public) {
+void Server::sendLobbyVisibilityChanged(uint32_t lobby_id, bool is_public) {
     net::LOBBY_VISIBILITY_CHANGED msg;
     msg.is_public = is_public ? 1 : 0;
     broadcastToLobby(lobby_id, msg.serialize());
 }
 
-void Server::sendLobbyDestroyed(uint lobby_id) {
+void Server::sendLobbyDestroyed(uint32_t lobby_id) {
     net::LOBBY_DESTROYED msg;
     broadcastToLobby(lobby_id, msg.serialize());
 }
@@ -255,12 +255,12 @@ void Server::sendPlayersNotInTeam(const net::Address& address) {
     sendTo(address, msg.serialize());
 }
 
-void Server::sendAdminGamePaused(uint lobby_id) {
+void Server::sendAdminGamePaused(uint32_t lobby_id) {
     net::ADMIN_GAME_PAUSED msg;
     broadcastToLobby(lobby_id, msg.serialize());
 }
 
-void Server::sendGameEnded(uint lobby_id) {
+void Server::sendGameEnded(uint32_t lobby_id) {
     std::println(
         "[Server] sendGameEnded: Broadcasting GAME_END to lobby {}",
         lobby_id);
@@ -271,7 +271,7 @@ void Server::sendGameEnded(uint lobby_id) {
     std::println("[Server] sendGameEnded: Broadcast complete");
 }
 
-void Server::sendPlayersInit(uint lobby_id) {
+void Server::sendPlayersInit(uint32_t lobby_id) {
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
 
@@ -286,7 +286,7 @@ void Server::sendPlayersInit(uint lobby_id) {
 }
 
 
-void Server::sendBuildingsInit(uint lobby_id) {
+void Server::sendBuildingsInit(uint32_t lobby_id) {
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
 

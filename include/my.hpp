@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** GameTwo
 ** File description:
-** my.hpp
+** my.hpp  ... tek1 nostalgie
 */
 
 #pragma once
@@ -23,7 +23,7 @@ static const std::array<std::string, NB_CHAMPIONS> CHAMPIONS = {
     "Gules",
     "Goatier",
     "TTheodore",
-    "",
+    "Crloy",
     "",
     "",
     "",
@@ -61,9 +61,9 @@ static const std::array<std::pair<std::string, mat::Vector2f>, NB_BUILDINGS> BUI
 
   #define NB_CREATURES 4
 static const std::array<std::pair<std::string, mat::Vector2f>, NB_CREATURES> CREATURES = {{
-    {"range_blue_creap", mat::Vector2f(1400.0f, 1200.0f)},
-    {"range_blue_creap", mat::Vector2f(1400.0f, 2400.0f)},
+    {"range_blue_creap_top", mat::Vector2f(1420.0f, 1200.0f)},
+    {"range_blue_creap_down", mat::Vector2f(1420.0f, 2400.0f)},
 
-    {"range_red_creap", mat::Vector2f(6792.0f, 1200.0f)},
-    {"range_red_creap", mat::Vector2f(6792.0f, 2400.0f)},
+    {"range_red_creap", mat::Vector2f(6772.0f, 1200.0f)},
+    {"range_red_creap", mat::Vector2f(6772.0f, 2400.0f)},
 }};

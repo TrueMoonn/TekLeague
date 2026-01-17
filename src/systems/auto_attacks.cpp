@@ -33,7 +33,7 @@ void autoAttacks(Game &game) {
             ECS::IndexedDenseZipper(positions, teams, aas, spools)) {
             for (auto&& [e2, pos2, team2, _] :
                 ECS::IndexedDenseZipper(positions, teams, healths)) {
-                if (!aa.automatic || team1.name == team2.name)
+                if (!aa.automatic || team1.name == team2.name || !positions.hasComponent(e2))
                     continue;
                 if (sqrtf(pow(pos1.x - pos2.x, 2) +
                     pow(pos1.y - pos2.y, 2)) < spool.atk_range) {

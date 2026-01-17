@@ -5,15 +5,34 @@ project(TekLeague)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+endif()
 set(GAME_SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 set(GAME_HDR_DIR "${PROJECT_SOURCE_DIR}/include")
-set(TE_PLUGIN_PATH "${PROJECT_SOURCE_DIR}/TrueEngine/plugins")
+set(TE_PLUGIN_PATH "${PROJECT_SOURCE_DIR}/Release")
+
+if(WIN32)
+    add_compile_definitions(NOMINMAX)
+    add_compile_definitions(WIN32_LEAN_AND_MEAN)
+    add_compile_definitions(_WINSOCK_DEPRECATED_NO_WARNINGS)
+endif()
 
 ########## PROTOCOL GENERATION ##########
 message(STATUS "Generating protocol files...")
+## Cross-platform Python interpreter detection
+if(CMAKE_VERSION VERSION_LESS 3.12)
+    find_package(PythonInterp REQUIRED)
+    set(PYTHON_EXE ${PYTHON_EXECUTABLE})
+else()
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    set(PYTHON_EXE ${Python3_EXECUTABLE})
+endif()
+
 execute_process(
-    COMMAND python3 ${PROJECT_SOURCE_DIR}/TrueEngine/Network/tools/generate_protocol.py ${PROJECT_SOURCE_DIR}/config/protocol.json
+    COMMAND ${PYTHON_EXE} ${PROJECT_SOURCE_DIR}/TrueEngine/Network/tools/generate_protocol.py ${PROJECT_SOURCE_DIR}/config/protocol.json
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/TrueEngine/Network
     RESULT_VARIABLE PROTOCOL_RESULT
 )
@@ -26,6 +45,7 @@ endif()
 
 ########## TRUE ENGINE ##########
 set(USE_CUSTOM_PROTOCOL ON CACHE BOOL "Use TekLeague protocol" FORCE)
+set(TE_HDR_DIR "${PROJECT_SOURCE_DIR}/TrueEngine/include")
 add_subdirectory(TrueEngine)
 
 ########## COMMUN ##########
@@ -72,7 +92,6 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/systems/track_target.cpp
     ${GAME_SRC_DIR}/systems/deal_damage.cpp
     ${GAME_SRC_DIR}/systems/kill_all_entity.cpp
-    ${GAME_SRC_DIR}/systems/TrackStat.cpp
     ${GAME_SRC_DIR}/systems/updateSticky.cpp
     ${GAME_SRC_DIR}/systems/minions_mov.cpp
     ${GAME_SRC_DIR}/systems/targeted_damage.cpp
