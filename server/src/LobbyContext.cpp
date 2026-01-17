@@ -80,19 +80,20 @@ void LobbyContext::createPlayersEntities() {
 
         _player_entities[player.id] = e;
 
-        for (auto& plist : game.getPlayers()) {
-            teams.getComponent(e).name = TEAMS[plist.team];
-            if (plist.team == 1) {
-                positions.getComponent(e).x = BLUE_POS_X;
-                positions.getComponent(e).y = BLUE_POS_Y;
-                targets.getComponent(e).x = BLUE_POS_X;
-                targets.getComponent(e).y = BLUE_POS_Y;
-            } else {
-                positions.getComponent(e).x = RED_POS_X;
-                positions.getComponent(e).y = RED_POS_Y;
-                targets.getComponent(e).x = RED_POS_X;
-                targets.getComponent(e).y = RED_POS_Y;
-            }
+        std::size_t team_idx =
+            (player.team < TEAMS.size()) ? player.team : 2;
+        teams.getComponent(e).name = TEAMS[team_idx];
+
+        if (team_idx == 1) {  // blue
+            positions.getComponent(e).x = BLUE_POS_X;
+            positions.getComponent(e).y = BLUE_POS_Y;
+            targets.getComponent(e).x = BLUE_POS_X;
+            targets.getComponent(e).y = BLUE_POS_Y;
+        } else {  // red
+            positions.getComponent(e).x = RED_POS_X;
+            positions.getComponent(e).y = RED_POS_Y;
+            targets.getComponent(e).x = RED_POS_X;
+            targets.getComponent(e).y = RED_POS_Y;
         }
     }
 }
