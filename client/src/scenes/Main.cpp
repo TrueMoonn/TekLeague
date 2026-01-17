@@ -5,6 +5,8 @@
 ** Main.cpp
 */
 
+#include <print>
+
 #include <SFML/Graphics/Drawable.hpp>
 #include <events.hpp>
 #include <ECS/DenseZipper.hpp>
@@ -12,7 +14,6 @@
 #include <sfml/components/focus.hpp>
 #include <sfml/components/drawable.hpp>
 #include <Network/generated_messages.hpp>
-#include <print>
 
 #include "scenes/main.hpp"
 #include "scenes.hpp"

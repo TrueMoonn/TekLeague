@@ -7,6 +7,7 @@
 
 #include <print>
 #include <vector>
+#include <string>
 
 #include "components/competences/spells.hpp"
 

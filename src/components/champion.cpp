@@ -5,6 +5,8 @@
 ** champion.cpp
 */
 
+#include <string>
+
 #include "components/champion.hpp"
 #include "ECS/Entity.hpp"
 

@@ -7,6 +7,7 @@
 
 #pragma once
 
+    #include <string>
     #include <vector>
 
     #include <clock.hpp>
@@ -61,7 +62,8 @@ struct Spell {
 };
 
 struct Spells {
-    Spells(const std::vector<std::size_t>& spellid) : spell_id(spellid) {}
+    explicit Spells(const std::vector<std::size_t>& spellid) :
+        spell_id(spellid) {}
     std::vector<std::size_t> spell_id;
 };
 

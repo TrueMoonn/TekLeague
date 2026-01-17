@@ -7,9 +7,10 @@
 
 #pragma once
 
-    #include "maths/Vector.hpp"
     #include <array>
     #include <string>
+
+    #include "maths/Vector.hpp"
 
     #define BLUE_POS_X 750
     #define BLUE_POS_Y 1800
@@ -47,9 +48,10 @@ enum class ActionIG {
     SHOP,
 };
 
- #define NB_BUILDINGS 6
+#define NB_BUILDINGS 6
 
-static const std::array<std::pair<std::string, mat::Vector2f>, NB_BUILDINGS> BUILDINGS = {{
+static const std::array<std::pair<std::string,
+    mat::Vector2f>, NB_BUILDINGS> BUILDINGS = {{
     {"tower_blue", mat::Vector2f(1400.0f, 1200.0f)},
     {"tower_blue", mat::Vector2f(1100.0f, 1800.0f)},
     {"tower_blue", mat::Vector2f(1400.0f, 2400.0f)},

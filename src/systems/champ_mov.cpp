@@ -37,7 +37,8 @@ void championMovement(Game &game) {
                     champ.state = ChampState::IDLE;
                     if (anim.curAnim != cframe) {
                         anim.curAnim = cframe;
-                        anim.timestamp.delay = anim.frameInfos[cframe].frameDELAY;
+                        anim.timestamp.delay =
+                            anim.frameInfos[cframe].frameDELAY;
                     }
                     continue;
                 }

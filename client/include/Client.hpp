@@ -8,6 +8,8 @@
 #pragma once
 
 #include <optional>
+#include <string>
+#include <vector>
 
 #include <maths/Vector.hpp>
 #include <network1/GameClient.hpp>
@@ -74,6 +76,7 @@ class Client : public Game, public te::network::GameClient {
 
     mat::Vector2i mpos;
     te::Timestamp inputLimit{0.08f};
+
  private:
     std::string _username;
     uint32_t _client_id = 0;
