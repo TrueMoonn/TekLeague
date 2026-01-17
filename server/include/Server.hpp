@@ -151,6 +151,8 @@ class Server : public te::network::GameServer {
         const net::Address& sender);
     void handleDisconnection(const std::vector<uint8_t>& data,
         const net::Address& sender);
+    void handlePacketLoss(const std::vector<uint8_t>& data,
+        const net::Address& sender);
 
     ////// Senders //////
     void sendPing(const net::Address& address, uint32_t client_id);
