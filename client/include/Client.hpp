@@ -9,9 +9,12 @@
 
 #include <optional>
 
+#include <maths/Vector.hpp>
+#include <network1/GameClient.hpp>
+
 #include "Game.hpp"
 #include "Network/generated_messages.hpp"
-#include <network1/GameClient.hpp>
+#include "clock.hpp"
 
 class Client : public Game, public te::network::GameClient {
  public:

@@ -179,6 +179,7 @@ std::string Server::generateUniqueLobbyCode() {
 void Server::run() {
     std::println("[Server::run] Starting main loop");
     int loop_count = 0;
+    te::Timestamp bandwidthCheck = te::Timestamp(1.0f / 1.0f);
 
     try {
         while (isRunning() && _should_run.load()) {
@@ -187,6 +188,9 @@ void Server::run() {
                     "[Server::run] Shutdown signal received, exiting loop");
                 break;
             }
+
+            if (bandwidthCheck.checkDelay())
+                evalBandwidthUsage();
 
             // Run game logic for each lobby
             try {
