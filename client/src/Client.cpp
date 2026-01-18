@@ -324,7 +324,7 @@ void Client::run() {
             runSystems();
 
         // Small sleep to avoid burning CPU
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     std::println("[Client] Main game loop ended");
 }
