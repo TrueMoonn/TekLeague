@@ -22,7 +22,7 @@
 #include "maths/Vector.hpp"
 
 void trackTarget(Game& game) {
-    game.createSystem("entity_direction", [&game](ECS::Registry&) {
+    game.createSystem("track_target", [&game](ECS::Registry&) {
         auto& targets = game.getComponent<Target>();
         auto& stats = game.getComponent<StatPool>();
         auto& spells = game.getComponent<Spell>();
@@ -100,5 +100,5 @@ void trackTarget(Game& game) {
             vel.x = dir.x * spell.spellSpeed;
             vel.y = dir.y * spell.spellSpeed;
         }
-    });
+    }, false);
 }

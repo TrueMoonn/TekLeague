@@ -1,6 +1,7 @@
 [ENTITIES.Gules]
 position2 = true
 target = true
+movable = true
 
 [ENTITIES.Gules.champion]
 name = "Gules"
@@ -8,6 +9,10 @@ name = "Gules"
 [ENTITIES.Gules.attack]
 name = "gules_aa"
 auto = false
+
+[ENTITIES.Gules.circle_hitbox]
+radius = 20
+pushback = true
 
 [ENTITIES.Gules.team]
 name = ""
@@ -32,8 +37,8 @@ amount = 0
 [ENTITIES.Gules.hitbox]
 left = 0.0
 top = 0.0
-width = 144.3
-height = 192.3
+width = 258
+height = 430
 
 [ENTITIES.Gules.stat_pool]
 ad = 67

@@ -19,7 +19,11 @@ static const std::vector<std::string> CONFIG_PATHS {
     //
     "assets/configs/buildings/tower.toml",
     "assets/configs/buildings/nexus.toml",
-    "assets/configs/creatures/nash.toml"
+    "assets/configs/creatures/nash.toml",
+    "assets/configs/creaps/range_blue_creap_down.toml",
+    "assets/configs/creaps/range_blue_creap_top.toml",
+    "assets/configs/creaps/range_red_creap.toml",
+    "assets/configs/misc/collisions.toml",
 };
 
 static const std::vector<std::string> CLIENT_CONFIG_PATHS {
@@ -36,6 +40,7 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
 
     /* === UI === */
     "client/assets/configs/ui/buttons.toml",
+    "client/assets/configs/ui/health_bar.toml",
     "client/assets/configs/ui/logo.toml",
     "client/assets/configs/ui/backgrounds.toml",
     "client/assets/configs/ui/text_input.toml",
@@ -50,6 +55,10 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     "client/assets/configs/ui/parameters/button.toml",
     /* == End Game == */
     "client/assets/configs/ui/end_game.toml",
+
+    "client/assets/configs/creaps/range_red_creap.toml",
+    "client/assets/configs/creaps/range_blue_creap_top.toml",
+    "client/assets/configs/creaps/range_blue_creap_down.toml",
     /* == Buildings == */
     "client/assets/configs/buildings/tower.toml",
     "client/assets/configs/buildings/nexus.toml",

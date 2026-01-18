@@ -17,6 +17,7 @@ drawable = true
 path = "client/assets/images/buildings/tower_red_top.png"
 size = [575, 1459]
 origin = [287.5, 729.5]
+center = true
 scale = [171, 378]
 layer = 10
 
@@ -35,6 +36,25 @@ layer = 10
 frames = [
     [[0, 0], 3, 0.4, true]
 ]
+
+[ENTITIES.tower_projectiles_explosion]
+drawable = true
+
+[ENTITIES.tower_projectiles_explosion.sprite]
+path = "client/assets/images/buildings/boom.png"
+center = true
+size = [128, 128]
+scale = [256, 256]
+layer = 11
+
+[ENTITIES.tower_projectiles_explosion.animation]
+frames = [
+    [[0, 0], 10, 0.2, false]
+]
+
+[ENTITIES.tower_projectiles_explosion.sound]
+path = "client/assets/audio/boom.mp3"
+play = true
 
 #------------------------------
 

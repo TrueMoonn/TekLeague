@@ -71,5 +71,5 @@ void championMovement(Game &game) {
                 anim.timestamp.delay = anim.frameInfos[cframe].frameDELAY;
             }
         }
-    });
+    }, false);
 }

@@ -20,6 +20,8 @@
 
 #include "Client.hpp"
 #include "Network/generated_messages.hpp"
+#include "components/ui/game/sticky.hpp"
+#include "components/ui/game/track_stat.hpp"
 #include "components/stats/health.hpp"
 #include "components/stats/mana.hpp"
 #include "components/stats/xp.hpp"
@@ -151,12 +153,31 @@ void Client::handlePong() {
     // TODO(PIERRE): si ca fait longtemps = deco
 }
 
+void handleHealthBar(Game &game, ECS::Entity targetId) {
+    auto& health = game.getComponent<Health>();
+    auto& sticky = game.getComponent<Sticky>();
+    auto& trackstat = game.getComponent<TrackStat>();
+
+    std::cerr << "Entering health bar" << std::endl;
+    if (!health.hasComponent(targetId))
+        return;
+    std::cerr << "Creating health bar" << std::endl;
+    auto barId = game.nextEntity(eType::HUD);
+    game.createEntity(barId, "health_bar");
+    if (!sticky.hasComponent(barId) || !trackstat.hasComponent(barId))
+        return;
+    std::cerr << "Computing health bar" << std::endl;
+    sticky.getComponent(barId).id = targetId;
+    trackstat.getComponent(barId).id = targetId;
+}
+
 void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
     auto& targets = getComponent<Target>();
     auto& teams = getComponent<addon::eSpec::Team>();
     for (auto& player : msg.players) {
         ECS::Entity e = player.entity;
         createEntity(e, CHAMPIONS[player.champ], {player.x, player.y});
+        handleHealthBar(*this, e);
         targets.getComponent(e).x = player.x;
         targets.getComponent(e).y = player.y;
         teams.getComponent(e).name = TEAMS[player.team];
@@ -199,6 +220,7 @@ void Client::handleBuildingsInit(const net::BUILDINGS_INIT& msg) {
         }
 
         createEntity(e, prefab, {building.x, building.y});
+        //handleHealthBar(*this, e);
 
         teams.getComponent(e).name = TEAMS[building.team];
         positions.getComponent(e).x = building.x + visualOffset.x;
@@ -259,9 +281,32 @@ void Client::handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg) {
     }
 }
 
+void Client::handleCreaturesUpdate(const net::CREATURES_UPDATES& msg) {
+    auto& healths = getComponent<Health>();
+    auto& positions = getComponent<addon::physic::Position2>();
+    auto& velocitys = getComponent<addon::physic::Velocity2>();
+
+    for (auto& creatures : msg.creatures) {
+        ECS::Entity e = creatures.entity;
+        if (healths.hasComponent(e)) {
+            healths.getComponent(e).amount = creatures.hp;
+        }
+        if (positions.hasComponent(e)) {
+            positions.getComponent(e).x = creatures.x;
+            positions.getComponent(e).y = creatures.y;
+        }
+        if (velocitys.hasComponent(e)) {
+            velocitys.getComponent(e).x = creatures.vel_x;
+            velocitys.getComponent(e).y = creatures.vel_y;
+        }
+    }
+}
+
 void Client::handleEntitiesCreated(const net::ENTITIES_CREATED& msg) {
-    for (auto& entity : msg.entities)
+    for (auto& entity : msg.entities) {
         createEntity(entity.entity, entity.type, {entity.x, entity.y});
+        //handleHealthBar(*this, entity.entity);
+    }
 }
 
 void Client::handleEntitiesDestroyed(const net::ENTITIES_DESTROYED& msg) {

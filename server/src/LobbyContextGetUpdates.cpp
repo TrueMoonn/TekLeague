@@ -187,9 +187,10 @@ net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
     auto& game = getLobby();
     auto& healths = game.getComponent<Health>();
     auto& positions = game.getComponent<addon::physic::Position2>();
+    auto& velocitys = game.getComponent<addon::physic::Velocity2>();
 
-    for (auto&& [entity, position, health] :
-        ECS::IndexedDenseZipper(positions, healths)) {
+    for (auto&& [entity, position, health, vel] :
+        ECS::IndexedDenseZipper(positions, healths, velocitys)) {
         if (entity < eField::CREATURES_BEGIN)
             continue;
         if (entity > eField::CREATURES_END)
@@ -200,6 +201,8 @@ net::CREATURES_UPDATES LobbyContext::getCreaturesUpdates() {
         state.entity = static_cast<uint32_t>(entity);
         state.x = position.x;
         state.y = position.y;
+        state.vel_x = vel.x;
+        state.vel_y = vel.y;
         state.hp = health.amount;
         msg.creatures.push_back(state);
     }

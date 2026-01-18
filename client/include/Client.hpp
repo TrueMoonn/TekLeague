@@ -7,16 +7,16 @@
 
 #pragma once
 
-#include <optional>
-#include <string>
-#include <vector>
+    #include <optional>
+    #include <string>
+    #include <vector>
 
-#include <maths/Vector.hpp>
-#include <network1/GameClient.hpp>
+    #include "Game.hpp"
+    #include "Network/generated_messages.hpp"
+    #include "clock.hpp"
 
-#include "Game.hpp"
-#include "Network/generated_messages.hpp"
-#include "clock.hpp"
+    #include <maths/Vector.hpp>
+    #include <network1/GameClient.hpp>
 
 class Client : public Game, public te::network::GameClient {
  public:
@@ -121,4 +121,5 @@ class Client : public Game, public te::network::GameClient {
     void handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg);
     void handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg);
     void handleSpellCast(const net::SPELL_CAST& msg);
+    void handleCreaturesUpdate(const net::CREATURES_UPDATES& msg);
 };

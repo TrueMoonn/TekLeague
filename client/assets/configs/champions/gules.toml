@@ -17,8 +17,11 @@ drawable = true
 path = "client/assets/images/champions/gules/Gules.png"
 size = [387, 644]
 scale = [258, 430]
-origin = [193.5, 420]
+origin = [193.5, 322]
 layer = 10
+
+[ENTITIES.Gules.on_death]
+entity = "dead_gules"
 
 [ENTITIES.Gules.animation]
 frames = [
@@ -84,3 +87,5 @@ size = [644, 644]
 scale = [50, 50]
 origin = [193.5, 322]
 layer = 10
+
+# -----------------------------

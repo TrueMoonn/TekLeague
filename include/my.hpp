@@ -59,3 +59,12 @@ static const std::array<std::pair<std::string,
     {"nexus_blue", mat::Vector2f(BLUE_POS_X - 200.0f, BLUE_POS_Y)},
     {"nexus_red", mat::Vector2f(RED_POS_X + 500.0f, RED_POS_Y)}
 }};
+
+  #define NB_CREATURES 4
+static const std::array<std::pair<std::string, mat::Vector2f>, NB_CREATURES> CREATURES = {{
+    {"range_blue_creap_top", mat::Vector2f(1420.0f, 1200.0f)},
+    {"range_blue_creap_down", mat::Vector2f(1420.0f, 2400.0f)},
+
+    {"range_red_creap", mat::Vector2f(6772.0f, 1200.0f)},
+    {"range_red_creap", mat::Vector2f(6772.0f, 2400.0f)},
+}};

@@ -191,5 +191,5 @@ void targetedDamage(Game& game) {
                 }
             }
         }
-    });
+    }, false);
 }

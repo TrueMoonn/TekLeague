@@ -1,0 +1,32 @@
+
+[ENTITIES.health_bar]
+position2 = true
+drawable = true
+
+[ENTITIES.health_bar.sticky]
+offset = [0, -60]
+
+[ENTITIES.health_bar.sprite]
+path = "client/assets/images/ui/game/health.png"
+size = [349, 56]
+scale = [116, 19]
+origin = [175, 25]
+layer = 11
+
+[ENTITIES.health_bar.animation]
+frames = [
+    [[0, 10], 1, 0.4, false],
+    [[0, 9], 1, 0.4, false],
+    [[0, 8], 1, 0.4, false],
+    [[0, 7], 1, 0.4, false],
+    [[0, 6], 1, 0.4, false],
+    [[0, 5], 1, 0.4, false],
+    [[0, 4], 1, 0.4, false],
+    [[0, 3], 1, 0.4, false],
+    [[0, 2], 1, 0.4, false],
+    [[0, 1], 1, 0.4, false],
+    [[0, 0], 1, 0.4, false],
+]
+
+[ENTITIES.health_bar.track_stat]
+stat = "health"

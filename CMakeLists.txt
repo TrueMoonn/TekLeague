@@ -56,6 +56,8 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/components/building.cpp
     ${GAME_SRC_DIR}/components/champion.cpp
     ${GAME_SRC_DIR}/components/gules.cpp
+    ${GAME_SRC_DIR}/components/circle_hitbox.cpp
+    ${GAME_SRC_DIR}/components/on_death.cpp
 
     ${GAME_SRC_DIR}/components/competences/target.cpp
     ${GAME_SRC_DIR}/components/competences/auto_attack.cpp
@@ -72,11 +74,15 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/components/stats/gold.cpp
 
     ${GAME_SRC_DIR}/components/ui/button.cpp
+    ${GAME_SRC_DIR}/components/ui/game/sticky.cpp
+    ${GAME_SRC_DIR}/components/ui/game/track_stat.cpp
     ${GAME_SRC_DIR}/components/stats/stat_pool.cpp
     ${GAME_SRC_DIR}/components/items/inventory.cpp
     ${GAME_SRC_DIR}/components/items/item.cpp
     ${GAME_SRC_DIR}/components/competences/target.cpp
     ${GAME_SRC_DIR}/components/competences/auto_track.cpp
+    ${GAME_SRC_DIR}/components/minions/minions.cpp
+    ${GAME_SRC_DIR}/components/minions/minionsRoute.cpp
 
     # SPELLS
     ${GAME_SRC_DIR}/spells/goatier_spell1.cpp
@@ -90,7 +96,11 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/systems/auto_attacks.cpp
     ${GAME_SRC_DIR}/systems/track_target.cpp
     ${GAME_SRC_DIR}/systems/deal_damage.cpp
+    ${GAME_SRC_DIR}/systems/circle_pushback.cpp
+    ${GAME_SRC_DIR}/systems/handle_timeout.cpp
+    ${GAME_SRC_DIR}/systems/spawn_death_entity.cpp
     ${GAME_SRC_DIR}/systems/kill_all_entity.cpp
+    ${GAME_SRC_DIR}/systems/minions_mov.cpp
     ${GAME_SRC_DIR}/systems/targeted_damage.cpp
 )
 

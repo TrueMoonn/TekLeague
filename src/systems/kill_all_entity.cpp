@@ -19,5 +19,5 @@ void killAllEntity(Game &game) {
         for (auto& e : game.getAllEntityToKill()) {
             game.removeEntity(e);
         }
-    });
+    }, false);
 }

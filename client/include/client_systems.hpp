@@ -11,13 +11,20 @@
     #include <functional>
 
     #include "Client.hpp"
+    #include "configs/systems.hpp"
 
 void championMovement(Game&);
 void buttonStates(Client&);
 void updateHud(Client&);
+void updateSticky(Game& game);
+void trackStats(Game& game);
+void minionsMovement(Game &game);
 
 static const std::vector<std::function<void(Client&)>> CLIENT_SYSTEMS = {
     &buttonStates,
+    &trackStats,
     &championMovement,
     &updateHud,
+    &updateSticky,
+    &minionsMovement,
 };

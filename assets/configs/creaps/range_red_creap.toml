@@ -1,0 +1,44 @@
+[ENTITIES.range_red_creap]
+position2 = true
+target = true
+clickable = true
+
+[ENTITIES.range_red_creap.velocity2]
+x = 0
+y = 0
+
+[ENTITIES.range_red_creap.attack]
+name = "tower_projectile"
+auto = true
+
+[ENTITIES.range_red_creap.minions]
+name = "range_red"
+
+[ENTITIES.range_red_creap.team]
+name = "red"
+
+[ENTITIES.range_red_creap.health]
+amount = 1
+max = 200
+regen = 3
+
+[ENTITIES.range_red_creap.mana]
+amount = 1
+max = 200
+regen = 3
+
+[ENTITIES.range_red_creap.stat_pool]
+ad = 3
+ap = 0
+atk_speed = 3
+atk_range = 50
+cdr = 0
+armor = 34
+magic_resist = 25
+mov_speed = 200
+
+[ENTITIES.range_red_creap.minion_route]
+direction1 = [6792, 1000]
+direction2 = [6192, 700]
+direction3 = [4096, 1480]
+direction4 = [2000, 700]

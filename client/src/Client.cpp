@@ -280,9 +280,9 @@ void Client::registerMessageHandlers() {
     });
 
     registerPacketHandler(63, [this](const std::vector<uint8_t>& data) {
-        std::println("[Client] Received BUILDINGS_UPDATES packet");
-        auto msg = net::BUILDINGS_UPDATES::deserialize(data);
-        handleBuildingsUpdate(msg);
+        std::println("[Client] Received CREATURES_UPDATES packet");
+        auto msg = net::CREATURES_UPDATES::deserialize(data);
+        handleCreaturesUpdate(msg);
     });
 
     registerPacketHandler(64, [this](const std::vector<uint8_t>& data) {

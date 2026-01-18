@@ -14,6 +14,9 @@ add_executable(${PROJECT_NAME}
     # SYSTEMS
     ${GAME_CLIENT_SRC_DIR}/systems/update_button.cpp
     ${GAME_CLIENT_SRC_DIR}/systems/update_hud.cpp
+    ${GAME_CLIENT_SRC_DIR}/systems/minions_animation.cpp
+    ${GAME_CLIENT_SRC_DIR}/systems/track_stat.cpp
+    ${GAME_CLIENT_SRC_DIR}/systems/updateSticky.cpp
 
     # SCENES
     ${GAME_CLIENT_SRC_DIR}/scenes/Main.cpp
