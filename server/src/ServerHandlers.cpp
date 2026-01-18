@@ -320,6 +320,7 @@ void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
     // lobbies.at(lobby_id).getLobby().startGame();
     lobbies.at(lobby_id).createPlayersEntities();
     lobbies.at(lobby_id).createOtherEntities();
+    lobbies.at(lobby_id).createCollisionBoxes();
     sendPlayersInit(lobby_id);
     sendBuildingsInit(lobby_id);
 }

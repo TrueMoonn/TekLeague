@@ -99,6 +99,7 @@ class LobbyContext {
     bool isFull() const;
     void createPlayersEntities();
     void createOtherEntities();
+    void createCollisionBoxes();
 
     /**
      * @brief Get the entity associated with a player's client ID

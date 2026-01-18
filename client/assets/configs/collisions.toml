@@ -1,7 +1,0 @@
-[ENTITIES.circle_collisions]
-drawable = true
-
-[ENTITIES.circle_collisions.sprite]
-path = "client/assets/images/circle.png"
-scale = [200, 400]
-origin = [200, 200]
