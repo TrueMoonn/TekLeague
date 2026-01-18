@@ -74,7 +74,6 @@ void LobbyContext::spawnNash() {
     game.createEntity(e, "nash", {8192 / 2, 400});
     game.entities_queue.emplace_back(e, "nash");
     lobby.run();
-    SpawnCreeps();
 }
 
 void LobbyContext::SpawnCreeps() {
