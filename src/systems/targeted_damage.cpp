@@ -15,6 +15,7 @@
 #include "components/stats/health.hpp"
 #include "components/competences/spells.hpp"
 #include "components/competences/target.hpp"
+#include "components/building.hpp"
 #include "components/stats/stat_pool.hpp"
 #include "configs/systems.hpp"
 #include "maths/Rect.hpp"
@@ -44,6 +45,7 @@ void targetedDamage(Game& game) {
         auto& healths = game.getComponent<Health>();
         auto& teams = game.getComponent<addon::eSpec::Team>();
         auto& stats = game.getComponent<StatPool>();
+        auto& buildings = game.getComponent<Building>();
 
         auto explodeAt = [&](ECS::Entity proj,
             const addon::physic::Position2& pos, Spell& spell,
@@ -62,6 +64,10 @@ void targetedDamage(Game& game) {
                     if (enemy_team.name == projectile_team.name)
                         continue;
                     if (enemy_e == ignored)
+                        continue;
+                    if (buildings.hasComponent(enemy_e))
+                        continue;
+                    if (spells.hasComponent(enemy_e))
                         continue;
 
                     float dist_to_enemy = std::sqrt(
@@ -103,6 +109,10 @@ void targetedDamage(Game& game) {
                         ECS::IndexedDenseZipper(positions, teams, hitboxes)) {
                         if (enemy_team.name == projectile_team.name)
                             continue;
+                        if (buildings.hasComponent(enemy_e))
+                            continue;
+                        if (spells.hasComponent(enemy_e))
+                            continue;
 
                         mat::RectF enemy_rect = rectFrom(enemy_pos, enemy_hit);
                         if (intersects(proj_rect, enemy_rect)) {
@@ -131,6 +141,10 @@ void targetedDamage(Game& game) {
                         continue;
                     if (healths.hasComponent(tag.to_attack) &&
                         stats.hasComponent(spell.from)) {
+                        if (buildings.hasComponent(tag.to_attack))
+                            continue;
+                        if (spells.hasComponent(tag.to_attack))
+                            continue;
                         auto& st = stats.getComponent(spell.from);
                         auto& target_health = healths.getComponent(tag.to_attack);
                         target_health.reduceSafely(spell.base +
