@@ -40,6 +40,7 @@ void trackTarget(Game& game) {
                     dist = std::sqrt(std::pow(pos.x - destination.x, 2) +
                         std::pow(pos.y - destination.y, 2));
                 } else {
+                    tag.to_attack = 0;
                     continue;
                 }
                 if (dist <= stat.atk_range) {
@@ -74,7 +75,7 @@ void trackTarget(Game& game) {
                     continue;
                 }
             }
-            mat::Vector2f dir(tag - pos);
+            mat::Vector2f dir(destination - pos);
             float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
             dir /= length;
             vel.x = dir.x * stat.mov_speed;
