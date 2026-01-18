@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics/Text.hpp>
 #include <cstddef>
+#include <string>
 #include <events.hpp>
 #include <sfml/components/text.hpp>
 #include <interaction/components/clickable.hpp>
@@ -24,6 +25,8 @@ static void updateLobbyInfos(Client &game) {
     auto& texts = game.getComponent<addon::sfml::Text>();
     auto& draws = game.getComponent<addon::sfml::Drawable>();
     auto& buttons = game.getComponent<Button>();
+    const std::string code = game.getCode();
+    texts.getComponent(LOBBY_CODE).setString(code.empty() ? "CODE: ------" : "CODE: " + code);
     if (game.isAdmin() && !draws.hasComponent(LOBBY_LAUNCH_GAME)) {
         game.createComponent<addon::sfml::Drawable>(LOBBY_LAUNCH_GAME);
         game.createComponent<Button>(LOBBY_LAUNCH_GAME);
@@ -79,6 +82,7 @@ void setInLobbyScene(Client& game) {
         {LOBBY_SELECT_TEAM_RED, "select_red", {1100.f, 320.f}},
         {LOBBY_LAUNCH_GAME, "launch_game", {1140.f, 750.f}},
         {LOBBY_SELECT_CHAMP, "champ_selection", {560.f, 740.f}},
+        {LOBBY_CODE, "lobby_code", {960.0f, 320.0f}},
     };
 
     inlobby.on_activate = [&game]() {

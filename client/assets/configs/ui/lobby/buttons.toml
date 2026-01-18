@@ -307,3 +307,15 @@ button = true
     size = 20
     center = true
     color = [255, 255, 255, 255]
+
+[ENTITIES.lobby_code]
+drawable = true
+position2 = true
+
+    [ENTITIES.lobby_code.text]
+    string = ""
+    font = "client/assets/images/ui/main_font.otf"
+    offset = [0, 0]
+    size = 28
+    center = true
+    color = [255, 255, 255, 255]

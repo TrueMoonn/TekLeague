@@ -56,6 +56,8 @@
         MENU_BEGIN + 20)
     #define LOBBY_SELECT_CHAMP_LIST static_cast<std::size_t>(TEMP_SCENE\
         MENU_BEGIN + 26)
+    #define LOBBY_CODE static_cast<std::size_t>(TEMP_SCENE\
+        MENU_BEGIN + 27)
 
 static const std::array<std::string, NB_CHAMPIONS> CHAMPION_PP = {
     "gules_pp",
