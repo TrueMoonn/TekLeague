@@ -24,6 +24,8 @@
 
 static void returnToMenu(Client& game) {
     game.sendLeaveLobby();
+    game.clearPlayers();
+    game.setCode("");
     game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::END_GAME));
     auto& win = game.getComponent<addon::sfml::Window>().getComponent(SYSTEM_F).win;
     win->setView(win->getDefaultView());

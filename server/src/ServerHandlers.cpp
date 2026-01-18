@@ -224,6 +224,8 @@ void Server::handleJoinLobby(const std::vector<uint8_t>& data,
 
     client.in_lobby = true;
     client.lobby_id = lobby_id;
+    client.team = 0;
+    client.champion = 0;
 
     std::println("[Server::handleJoinLobby] Sending LOBBY_JOINED to client...");
     sendLobbyJoined(sender, client.id);
@@ -259,6 +261,8 @@ void Server::handleCreateLobby(const std::vector<uint8_t>& data,
         lobby_ctx.addClient(sender, client.id);
         client.in_lobby = true;
         client.lobby_id = lobby_id;
+        client.team = 0;
+        client.champion = 0;
 
         lobby_code = lobby_ctx.getCode();
     }
@@ -378,6 +382,8 @@ void Server::handleLeaveLobby(const std::vector<uint8_t>& data,
 
     client.in_lobby = false;
     client.lobby_id = 0;
+    client.team = 0;
+    client.champion = 0;
 
     if (lobby_is_empty) {
         return;

@@ -26,7 +26,8 @@ static void updateLobbyInfos(Client &game) {
     auto& draws = game.getComponent<addon::sfml::Drawable>();
     auto& buttons = game.getComponent<Button>();
     const std::string code = game.getCode();
-    texts.getComponent(LOBBY_CODE).setString(code.empty() ? "CODE: ------" : "CODE: " + code);
+    if (texts.hasComponent(LOBBY_CODE))
+        texts.getComponent(LOBBY_CODE).setString(code.empty() ? "CODE: ------" : "CODE: " + code);
     if (game.isAdmin() && !draws.hasComponent(LOBBY_LAUNCH_GAME)) {
         game.createComponent<addon::sfml::Drawable>(LOBBY_LAUNCH_GAME);
         game.createComponent<Button>(LOBBY_LAUNCH_GAME);
