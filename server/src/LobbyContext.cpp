@@ -146,7 +146,7 @@ ECS::Entity LobbyContext::getPlayerEntity(uint32_t client_id) const {
     return it->second;
 }
 
-std::vector<uint8_t> LobbyContext::forceGetData(int8_t code) {
+std::vector<uint8_t> LobbyContext::forceGetData(uint8_t code) {
     switch (code) {
         case static_cast<uint8_t>(net::PLAYERS_UPDATES::ID):
             return getPlayerUpdates().serialize();
