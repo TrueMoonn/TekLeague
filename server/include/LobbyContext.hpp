@@ -277,12 +277,12 @@ class LobbyContext {
     bool shouldSendPlayersList();
 
     /**
-    * @brief Force get data without checking timestamp 
+    * @brief Force get data without checking timestamp
     * due to packet loss signaled by client
     * @param code The code of the missing packet
     * @return true
     */
-    std::vector<uint8_t> forceGetData(u_int8_t code);
+    std::vector<uint8_t> forceGetData(uint8_t code);
 
  private:
     Game lobby;
