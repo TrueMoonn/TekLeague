@@ -144,6 +144,12 @@
         { "name": "atk_speed", "type": "uint32" },
         { "name": "range", "type": "uint32" }
       ]
+    },
+    "SpellCast": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "spell_slot", "type": "uint8" }
+      ]
     }
   },
 
@@ -197,6 +203,13 @@
     "LOGGED_OUT": {
       "id": 23,
       "fields": [{ "name": "id", "type": "uint32" }]
+    },
+    "SPELL_CAST": {
+      "id": 90,
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "spell_slot", "type": "uint8" }
+      ]
     },
     "USERNAME_ALREADY_TAKEN": {
       "id": 25,

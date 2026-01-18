@@ -7,6 +7,11 @@
 
 #pragma once
 
+    #include <array>
+#include <vector>
+    #include <string>
+
+    #include "my.hpp"
     #include "entities.hpp"
 
     #define TEMP_SCENE 500 +
@@ -47,5 +52,14 @@
 
     #define LOBBY_SELECT_CHAMP_BG static_cast<std::size_t>(TEMP_SCENE\
         MENU_BEGIN + 19)
-    #define LOBBY_SELECT_CHAMP_LIST static_cast<std::size_t>(TEMP_SCENE\
+    #define LOBBY_SELECT_CHAMP_PP static_cast<std::size_t>(TEMP_SCENE\
         MENU_BEGIN + 20)
+    #define LOBBY_SELECT_CHAMP_LIST static_cast<std::size_t>(TEMP_SCENE\
+        MENU_BEGIN + 26)
+
+static const std::array<std::string, NB_CHAMPIONS> CHAMPION_PP = {
+    "gules_pp",
+    "goatier_pp",
+    "ttheodore_pp",
+    "croly_pp",
+};

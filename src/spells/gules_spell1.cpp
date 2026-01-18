@@ -32,6 +32,7 @@ void gulesSpell1(Game& game, ECS::Entity e, const mat::Vector2f& mpos) {
             gball.getComponent(e).idx = gball_idx;
             game.createComponent<Gball>(gball_idx, e);
             teams.getComponent(gball_idx).name = teams.getComponent(e).name;
+            spells.getComponent(gball_idx).from = e;
             game.entities_queue.emplace_back(gball_idx, "gules_ball");
         } else {
             if (!spells.getComponent(gball_idx).cooldown.checkDelay())
@@ -43,17 +44,19 @@ void gulesSpell1(Game& game, ECS::Entity e, const mat::Vector2f& mpos) {
         game.createComponent<Gball>(e, gball_idx);
         game.createComponent<Gball>(gball_idx, e);
         teams.getComponent(gball_idx).name = teams.getComponent(e).name;
+        spells.getComponent(gball_idx).from = e;
         game.entities_queue.emplace_back(gball_idx, "gules_ball");
     }
 
     auto& spell_info = spells.getComponent(gball_idx);
-    auto& pos = positions.getComponent(e);
+    auto& ball_pos = positions.getComponent(gball_idx);
     float dist =
-        std::sqrt(std::pow(mpos.x - pos.x, 2) + std::pow(mpos.y - pos.y, 2));
+        std::sqrt(std::pow(mpos.x - ball_pos.x, 2) + std::pow(mpos.y - ball_pos.y, 2));
     if ((dist > spell_info.range) ||
         manas.getComponent(e).amount < spell_info.mana_cost) {
         return;
     }
+    spells.getComponent(gball_idx).arrived = false;
     targets.getComponent(gball_idx).x = mpos.x;
     targets.getComponent(gball_idx).y = mpos.y;
 }

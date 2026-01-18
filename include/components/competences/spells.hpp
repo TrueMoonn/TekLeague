@@ -41,9 +41,10 @@ struct Spell {
     Spell(const std::string& name, std::size_t base, EffectType dtype,
         const std::array<std::size_t, DamageType::DMGLIMIT>& ratio,
         float cd, float cast, SpellTarget to, std::size_t mc,
-        std::size_t spd, std::size_t r) :
+        std::size_t spd, std::size_t r, float aoe = 0.0f, bool persist = false) :
         name(name), base(base), dmgType(dtype), ratios(ratio), cooldown(cd),
-        castTime(cast), target(to), mana_cost(mc), spellSpeed(spd), range(r) {}
+        castTime(cast), target(to), mana_cost(mc), spellSpeed(spd), range(r),
+        aoe_radius(aoe), persistent(persist) {}
 
     std::string name;
     ECS::Entity from = 0;
@@ -59,6 +60,9 @@ struct Spell {
     std::size_t spellSpeed;
     std::size_t range;
     SpellTarget target;
+    float aoe_radius;
+    bool persistent;
+    bool arrived = false;
 };
 
 struct Spells {

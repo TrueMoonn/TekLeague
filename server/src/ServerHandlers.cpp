@@ -447,12 +447,22 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
         return;
 
     uint32_t lobby_id = client.lobby_id;
+    bool send_cast = false;
+    uint8_t cast_slot = 0;
+    uint32_t cast_entity = 0;
 
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         auto& lobby_ctx = lobbies.at(lobby_id);
         auto& game = lobby_ctx.getLobby();
         auto e = lobby_ctx.getPlayerEntity(client.id);
+
+        if (e == 0)
+            return;
+
+        if (!game.getComponent<Target>().hasComponent(e) ||
+            !game.getComponent<Spells>().hasComponent(e))
+            return;
 
         if (msg.actions == static_cast<uint8_t>(ActionIG::MOVEMENT)) {
             auto& target = game.getComponent<Target>();
@@ -465,20 +475,33 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
                 getComponent(e).spell_id[0];
             SPELLS.at(static_cast<SpellId>(spell_id))(
                  game, e, {msg.mouse_x, msg.mouse_y});
+            send_cast = true;
+            cast_slot = 1;
+            cast_entity = static_cast<uint32_t>(e);
         }
         if (msg.actions == static_cast<uint8_t>(ActionIG::SPELL2)) {
             auto& spell_id = game.getComponent<Spells>().
                 getComponent(e).spell_id[1];
             SPELLS.at(static_cast<SpellId>(spell_id))(
                 game, e, {msg.mouse_x, msg.mouse_y});
+            send_cast = true;
+            cast_slot = 2;
+            cast_entity = static_cast<uint32_t>(e);
         }
         if (msg.actions == static_cast<uint8_t>(ActionIG::AA)) {
             auto& target = game.getComponent<Target>();
             target.getComponent(e).x = msg.mouse_x;
             target.getComponent(e).y = msg.mouse_y;
             target.getComponent(e).to_attack = msg.target;
+            send_cast = true;
+            cast_slot = 0;
+            cast_entity = static_cast<uint32_t>(e);
             // std::cout << "auto attack on " << msg.target << "\n";
         }
+    }
+
+    if (send_cast) {
+        sendSpellCast(lobby_id, cast_entity, cast_slot);
     }
 }
 
