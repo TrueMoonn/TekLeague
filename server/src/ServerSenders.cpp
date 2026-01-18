@@ -256,6 +256,13 @@ void Server::sendPlayersNotInTeam(const net::Address& address) {
     sendTo(address, msg.serialize());
 }
 
+void Server::sendSpellCast(uint32_t lobby_id, uint32_t entity, uint8_t spell_slot) {
+    net::SPELL_CAST msg;
+    msg.entity = entity;
+    msg.spell_slot = spell_slot;
+    broadcastToLobby(lobby_id, msg.serialize());
+}
+
 void Server::sendAdminGamePaused(uint32_t lobby_id) {
     net::ADMIN_GAME_PAUSED msg;
     broadcastToLobby(lobby_id, msg.serialize());

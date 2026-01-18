@@ -291,6 +291,12 @@ void Client::registerMessageHandlers() {
         handleProjectilesUpdate(msg);
     });
 
+    registerPacketHandler(90, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received SPELL_CAST packet");
+        auto msg = net::SPELL_CAST::deserialize(data);
+        handleSpellCast(msg);
+    });
+
     registerPacketHandler(88, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received ADMIN_GAME_PAUSED packet");
         auto msg = net::ADMIN_GAME_PAUSED::deserialize(data);
