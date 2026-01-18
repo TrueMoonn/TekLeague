@@ -115,4 +115,5 @@ class Client : public Game, public te::network::GameClient {
     void handlePlayersUpdate(const net::PLAYERS_UPDATES& msg);
     void handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg);
     void handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg);
+    void handleSpellCast(const net::SPELL_CAST& msg);
 };
