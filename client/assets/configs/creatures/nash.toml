@@ -12,3 +12,17 @@
         frames = [
             [[0, 0], 33, 0.1, true]
         ]
+
+[ENTITIES.nash_attack]
+    drawable = true
+
+    [ENTITIES.nash_attack.sprite]
+        path = "client/assets/images/buildings/tower_projectile.png"
+        size = [16, 16]
+        origin = [8, 8]
+        layer = 10
+
+    [ENTITIES.nash_attack.animation]
+        frames = [
+            [[0, 0], 3, 0.4, true]
+        ]
