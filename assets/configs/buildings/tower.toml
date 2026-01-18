@@ -13,7 +13,7 @@ name = "blue"
 name = "tower"
 
 [ENTITIES.tower_blue.stat_pool]
-ad = 0
+ad = 50
 ap = 0
 atk_speed = 1.0
 armor = 20
@@ -49,7 +49,7 @@ name = "red"
 name = "tower"
 
 [ENTITIES.tower_red.stat_pool]
-ad = 100
+ad = 50
 ap = 0
 atk_speed = 1.0
 armor = 20
