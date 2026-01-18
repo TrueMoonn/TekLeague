@@ -9,4 +9,4 @@
         name = "TekLeague"
         framelimit = 60
         size = [1920, 1080]
-        fullscreen = false
+        fullscreen = true

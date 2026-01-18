@@ -12,10 +12,12 @@
 
     #include "Client.hpp"
 
-void championMovement(Game& game);
+void championMovement(Game&);
 void buttonStates(Client&);
+void updateHud(Client&);
 
 static const std::vector<std::function<void(Client&)>> CLIENT_SYSTEMS = {
     &buttonStates,
     &championMovement,
+    &updateHud,
 };
