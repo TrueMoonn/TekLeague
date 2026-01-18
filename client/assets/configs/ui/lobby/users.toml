@@ -6,7 +6,7 @@ position2 = true
     path = "client/assets/images/ui/lobby/user_blue_side.png"
     size = [64, 20]
     scale = [380, 100]
-    layer = 21
+    layer = 19
 
     [ENTITIES.user_blue_side_lobby.text]
     string = "..."
@@ -24,7 +24,7 @@ position2 = true
     path = "client/assets/images/ui/lobby/user_red_side.png"
     size = [64, 20]
     scale = [380, 100]
-    layer = 21
+    layer = 19
 
     [ENTITIES.user_red_side_lobby.text]
     string = "..."

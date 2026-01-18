@@ -7,14 +7,16 @@
 
 #include <SFML/Graphics/Text.hpp>
 #include <cstddef>
+#include <string>
 #include <events.hpp>
 #include <sfml/components/text.hpp>
 #include <interaction/components/clickable.hpp>
 #include <sfml/components/drawable.hpp>
 
 #include "GameTool.hpp"
-#include "Network/generated_messages.hpp"
 #include "components/ui/button.hpp"
+#include "maths/Vector.hpp"
+#include "physic/components/position.hpp"
 #include "scenes/lobby.hpp"
 #include "scenes.hpp"
 
@@ -23,6 +25,9 @@ static void updateLobbyInfos(Client &game) {
     auto& texts = game.getComponent<addon::sfml::Text>();
     auto& draws = game.getComponent<addon::sfml::Drawable>();
     auto& buttons = game.getComponent<Button>();
+    const std::string code = game.getCode();
+    if (texts.hasComponent(LOBBY_CODE))
+        texts.getComponent(LOBBY_CODE).setString(code.empty() ? "CODE: ------" : "CODE: " + code);
     if (game.isAdmin() && !draws.hasComponent(LOBBY_LAUNCH_GAME)) {
         game.createComponent<addon::sfml::Drawable>(LOBBY_LAUNCH_GAME);
         game.createComponent<Button>(LOBBY_LAUNCH_GAME);
@@ -38,26 +43,23 @@ static void updateLobbyInfos(Client &game) {
     for (std::size_t i = 0; i < 6; ++i) {
         texts.getComponent(
             i + LOBBY_USER_BLUE_1).setString("...");
+        game.removeEntity(LOBBY_SELECT_CHAMP_PP + i);
     }
     for (std::size_t i = 0; i < players.size(); ++i) {
         if (players[i].team == 1 && i < 3) {
             texts.getComponent(
                 blue + LOBBY_USER_BLUE_1).setString(players[i].username);
+            game.createEntity(LOBBY_SELECT_CHAMP_PP + blue,
+                CHAMPION_PP[players[i].champion], {570.f, 410.f + (110.f * blue)});
             blue += 1;
         } else if (players[i].team == 2 && i < 3) {
             texts.getComponent(
                 red + LOBBY_USER_RED_1).setString(players[i].username);
+            game.createEntity(LOBBY_SELECT_CHAMP_PP + red + 3,
+                CHAMPION_PP[players[i].champion], {1276.f, 405.f + (110.f * red)});
             red += 1;
         }
     }
-    // if (red == 3 && clics.hasComponent(LOBBY_SELECT_TEAM_RED))
-    //     clics.removeComponent(LOBBY_SELECT_TEAM_RED);
-    // else if (!clics.hasComponent(LOBBY_SELECT_TEAM_RED))
-    //     game.createComponent<addon::intact::Clickable>(LOBBY_SELECT_TEAM_RED);
-    // if (blue == 3 && clics.hasComponent(LOBBY_SELECT_TEAM_BLUE))
-    //     clics.removeComponent(LOBBY_SELECT_TEAM_BLUE);
-    // else if (!clics.hasComponent(LOBBY_SELECT_TEAM_BLUE))
-    //     game.createComponent<addon::intact::Clickable>(LOBBY_SELECT_TEAM_BLUE);
 }
 
 void setInLobbyScene(Client& game) {
@@ -79,7 +81,9 @@ void setInLobbyScene(Client& game) {
         {LOBBY_USER_RED_3, "user_red_side_lobby", {980.f, 620.f}},
         {LOBBY_SELECT_TEAM_BLUE, "select_blue", {650.f, 320.f}},
         {LOBBY_SELECT_TEAM_RED, "select_red", {1100.f, 320.f}},
-        {LOBBY_LAUNCH_GAME, "launch_game", {1100.f, 750.f}},
+        {LOBBY_LAUNCH_GAME, "launch_game", {1140.f, 750.f}},
+        {LOBBY_SELECT_CHAMP, "champ_selection", {560.f, 740.f}},
+        {LOBBY_CODE, "lobby_code", {960.0f, 320.0f}},
     };
 
     inlobby.on_activate = [&game]() {
@@ -88,6 +92,9 @@ void setInLobbyScene(Client& game) {
 
     inlobby.on_deactivate = [&game]() {
         game.removeEntity(LOBBY_LAUNCH_GAME);
+        game.removeEntity(LOBBY_CODE);
+        for (std::size_t i = 0; i < 6; ++i)
+            game.removeEntity(LOBBY_SELECT_CHAMP_PP + i);
     };
 
     std::size_t idx = game.addScene(inlobby);
@@ -98,6 +105,7 @@ void setInLobbyScene(Client& game) {
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::MAIN));
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
+        game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::HUD));
         game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
     });
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
@@ -110,6 +118,10 @@ void setInLobbyScene(Client& game) {
                 break;
             case LOBBY_SELECT_TEAM_RED:
                 game.sendWantThisTeam(2);
+                break;
+            case LOBBY_SELECT_CHAMP:
+                game.updateScene(te::sStatus::PAUSE, SCAST(SCENES::IN_LOBBY));
+                game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::SELECT_CHAMP));
                 break;
         }
     });

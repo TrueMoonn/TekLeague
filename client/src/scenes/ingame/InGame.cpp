@@ -5,9 +5,9 @@
 ** InGame.cpp
 */
 
-#include <ECS/DenseZipper.hpp>
-
 #include <cstdint>
+
+#include <ECS/DenseZipper.hpp>
 #include <events.hpp>
 #include <clock.hpp>
 #include <maths/Vector.hpp>
@@ -16,6 +16,7 @@
 #include <sfml/components/window.hpp>
 #include <entity_spec/components/team.hpp>
 
+#include "GameTool.hpp"
 #include "Network/generated_messages.hpp"
 #include "components/competences/target.hpp"
 #include "entities.hpp"
@@ -39,13 +40,8 @@ void setInGameScene(Client& game) {
         {game.nextEntity(eType::MAP), "sumoners_rift_walls"},
     };
 
-    ingame.on_activate = [&game](){};
-
     std::size_t idx = game.addScene(ingame);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
-        if (keys[te::Key::Escape]) {
-            game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::PARAMETERS));
-        }
         if (keys[te::Key::A]) {
             net::CLIENT_INPUTS msg;
             msg.mouse_x = game.mpos.x;

@@ -27,6 +27,7 @@
         { "name": "id", "type": "uint32" },
         { "name": "is_admin", "type": "uint8" },
         { "name": "team", "type": "uint8" },
+        { "name": "champion", "type": "uint8" },
         { "name": "username", "type": "string", "max_length": 32 }
       ]
     },
@@ -145,6 +146,12 @@
         { "name": "atk_speed", "type": "uint32" },
         { "name": "range", "type": "uint32" }
       ]
+    },
+    "SpellCast": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "spell_slot", "type": "uint8" }
+      ]
     }
   },
 
@@ -198,6 +205,13 @@
     "LOGGED_OUT": {
       "id": 23,
       "fields": [{ "name": "id", "type": "uint32" }]
+    },
+    "SPELL_CAST": {
+      "id": 90,
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "spell_slot", "type": "uint8" }
+      ]
     },
     "USERNAME_ALREADY_TAKEN": {
       "id": 25,
@@ -290,6 +304,15 @@
     "PLAYERS_NOT_IN_TEAM": {
       "id": 48,
       "fields": []
+    },
+    "SELECT_CHAMPION": {
+      "id": 49,
+      "fields": [
+        {
+          "name": "champion",
+          "type": "uint8"
+        }
+      ]
     },
     "CLIENT_INPUTS": {
       "id": 50,

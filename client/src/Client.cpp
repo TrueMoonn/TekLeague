@@ -10,16 +10,19 @@
 #include <sys/socket.h>
 #endif
 #include <thread>
+#include <unordered_map>
+#include <string>
+#include <vector>
 
 #include "Network/generated_messages.hpp"
 #include "configs/entities.hpp"
 #include "client_systems.hpp"
 #include "Client.hpp"
+#include "latencies.hpp"
 
 Client::Client()
     : Game(CLIENT_PLUGINS_PATH)
     , te::network::GameClient(COM_DEFAULT_MODE, PROTOCOL_PATH) {
-
     for (auto& conf : CLIENT_CONFIG_PATHS)
         addConfig(conf);
     for (auto& sys : CLIENT_SYSTEMS)
@@ -32,6 +35,7 @@ Client::Client()
     createSystem("animate");
 
     registerMessageHandlers();
+    registerPacketTrackers();
 }
 
 Client::~Client() {
@@ -63,16 +67,45 @@ void Client::disconnect() {
 
 void Client::receiveMessages() {
     update(0);
-    checkPacketTrackers();
+    if (getGameState() == LobbyGameState::IN_GAME)
+        checkPacketTrackers();
 }
 
 void Client::registerPacketTrackers() {
     std::unordered_map<uint8_t, uint32_t> packetsToTrace = {
-        {net::PLAYERS_UPDATES::ID, 1000 / 120}
+        {
+            static_cast<uint8_t>(net::PLAYERS_UPDATES::ID),
+            static_cast<uint32_t>(PLAYERS_UPDATES_DEFAULT_LATENCY * 1000)
+        },
+        {
+            static_cast<uint8_t>(net::BUILDINGS_UPDATES::ID),
+            static_cast<uint32_t>(BUILDINGS_UPDATES_DEFAULT_LATENCY * 1000)
+        },
+        {
+            static_cast<uint8_t>(net::CREATURES_UPDATES::ID),
+            static_cast<uint32_t>(CREATURES_UPDATES_DEFAULT_LATENCY * 1000)
+        },
+        {
+            static_cast<uint8_t>(net::PROJECTILES_UPDATES::ID),
+            static_cast<uint32_t>(PROJECTILES_UPDATES_DEFAULT_LATENCY * 1000)
+        },
+    // {
+    //     static_cast<uint8_t>(net::COLLECTIBLES_UPDATES::ID),
+    //     static_cast<uint32_t>(COLLECTIBLES_UPDATES_DEFAULT_LATENCY * 1000)
+    // },
+    // {
+    //     static_cast<uint8_t>(net::INVENTORIES_UPDATES::ID),
+    //     static_cast<uint32_t>(INVENTORIES_UPDATES_DEFAULT_LATENCY * 1000)
+    // },
+    // {
+    //     static_cast<uint8_t>(net::STATS_UPDATES::ID),
+    //     static_cast<uint32_t>(STATS_UPDATES_DEFAULT_LATENCY * 1000)
+    // }
     };
 
     initPacketTrackers(packetsToTrace, [this](uint8_t code) {
-        std::println("[Client] Packet {} missing, requesting resend...", code);
+        // std::println("[Client] Packet {} missing, requesting resend...",
+        // code);
         sendPacketLoss(code);
     });
 }
@@ -89,7 +122,8 @@ void Client::registerMessageHandlers() {
     });
 
     registerPacketHandler(22, [this](const std::vector<uint8_t>& data) {
-        std::println("[Client] Received LOGGED_IN packet ({} bytes)", data.size());
+        std::println("[Client] Received LOGGED_IN packet ({} bytes)",
+            data.size());
         auto msg = net::LOGGED_IN::deserialize(data);
         std::println("[Client] Client ID: {}", msg.id);
 
@@ -257,12 +291,25 @@ void Client::registerMessageHandlers() {
         handleProjectilesUpdate(msg);
     });
 
+    registerPacketHandler(90, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received SPELL_CAST packet");
+        auto msg = net::SPELL_CAST::deserialize(data);
+        handleSpellCast(msg);
+    });
+
     registerPacketHandler(88, [this](const std::vector<uint8_t>& data) {
         std::println("[Client] Received ADMIN_GAME_PAUSED packet");
         auto msg = net::ADMIN_GAME_PAUSED::deserialize(data);
 
         handleAdminGamePaused(msg);
         emit("lobby:game_paused");
+    });
+
+    registerPacketHandler(89, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received GAME_END packet");
+        auto msg = net::GAME_END::deserialize(data);
+
+        handleGameEnd(msg);
     });
 }
 
@@ -284,7 +331,7 @@ void Client::run() {
             runSystems();
 
         // Small sleep to avoid burning CPU
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     std::println("[Client] Main game loop ended");
 }

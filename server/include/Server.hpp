@@ -29,6 +29,7 @@ struct PlayerInfo {
     uint32_t lobby_id = 0;  // 0 means not in a lobby
     bool in_lobby = false;
     uint8_t team = 0;  // 0 = no team, 1 = team 1, 2 = team 2
+    uint8_t champion = 0;
     net::Address address;
 };
 
@@ -138,6 +139,8 @@ class Server : public te::network::GameServer {
         const net::Address& sender);
     void handleToggleLobbyVisibility(const std::vector<uint8_t>& data,
         const net::Address& sender);
+    void handleChampionSelection(const std::vector<uint8_t>& data,
+        const net::Address& sender);
     void handleWantThisTeam(const std::vector<uint8_t>& data,
         const net::Address& sender);
     void handleClientInput(const std::vector<uint8_t>& data,
@@ -147,6 +150,8 @@ class Server : public te::network::GameServer {
     void handleAdminEndGame(const std::vector<uint8_t>& data,
         const net::Address& sender);
     void handleDisconnection(const std::vector<uint8_t>& data,
+        const net::Address& sender);
+    void handlePacketLoss(const std::vector<uint8_t>& data,
         const net::Address& sender);
 
     ////// Senders //////
@@ -176,6 +181,7 @@ class Server : public te::network::GameServer {
     void sendGameEnded(uint32_t lobby_id);
     void sendPlayersInit(uint32_t lobby_id);
     void sendBuildingsInit(uint32_t lobby_id);
+    void sendSpellCast(uint32_t lobby_id, uint32_t entity, uint8_t spell_slot);
 
     ////// Lobby State Queries //////
 

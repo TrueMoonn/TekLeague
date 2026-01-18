@@ -24,9 +24,11 @@ static std::atomic<bool> g_running(true);
 // Signal handler for SIGINT and SIGTERM
 void signalHandler(int signal) {
     if (signal == SIGINT) {
-        std::println("\n[CLIENT] Received SIGINT (Ctrl+C), shutting down gracefully...");
+        std::println(
+            "\n[CLIENT] Received SIGINT (Ctrl+C), shutting down gracefully...");
     } else if (signal == SIGTERM) {
-        std::println("\n[CLIENT] Received SIGTERM, shutting down gracefully...");
+        std::println(
+            "\n[CLIENT] Received SIGTERM, shutting down gracefully...");
     }
     g_running.store(false);
 }
@@ -64,7 +66,8 @@ int main(int ac, char **av) {
     try {
         game.connectToServer(server_ip, server_port);
     } catch (const std::exception& e) {
-        std::print(stderr, "[ERROR] Failed to connect to server: {}\n", e.what());
+        std::print(stderr, "[ERROR] Failed to connect to server: {}\n",
+            e.what());
         std::print(stderr, "Usage: {} [server_ip] [server_port]\n", av[0]);
         std::print(stderr, "Example: {} 127.0.0.1 6767\n", av[0]);
         return 1;
@@ -82,7 +85,6 @@ int main(int ac, char **av) {
             std::println("\n[CLIENT] Disconnecting from server...");
             game.disconnect();
         }
-
     } catch (const std::exception& e) {
         std::println(stderr, "[CLIENT] Error during runtime: {}", e.what());
         return 1;

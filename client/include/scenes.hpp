@@ -20,14 +20,20 @@ void setSearchLobbyScene(Client& game);
 void setInLobbyScene(Client& game);
 void setParametersScenes(Client& game);
 void setInGameScene(Client& game);
+void setChampionSelection(Client& game);
+void setHudScene(Client& game);
+void setEndGameScene(Client& game);
 
 enum class SCENES {
     MAIN = 0,
     LOBBY,
     SEARCH_LOBBY,
     IN_LOBBY,
+    SELECT_CHAMP,
     PARAMETERS,
     INGAME,
+    HUD,
+    END_GAME,
     LIMITSCENE,
 };
 
@@ -37,6 +43,9 @@ static const std::unordered_map<SCENES,
     {SCENES::LOBBY, &setLobbyScene},
     {SCENES::SEARCH_LOBBY, &setSearchLobbyScene},
     {SCENES::IN_LOBBY, &setInLobbyScene},
+    {SCENES::SELECT_CHAMP, &setChampionSelection},
     {SCENES::PARAMETERS, &setParametersScenes},
     {SCENES::INGAME, &setInGameScene},
+    {SCENES::HUD, &setHudScene},
+    {SCENES::END_GAME, &setEndGameScene},
 };

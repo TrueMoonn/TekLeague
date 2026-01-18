@@ -1,3 +1,15 @@
+[ENTITIES.ttheodore_pp]
+drawable = true
+position2 = true
+
+[ENTITIES.ttheodore_pp.sprite]
+path = "client/assets/images/champions/TTheodore/pp.jpeg"
+size = [200, 200]
+scale = [80, 80]
+layer = 22
+
+# --------------------------
+
 [ENTITIES.Ttheodore]
 drawable = true
 

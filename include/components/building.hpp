@@ -7,10 +7,12 @@
 
 #pragma once
 
+    #include <string>
+
     #include "Game.hpp"
 
 struct Building {
-    Building(const std::string& name) : name(name) {}
+    explicit Building(const std::string& name) : name(name) {}
     std::string name;
 };
 

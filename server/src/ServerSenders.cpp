@@ -69,6 +69,8 @@ void Server::sendAutomatic() {
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetScore())
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetGameEnd())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetGameDuration())
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetScoreboard())
@@ -196,6 +198,7 @@ void Server::sendPlayersListUnsafe(uint32_t lobby_id) {
             entry.id = client.id;
             entry.is_admin = isAdmin(address, lobby_id) ? 1 : 0;
             entry.team = client.team;
+            entry.champion = client.champion;
             std::memcpy(entry.username, client.username.c_str(),
                 std::min(client.username.size(), size_t(32)));
             msg.players.push_back(entry);
@@ -253,6 +256,13 @@ void Server::sendTeamFull(const net::Address& address) {
 void Server::sendPlayersNotInTeam(const net::Address& address) {
     net::PLAYERS_NOT_IN_TEAM msg;
     sendTo(address, msg.serialize());
+}
+
+void Server::sendSpellCast(uint32_t lobby_id, uint32_t entity, uint8_t spell_slot) {
+    net::SPELL_CAST msg;
+    msg.entity = entity;
+    msg.spell_slot = spell_slot;
+    broadcastToLobby(lobby_id, msg.serialize());
 }
 
 void Server::sendAdminGamePaused(uint32_t lobby_id) {

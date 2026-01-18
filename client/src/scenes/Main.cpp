@@ -5,6 +5,8 @@
 ** Main.cpp
 */
 
+#include <print>
+
 #include <SFML/Graphics/Drawable.hpp>
 #include <events.hpp>
 #include <ECS/DenseZipper.hpp>
@@ -12,7 +14,6 @@
 #include <sfml/components/focus.hpp>
 #include <sfml/components/drawable.hpp>
 #include <Network/generated_messages.hpp>
-#include <print>
 
 #include "scenes/main.hpp"
 #include "scenes.hpp"
@@ -41,6 +42,9 @@ void setMainScene(Client& game) {
         texts.getComponent(MAIN_BUTTON_PLAY).setString("PLAY");
         texts.getComponent(MAIN_BUTTON_SETTINGS).setString("SETTINGS");
         texts.getComponent(MAIN_BUTTON_QUIT).setString("QUIT");
+        const auto& name = game.getUsername();
+        if (!name.empty())
+            texts.getComponent(MAIN_USERNAME).setString(name);
     };
 
     main.on_pause = [&game] {
@@ -59,6 +63,9 @@ void setMainScene(Client& game) {
         texts.getComponent(MAIN_BUTTON_PLAY).setString("PLAY");
         texts.getComponent(MAIN_BUTTON_SETTINGS).setString("SETTINGS");
         texts.getComponent(MAIN_BUTTON_QUIT).setString("QUIT");
+        const auto& name = game.getUsername();
+        if (!name.empty())
+            texts.getComponent(MAIN_USERNAME).setString(name);
         game.createComponent<addon::sfml::Drawable>(MAIN_BUTTON_PLAY);
         game.createComponent<addon::sfml::Drawable>(MAIN_BUTTON_SETTINGS);
         game.createComponent<addon::sfml::Drawable>(MAIN_BUTTON_QUIT);

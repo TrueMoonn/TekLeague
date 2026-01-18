@@ -14,7 +14,7 @@
     #define MAX_ITEM_SLOT 6
 
 struct Inventory {
-    Inventory(const std::array<std::size_t, MAX_ITEM_SLOT>& arr) :
+    explicit Inventory(const std::array<std::size_t, MAX_ITEM_SLOT>& arr) :
         slots(arr) {}
 
     std::array<std::size_t, MAX_ITEM_SLOT> slots;

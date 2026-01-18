@@ -7,12 +7,16 @@
 
 #include <print>
 #include <cstring>
+#include <string>
+#include <cctype>
+#include <unordered_map>
 
 #include <entity_spec/components/team.hpp>
 #include <interaction/components/player.hpp>
 #include <components/competences/target.hpp>
 #include <physic/components/position.hpp>
 #include <physic/components/velocity.hpp>
+#include <display/components/animation.hpp>
 
 #include "Client.hpp"
 #include "Network/generated_messages.hpp"
@@ -21,6 +25,7 @@
 #include "components/stats/health.hpp"
 #include "components/stats/mana.hpp"
 #include "components/stats/xp.hpp"
+#include "physic/components/hitbox.hpp"
 #include "my.hpp"
 
 void Client::handleLoggedIn(const net::LOGGED_IN& msg) {
@@ -34,7 +39,8 @@ void Client::handleLoggedOut(const net::LOGGED_OUT& msg) {
     _client_id = 0;
 }
 
-void Client::handleUsernameAlreadyTaken(const net::USERNAME_ALREADY_TAKEN& msg) {
+void Client::handleUsernameAlreadyTaken(
+    const net::USERNAME_ALREADY_TAKEN& msg) {
     std::println("[Client] Username already taken");
     _username.clear();
 }
@@ -61,7 +67,8 @@ void Client::handleLobbyFull(const net::LOBBY_FULL& msg) {
 
 void Client::handlePlayersList(const net::PLAYERS_LIST& msg) {
     setPlayers(msg.players);
-    std::println("[Client] Players list updated ({} players)", getPlayers().size());
+    std::println("[Client] Players list updated ({} players)",
+        getPlayers().size());
 
     _is_admin = false;
     for (const auto& player : getPlayers()) {
@@ -83,14 +90,16 @@ void Client::handlePlayersList(const net::PLAYERS_LIST& msg) {
 
 void Client::handleLobbiesList(const net::LOBBIES_LIST& msg) {
     _cached_lobbies_list = msg.lobby_codes;
-    std::println("[Client] Received lobbies list ({} lobbies)", _cached_lobbies_list.size());
+    std::println("[Client] Received lobbies list ({} lobbies)",
+        _cached_lobbies_list.size());
 
     for (const auto& code : _cached_lobbies_list) {
         std::println("  - {}", code);
     }
 }
 
-void Client::handleLobbyVisibilityChanged(const net::LOBBY_VISIBILITY_CHANGED& msg) {
+void Client::handleLobbyVisibilityChanged(
+    const net::LOBBY_VISIBILITY_CHANGED& msg) {
     setPublic(msg.is_public != 0);
     std::println("[Client] Lobby visibility changed to: {}",
             (isPublic() ? "PUBLIC" : "PRIVATE"));
@@ -99,6 +108,21 @@ void Client::handleLobbyVisibilityChanged(const net::LOBBY_VISIBILITY_CHANGED& m
 void Client::handleGameStarting(const net::GAME_STARTING& msg) {
     std::println("[Client] GAME STARTING!");
     setGameState(LobbyGameState::IN_GAME);
+}
+
+void Client::handleGameEnd(const net::GAME_END& msg) {
+    setGameState(LobbyGameState::END_GAME);
+    setPendingWinningTeam(msg.winning_team);
+
+    std::string winner = (msg.winning_team < TEAMS.size())
+        ? TEAMS[msg.winning_team]
+        : "Unknown";
+    if (!winner.empty())
+        winner[0] = static_cast<char>(std::toupper(winner[0]));
+    setEndGameMessage("Winner: " + winner);
+
+    std::println("[Client] GAME END: winning team {}", static_cast<int>(msg.winning_team));
+    emit("game:game_end");
 }
 
 void Client::handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg) {
@@ -166,25 +190,46 @@ void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
 void Client::handleBuildingsInit(const net::BUILDINGS_INIT& msg) {
     auto& teams = getComponent<addon::eSpec::Team>();
     auto& positions = getComponent<addon::physic::Position2>();
+    auto& hitboxes = getComponent<addon::physic::Hitbox>();
 
     for (auto& building : msg.buildings) {
         ECS::Entity e = building.entity;
 
-        std::string tower_config;
-        if (building.team == 1) {
-            tower_config = "tower_blue";
-        } else if (building.team == 2) {
-            tower_config = "tower_red";
+        std::string prefab;
+        std::string type = building.type;
+        mat::Vector2f visualOffset{0.f, 0.f};
+
+        if (type == "nexus") {
+            if (building.team == 1) {
+                prefab = "nexus_blue";
+            } else if (building.team == 2) {
+                prefab = "nexus_red";
+            } else {
+                prefab = "nexus_blue";
+            }
+            visualOffset = {(building.team == 1 ? 100.f : (building.team == 2 ? -100.f : 0.f)), 350.f};
         } else {
-            tower_config = "tower_blue";
+            if (building.team == 1) {
+                prefab = "tower_blue";
+            } else if (building.team == 2) {
+                prefab = "tower_red";
+            } else {
+                prefab = "tower_blue";
+            }
+            visualOffset = {-103.5f, 104.f};
         }
 
-        createEntity(e, tower_config, {building.x, building.y});
+        createEntity(e, prefab, {building.x, building.y});
         handleHealthBar(*this, e);
 
         teams.getComponent(e).name = TEAMS[building.team];
-        positions.getComponent(e).x = building.x;
-        positions.getComponent(e).y = building.y;
+        positions.getComponent(e).x = building.x + visualOffset.x;
+        positions.getComponent(e).y = building.y + visualOffset.y;
+
+        if (hitboxes.hasComponent(e)) {
+            hitboxes.getComponent(e).position.x -= visualOffset.x;
+            hitboxes.getComponent(e).position.y -= visualOffset.y;
+        }
     }
 }
 
@@ -208,7 +253,7 @@ void Client::handlePlayersUpdate(const net::PLAYERS_UPDATES& msg) {
         xps.getComponent(e).amount = player.level;
         manas.getComponent(e).amount = player.mana;
     }
-};
+}
 
 void Client::handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg) {
     auto& positions = getComponent<addon::physic::Position2>();
@@ -219,6 +264,10 @@ void Client::handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg) {
         positions.getComponent(entity.entity).x = entity.x;
         positions.getComponent(entity.entity).y = entity.y;
     }
+}
+
+void Client::handleSpellCast(const net::SPELL_CAST& msg) {
+    (void)msg;
 }
 
 void Client::handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg) {

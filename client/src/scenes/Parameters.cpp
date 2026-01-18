@@ -41,7 +41,8 @@ void setParametersScenes(Client& game) {
         switch (e) {
             case PARAM_BUTTON_BACK:
                 game.updateScene(te::sStatus::RESUME, SCAST(SCENES::MAIN));
-                game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::PARAMETERS));
+                game.updateScene(te::sStatus::DEACTIVATE,
+                    SCAST(SCENES::PARAMETERS));
                 break;
             case PARAM_BUTTON_KEYS:
                 // KEY BINDINGS
@@ -54,7 +55,8 @@ void setParametersScenes(Client& game) {
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
         if (keys[te::Key::Escape]) {
             game.updateScene(te::sStatus::RESUME, SCAST(SCENES::MAIN));
-            game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::PARAMETERS));
+            game.updateScene(te::sStatus::DEACTIVATE,
+                SCAST(SCENES::PARAMETERS));
         }
     });
 }

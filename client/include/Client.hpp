@@ -7,14 +7,16 @@
 
 #pragma once
 
-    #include <optional>
+#include <optional>
+#include <string>
+#include <vector>
 
-    #include <maths/Vector.hpp>
-    #include <network1/GameClient.hpp>
+#include <maths/Vector.hpp>
+#include <network1/GameClient.hpp>
 
-    #include "Game.hpp"
-    #include "Network/generated_messages.hpp"
-    #include "clock.hpp"
+#include "Game.hpp"
+#include "Network/generated_messages.hpp"
+#include "clock.hpp"
 
 class Client : public Game, public te::network::GameClient {
  public:
@@ -72,14 +74,19 @@ class Client : public Game, public te::network::GameClient {
     bool isInLobby() const { return !getCode().empty(); }
     std::optional<net::PlayerListEntry> getMyInfos();
 
+    const std::string& getEndGameMessage() const { return _end_game_message; }
+    void setEndGameMessage(const std::string& msg) { _end_game_message = msg; }
+
     mat::Vector2i mpos;
     te::Timestamp inputLimit{0.08f};
+
  private:
     std::string _username;
     uint32_t _client_id = 0;
     bool _is_admin = false;
     std::vector<std::string> _cached_lobbies_list;
     net::Address _server_address;
+    std::string _end_game_message = "Game Over";
 
     void registerPacketTrackers();
 
@@ -101,6 +108,7 @@ class Client : public Game, public te::network::GameClient {
     void handleLobbiesList(const net::LOBBIES_LIST& msg);
     void handleLobbyVisibilityChanged(const net::LOBBY_VISIBILITY_CHANGED& msg);
     void handleGameStarting(const net::GAME_STARTING& msg);
+    void handleGameEnd(const net::GAME_END& msg);
     void handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg);
     void handleNotAdmin(const net::NOT_ADMIN& msg);
     void handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg);
@@ -113,4 +121,5 @@ class Client : public Game, public te::network::GameClient {
     void handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg);
     void handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg);
     void handleCreaturesUpdate(const net::CREATURES_UPDATES& msg);
+    void handleSpellCast(const net::SPELL_CAST& msg);
 };

@@ -27,10 +27,12 @@ void gulesSpell1(Game& game, ECS::Entity e, const mat::Vector2f& mpos) {
         gball_idx = gball.getComponent(e).idx;
         if (!gball.hasComponent(gball_idx)) {
             gball_idx = game.nextEntity(eType::PROJECTILES);
-            game.createEntity(gball_idx, "gules_ball", positions.getComponent(e));
+            game.createEntity(gball_idx, "gules_ball",
+                positions.getComponent(e));
             gball.getComponent(e).idx = gball_idx;
             game.createComponent<Gball>(gball_idx, e);
             teams.getComponent(gball_idx).name = teams.getComponent(e).name;
+            spells.getComponent(gball_idx).from = e;
             game.entities_queue.emplace_back(gball_idx, "gules_ball");
         } else {
             if (!spells.getComponent(gball_idx).cooldown.checkDelay())
@@ -42,16 +44,23 @@ void gulesSpell1(Game& game, ECS::Entity e, const mat::Vector2f& mpos) {
         game.createComponent<Gball>(e, gball_idx);
         game.createComponent<Gball>(gball_idx, e);
         teams.getComponent(gball_idx).name = teams.getComponent(e).name;
+        spells.getComponent(gball_idx).from = e;
         game.entities_queue.emplace_back(gball_idx, "gules_ball");
     }
 
     auto& spell_info = spells.getComponent(gball_idx);
-    auto& pos = positions.getComponent(e);
-    float dist = std::sqrt(std::pow(mpos.x - pos.x, 2) + std::pow(mpos.y - pos.y, 2));
+    auto& ball_pos = positions.getComponent(gball_idx);
+    float dist =
+        std::sqrt(std::pow(mpos.x - ball_pos.x, 2) + std::pow(mpos.y - ball_pos.y, 2));
+    auto& caster_mana = manas.getComponent(e);
     if ((dist > spell_info.range) ||
-        manas.getComponent(e).amount < spell_info.mana_cost) {
+        caster_mana.amount < static_cast<int>(spell_info.mana_cost)) {
         return;
     }
+    caster_mana.amount -= static_cast<int>(spell_info.mana_cost);
+    if (caster_mana.amount < 0)
+        caster_mana.amount = 0;
+    spells.getComponent(gball_idx).arrived = false;
     targets.getComponent(gball_idx).x = mpos.x;
     targets.getComponent(gball_idx).y = mpos.y;
 }

@@ -5,6 +5,8 @@
 ** track_target.hpp
 */
 
+#include <string>
+
 #include <ECS/DenseZipper.hpp>
 #include <physic/components/velocity.hpp>
 #include <physic/components/position.hpp>
@@ -38,6 +40,7 @@ void trackTarget(Game& game) {
                     dist = std::sqrt(std::pow(pos.x - destination.x, 2) +
                         std::pow(pos.y - destination.y, 2));
                 } else {
+                    tag.to_attack = 0;
                     continue;
                 }
                 if (dist <= stat.atk_range) {
@@ -47,12 +50,14 @@ void trackTarget(Game& game) {
                         std::string aname = attacks.getComponent(e).name;
                         vel.x = 0.f;
                         vel.y = 0.f;
-                        ECS::Entity projectile = game.nextEntity(eType::PROJECTILES);
+                        ECS::Entity projectile =
+                            game.nextEntity(eType::PROJECTILES);
                         game.createEntity(projectile, aname, pos);
                         game.getComponent<Target>().
                             getComponent(projectile).to_attack = target;
                         spells.getComponent(projectile).from = e;
-                        teams.getComponent(projectile).name = teams.getComponent(e).name;
+                        teams.getComponent(projectile).name =
+                            teams.getComponent(e).name;
                         game.entities_queue.emplace_back(projectile, aname);
                         continue;
                     } else {
@@ -70,7 +75,7 @@ void trackTarget(Game& game) {
                     continue;
                 }
             }
-            mat::Vector2f dir(tag - pos);
+            mat::Vector2f dir(destination - pos);
             float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
             dir /= length;
             vel.x = dir.x * stat.mov_speed;

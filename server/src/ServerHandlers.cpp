@@ -25,6 +25,10 @@ bool Server::setPacketsHandlers() {
         const net::Address& sender) {
         handleDisconnection(data, sender);
     });
+    registerPacketHandler(static_cast<uint8_t>(net::PACKET_LOSS::ID),
+        [this](const std::vector<uint8_t>& data, const net::Address& sender) {
+        handlePacketLoss(data, sender);
+    });
     registerPacketHandler(6, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
         handlePing(data, sender);
@@ -69,6 +73,10 @@ bool Server::setPacketsHandlers() {
         const net::Address& sender) {
         handleToggleLobbyVisibility(data, sender);
     });
+    registerPacketHandler(49, [this](const std::vector<uint8_t>& data,
+        const net::Address& sender) {
+        handleChampionSelection(data, sender);
+    });
     registerPacketHandler(50, [this](const std::vector<uint8_t>& data,
         const net::Address& sender) {
         handleClientInput(data, sender);
@@ -101,7 +109,8 @@ void Server::handleDisconnection(const std::vector<uint8_t>& data,
     }
 
     clients.erase(sender);
-    std::println("[Server::handleDisconnection] Client removed from clients map");
+    std::println(
+        "[Server::handleDisconnection] Client removed from clients map");
 }
 
 void Server::handlePing(const std::vector<uint8_t>& data,
@@ -215,6 +224,8 @@ void Server::handleJoinLobby(const std::vector<uint8_t>& data,
 
     client.in_lobby = true;
     client.lobby_id = lobby_id;
+    client.team = 0;
+    client.champion = 0;
 
     std::println("[Server::handleJoinLobby] Sending LOBBY_JOINED to client...");
     sendLobbyJoined(sender, client.id);
@@ -250,6 +261,8 @@ void Server::handleCreateLobby(const std::vector<uint8_t>& data,
         lobby_ctx.addClient(sender, client.id);
         client.in_lobby = true;
         client.lobby_id = lobby_id;
+        client.team = 0;
+        client.champion = 0;
 
         lobby_code = lobby_ctx.getCode();
     }
@@ -300,16 +313,19 @@ void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         if (lobbies.find(lobby_id) != lobbies.end()) {
-            for (auto& player : lobbies.at(lobby_id).getLobby().getPlayers())
+            for (auto& player : lobbies.at(lobby_id).getLobby().getPlayers()) {
                 if (player.team == 0) {
-                    std::println("[Server] handleAdminStartGame: Players in lobby {} are not in team",
+                    std::print("[Server] handleAdminStartGame: ");
+                    std::println("Players in lobby {} are not in team",
                         lobby_id);
                     sendPlayersNotInTeam(sender);
                     return;
                 }
+            }
             lobbies.at(lobby_id).setGameState(LobbyGameState::IN_GAME);
-            std::println("[Server] handleAdminStartGame: Lobby {} state changed to IN_GAME",
-                lobby_id);
+            std::println(
+            "[Server] handleAdminStartGame: Lobby {} state changed to IN_GAME",
+            lobby_id);
         }
     }
 
@@ -354,7 +370,8 @@ void Server::handleLeaveLobby(const std::vector<uint8_t>& data,
         }
 
         if (lobby_is_empty) {
-            std::println("[Server] handleLeaveLobby: Lobby {} is now empty, cleaning up",
+            std::println(
+                "[Server] handleLeaveLobby: Lobby {} is now empty, cleaning up",
                 lobby_id);
             std::string code = lobby_ctx.getCode();
             lobby_codes.erase(code);
@@ -366,6 +383,8 @@ void Server::handleLeaveLobby(const std::vector<uint8_t>& data,
 
     client.in_lobby = false;
     client.lobby_id = 0;
+    client.team = 0;
+    client.champion = 0;
 
     if (lobby_is_empty) {
         return;
@@ -412,6 +431,17 @@ void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data,
     sendLobbyVisibilityChanged(lobby_id, is_public);
 }
 
+void Server::handleChampionSelection(const std::vector<uint8_t>& data,
+    const net::Address& sender) {
+    net::SELECT_CHAMPION msg = net::SELECT_CHAMPION::deserialize(data);
+    auto client_opt = getClient(sender);
+    if (!client_opt)
+        return;
+
+    auto& client = client_opt->get();
+    client.champion = msg.champion;
+}
+
 void Server::handleClientInput(const std::vector<uint8_t>& data,
     const net::Address& sender) {
     net::CLIENT_INPUTS msg = net::CLIENT_INPUTS::deserialize(data);
@@ -424,12 +454,22 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
         return;
 
     uint32_t lobby_id = client.lobby_id;
+    bool send_cast = false;
+    uint8_t cast_slot = 0;
+    uint32_t cast_entity = 0;
 
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         auto& lobby_ctx = lobbies.at(lobby_id);
         auto& game = lobby_ctx.getLobby();
         auto e = lobby_ctx.getPlayerEntity(client.id);
+
+        if (e == 0)
+            return;
+
+        if (!game.getComponent<Target>().hasComponent(e) ||
+            !game.getComponent<Spells>().hasComponent(e))
+            return;
 
         if (msg.actions == static_cast<uint8_t>(ActionIG::MOVEMENT)) {
             auto& target = game.getComponent<Target>();
@@ -442,19 +482,33 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
                 getComponent(e).spell_id[0];
             SPELLS.at(static_cast<SpellId>(spell_id))(
                  game, e, {msg.mouse_x, msg.mouse_y});
+            send_cast = true;
+            cast_slot = 1;
+            cast_entity = static_cast<uint32_t>(e);
         }
         if (msg.actions == static_cast<uint8_t>(ActionIG::SPELL2)) {
             auto& spell_id = game.getComponent<Spells>().
                 getComponent(e).spell_id[1];
             SPELLS.at(static_cast<SpellId>(spell_id))(
                 game, e, {msg.mouse_x, msg.mouse_y});
+            send_cast = true;
+            cast_slot = 2;
+            cast_entity = static_cast<uint32_t>(e);
         }
         if (msg.actions == static_cast<uint8_t>(ActionIG::AA)) {
             auto& target = game.getComponent<Target>();
             target.getComponent(e).x = msg.mouse_x;
             target.getComponent(e).y = msg.mouse_y;
             target.getComponent(e).to_attack = msg.target;
+            send_cast = true;
+            cast_slot = 0;
+            cast_entity = static_cast<uint32_t>(e);
+            // std::cout << "auto attack on " << msg.target << "\n";
         }
+    }
+
+    if (send_cast) {
+        sendSpellCast(lobby_id, cast_entity, cast_slot);
     }
 }
 
@@ -491,7 +545,8 @@ void Server::handleWantThisTeam(const std::vector<uint8_t>& data,
     int team_count = 0;
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
-        for (const auto& [other_id, other_addr] : lobbies.at(lobby_id).getClients()) {
+        for (const auto& [other_id, other_addr] :
+            lobbies.at(lobby_id).getClients()) {
             auto other_client_opt = getClient(other_addr);
             if (other_client_opt) {
                 auto& other_client = other_client_opt->get();
@@ -577,8 +632,9 @@ void Server::handleAdminEndGame(const std::vector<uint8_t>& data,
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         if (lobbies.find(lobby_id) != lobbies.end()) {
             lobbies.at(lobby_id).setGameState(LobbyGameState::END_GAME);
-            std::println("[Server] handleAdminEndGame: Lobby {} state changed to END_GAME",
-                lobby_id);
+            std::println(
+            "[Server] handleAdminEndGame: Lobby {} state changed to END_GAME",
+            lobby_id);
         }
     }
 
@@ -586,4 +642,46 @@ void Server::handleAdminEndGame(const std::vector<uint8_t>& data,
         lobby_id);
     sendGameEnded(lobby_id);
     std::println("[Server] handleAdminEndGame: sendGameEnded completed");
+}
+
+void Server::handlePacketLoss(const std::vector<uint8_t>& data,
+    const net::Address& sender) {
+    net::PACKET_LOSS msg = net::PACKET_LOSS::deserialize(data);
+
+    std::println("[Server] handlePacketLoss: Request from {}:{}",
+        sender.getIP(), sender.getPort());
+
+    auto client_opt = getClient(sender);
+    if (!client_opt) {
+        std::println("[Server] handlePacketLoss: Client not found");
+        return;
+    }
+
+    auto& client = client_opt->get();
+    if (!client.in_lobby) {
+        std::println("[Server] handlePacketLoss: Client not in lobby");
+        return;
+    }
+
+    uint32_t lobby_id = client.lobby_id;
+
+    std::vector<uint8_t> claimedData = {};
+
+    {
+        std::lock_guard<std::mutex> lock(lobbies_mutex);
+        if (lobbies.find(lobby_id) != lobbies.end()) {
+            claimedData =
+                lobbies.at(lobby_id).forceGetData(msg.code);
+        } else {
+            return;
+        }
+    }
+
+    if (claimedData.empty()) {
+        std::println("[Server] handlePacketLoss: No data found for code {}",
+            msg.code);
+        return;
+    }
+
+    sendTo(sender, claimedData);
 }

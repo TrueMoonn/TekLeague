@@ -5,7 +5,7 @@ drawable = true
 path = "client/assets/images/buildings/tower_blue_top.png"
 size = [514, 1133]
 center = true
-# origin = [257, 1133]
+# origin = [257, 566.5]
 scale = [171, 378]
 layer = 10
 
@@ -18,7 +18,7 @@ drawable = true
 path = "client/assets/images/buildings/tower_red_top.png"
 size = [575, 1459]
 center = true
-# origin = [287.5, 1459]
+# origin = [287.5, 729.5]
 scale = [171, 378]
 layer = 10
 
@@ -69,3 +69,5 @@ size = [311, 200]
 scale = [400, 400]
 origin = [156, 100]
 layer = 10
+
+#------------------------------

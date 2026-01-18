@@ -8,13 +8,15 @@
 #include <print>
 #include <cstring>
 #include <algorithm>
+#include <string>
 
 #include "Client.hpp"
 
 void Client::sendLogin(const std::string& username) {
     net::LOGIN msg;
     std::memset(msg.username, 0, 32);
-    std::memcpy(msg.username, username.c_str(), std::min(username.size(), size_t(32)));
+    std::memcpy(msg.username, username.c_str(),
+        std::min(username.size(), size_t(32)));
 
     sendToServer(msg.serialize());
     std::println("[Client] Sent LOGIN for: {}", username);
@@ -83,7 +85,8 @@ void Client::sendWantThisTeam(uint8_t team) {
     net::WANT_THIS_TEAM msg;
     msg.team = team;
     sendToServer(msg.serialize());
-    std::println("[Client] Sent WANT_THIS_TEAM for team: {}", static_cast<int>(team));
+    std::println("[Client] Sent WANT_THIS_TEAM for team: {}",
+        static_cast<int>(team));
 }
 
 void Client::sendPing() {

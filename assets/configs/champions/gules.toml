@@ -85,15 +85,17 @@ name = ""
 
 [ENTITIES.gules_ball.spell]
 name = "gules1"
-base = 10
+base = 100
 damage_type = 1
 ratios = [0.0, 0.4]
 cooldown = 1.0
 cast_time = 0.0
 target = 0
-mana_cost = 0
+mana_cost = 40
 speed = 500
 range = 500
+aoe_radius = 100.0
+persistent = true
 
 [ENTITIES.gules_ball.velocity2]
 x = 0

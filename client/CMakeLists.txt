@@ -16,14 +16,18 @@ add_executable(${PROJECT_NAME}
     ${GAME_CLIENT_SRC_DIR}/systems/minions_animation.cpp
     ${GAME_CLIENT_SRC_DIR}/systems/track_stat.cpp
     ${GAME_CLIENT_SRC_DIR}/systems/updateSticky.cpp
+    ${GAME_CLIENT_SRC_DIR}/systems/update_hud.cpp
 
     # SCENES
     ${GAME_CLIENT_SRC_DIR}/scenes/Main.cpp
     ${GAME_CLIENT_SRC_DIR}/scenes/lobby/Lobby.cpp
     ${GAME_CLIENT_SRC_DIR}/scenes/lobby/SearchLobby.cpp
     ${GAME_CLIENT_SRC_DIR}/scenes/lobby/InLobby.cpp
+    ${GAME_CLIENT_SRC_DIR}/scenes/lobby/SelectChampion.cpp
+    ${GAME_CLIENT_SRC_DIR}/scenes/ingame/InGame.cpp
+    ${GAME_CLIENT_SRC_DIR}/scenes/ingame/Hud.cpp
+    ${GAME_CLIENT_SRC_DIR}/scenes/EndGame.cpp
     ${GAME_CLIENT_SRC_DIR}/scenes/Parameters.cpp
-    ${GAME_CLIENT_SRC_DIR}/scenes/InGame.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

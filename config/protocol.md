@@ -40,6 +40,7 @@ Every code (1 ... 255) is on ONE BYTE only
 40  LEAVE LOBBY                 [NO DATA]               ->  Disconnects client from lobby
 41  WANT THIS TEAM              [1B team]               ->  Team that the client want to join
 46  TOGGLE LOBBY PRIVATE/PUBLIC [NO DATA]               ->  Set lobby visibility (moved to avoid conflict with code 38)
+49  SELECT CHAMPION             [1B champId]            ->  Select a champion for the player
 ```
 
 ### 50 ... 69 → in game codes

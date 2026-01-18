@@ -13,6 +13,7 @@
     #include <vector>
     #include <algorithm>
     #include <cstdint>
+    #include <optional>
 
     #include <ECS/Entity.hpp>
     #include <GameTool.hpp>
@@ -31,25 +32,26 @@ enum class LobbyGameState {
 
 class Game : public te::GameTool {
  public:
-    Game(const std::string& ppath);
-    Game(uint32_t max_players, const std::string& code, const std::string& ppath);
+    explicit Game(const std::string& ppath);
+    Game(uint32_t max_players, const std::string& code,
+        const std::string& ppath);
 
     ECS::Entity nextEntity(eType type);
 
     void AddKillEntity(ECS::Entity e) {
         this->_EntityToKill.push_back(e);
-    };
+    }
     std::vector<ECS::Entity> getAllEntityToKill() {
         for (auto& parse : this->_EntityToKill) {
             std::cout << "return : " << parse << std::endl;
         }
         return this->_EntityToKill;
-    };
+    }
 
     void popEntity(ECS::Entity e) {
         this->_EntityToKill.erase(std::find(this->_EntityToKill.begin(),
             this->_EntityToKill.end(), e));
-    };
+    }
 
     virtual void run();
 
@@ -76,7 +78,42 @@ class Game : public te::GameTool {
     /**
      * @brief Set the game state
      */
-    void setGameState(LobbyGameState state) { _game_state = state; }
+    void setGameState(LobbyGameState state) {
+        _game_state = state;
+        if (_game_state == LobbyGameState::IN_GAME) {
+            _pending_winning_team.reset();
+        }
+    }
+
+    /**
+     * @brief Get pending winning team if game end was triggered
+     */
+    std::optional<uint8_t> getPendingWinningTeam() const {
+        return _pending_winning_team;
+    }
+
+    /**
+     * @brief Consume and clear pending winning team
+     */
+    std::optional<uint8_t> consumePendingWinningTeam() {
+        auto team = _pending_winning_team;
+        _pending_winning_team.reset();
+        return team;
+    }
+
+    /**
+     * @brief Set pending winning team for GAME_END broadcast
+     */
+    void setPendingWinningTeam(std::optional<uint8_t> team) {
+        _pending_winning_team = team;
+    }
+
+    /**
+     * @brief Set pending winning team for GAME_END broadcast
+     */
+    void setPendingWinningTeam(uint8_t team) {
+        _pending_winning_team = team;
+    }
 
     /**
      * @brief Check if lobby is in pre-game state
@@ -108,12 +145,15 @@ class Game : public te::GameTool {
     /**
      * @brief Get players in lobby
      */
-    const std::vector<net::PlayerListEntry>& getPlayers() const { return _players_in_lobby; }
+    const std::vector<net::PlayerListEntry>& getPlayers() const {
+        return _players_in_lobby;
+    }
 
     /**
      * @brief Set players list
      */
-    void setPlayers(const std::vector<net::PlayerListEntry>& players) { _players_in_lobby = players; }
+    void setPlayers(const std::vector<net::PlayerListEntry>& players) {
+        _players_in_lobby = players; }
 
     /**
      * @brief Clear players list
@@ -122,9 +162,11 @@ class Game : public te::GameTool {
 
     std::vector<std::pair<ECS::Entity, std::string>> entities_queue;
     std::vector<ECS::Entity> _EntityToKill;
+
  protected:
     bool _running;
     te::Timestamp _framelimit;
+
  private:
     std::unordered_map<eType, ECS::Entity> _nextEntities;
 
@@ -134,6 +176,7 @@ class Game : public te::GameTool {
 
     // Game state
     LobbyGameState _game_state = LobbyGameState::PRE_GAME;
+    std::optional<uint8_t> _pending_winning_team;
     bool _lobby_is_public = true;
 
     std::vector<net::PlayerListEntry> _players_in_lobby;

@@ -11,12 +11,14 @@
     #include <optional>
     #include <string>
     #include <unordered_map>
+    #include <vector>
 
     #include <Network/generated_messages.hpp>
     #include <Network/Address.hpp>
     #include <clock.hpp>
 
     #include "Game.hpp"
+    #include "latencies.hpp"
 
 class LobbyContext {
  public:
@@ -39,6 +41,9 @@ class LobbyContext {
 
     static constexpr float SPAWN_CREAP = 30.0f;
 
+    static constexpr float NASH_SPAWN_DELAY = (60.0f * 1.0f);
+    static constexpr float NASH_STAYS_DELAY = (60.0f * 0.5f);
+
     static constexpr std::string PLUGINS_PATH = "server/plugins";
 
     te::Timestamp spawn_creap =
@@ -51,6 +56,10 @@ class LobbyContext {
     const std::string& getCode();
 
     Game& getLobby();
+
+    void spawnNash();
+
+    void checkNash();
 
     ////// Game State Management //////
 
@@ -181,6 +190,12 @@ class LobbyContext {
     std::optional<net::SCORE> tryGetScore();
 
     /**
+     * @brief Try to get game end if triggered
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::GAME_END> tryGetGameEnd();
+
+    /**
      * @brief Try to get game duration if the timestamp delay has passed
      * @return std::optional containing the message if ready, std::nullopt otherwise
      */
@@ -290,6 +305,14 @@ class LobbyContext {
      */
     void SpawnCreeps();
 
+    /**
+    * @brief Force get data without checking timestamp
+    * due to packet loss signaled by client
+    * @param code The code of the missing packet
+    * @return true
+    */
+    std::vector<uint8_t> forceGetData(uint8_t code);
+
  private:
     Game lobby;
 
@@ -297,6 +320,11 @@ class LobbyContext {
     std::unordered_map<uint32_t, net::Address> connected_players;
     uint32_t max_clients;
     std::unordered_map<uint32_t, ECS::Entity> _player_entities;
+
+    std::size_t _nashE;
+    bool _nashAlive = false;
+    te::Timestamp spawn_nash_delay = te::Timestamp(NASH_SPAWN_DELAY);
+    te::Timestamp stay_nash_delay = te::Timestamp(NASH_STAYS_DELAY);
 
     te::Timestamp players_update =
         te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);
@@ -386,6 +414,12 @@ class LobbyContext {
      * @return The constructed message
      */
     net::SCORE getScore();
+
+    /**
+     * @brief Build the GAME_END message from the lobby's state
+     * @return The constructed message
+     */
+    net::GAME_END getGameEnd();
 
     /**
      * @brief Build the STATS_UPDATES message from the lobby's registry

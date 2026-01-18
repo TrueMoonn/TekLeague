@@ -5,8 +5,10 @@
 ** target_player.hpp
 */
 
-#include <ECS/DenseZipper.hpp>
 #include <cmath>
+#include <string>
+
+#include <ECS/DenseZipper.hpp>
 #include <physic/components/velocity.hpp>
 #include <physic/components/position.hpp>
 #include <display/components/animation.hpp>
@@ -36,7 +38,7 @@ void autoAttacks(Game &game) {
                 if (!aa.automatic || team1.name == team2.name || !positions.hasComponent(e2))
                     continue;
                 if (sqrtf(pow(pos1.x - pos2.x, 2) +
-                    pow(pos1.y - pos2.y, 2)) < spool.atk_range) {
+                    pow(pos1.y - pos2.y, 2)) <= spool.atk_range) {
                     if (spool.atk_speed.checkDelay()) {
                         std::string aname = aa.name;
                         ECS::Entity e = game.nextEntity(eType::PROJECTILES);
