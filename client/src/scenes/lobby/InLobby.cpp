@@ -92,6 +92,7 @@ void setInLobbyScene(Client& game) {
 
     inlobby.on_deactivate = [&game]() {
         game.removeEntity(LOBBY_LAUNCH_GAME);
+        game.removeEntity(LOBBY_CODE);
         for (std::size_t i = 0; i < 6; ++i)
             game.removeEntity(LOBBY_SELECT_CHAMP_PP + i);
     };
