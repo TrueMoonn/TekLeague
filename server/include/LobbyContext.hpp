@@ -24,6 +24,9 @@ class LobbyContext {
  public:
     static constexpr std::string PLUGINS_PATH = "server/plugins";
 
+    static constexpr float NASH_SPAWN_DELAY = (60.0f * 1.0f);
+    static constexpr float NASH_STAYS_DELAY = (60.0f * 0.5f);
+
  public:
     LobbyContext(uint32_t max_players, const std::string& code);
 
@@ -31,6 +34,10 @@ class LobbyContext {
     const std::string& getCode();
 
     Game& getLobby();
+
+    void spawnNash();
+
+    void checkNash();
 
     ////// Game State Management //////
 
@@ -284,6 +291,11 @@ class LobbyContext {
     std::unordered_map<uint32_t, net::Address> connected_players;
     uint32_t max_clients;
     std::unordered_map<uint32_t, ECS::Entity> _player_entities;
+
+    std::size_t _nashE;
+    bool _nashAlive = false;
+    te::Timestamp spawn_nash_delay = te::Timestamp(NASH_SPAWN_DELAY);
+    te::Timestamp stay_nash_delay = te::Timestamp(NASH_STAYS_DELAY);
 
     te::Timestamp players_update =
         te::Timestamp(PLAYERS_UPDATES_DEFAULT_LATENCY);

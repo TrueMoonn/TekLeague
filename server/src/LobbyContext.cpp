@@ -27,11 +27,46 @@ LobbyContext::LobbyContext(uint32_t max_players, const std::string& code)
 void LobbyContext::run() {
     try {
         lobby.run();
+        checkNash();
     } catch (const std::exception& e) {
         std::println(stderr, "[LobbyContext::run] ERROR: {}", e.what());
     } catch (...) {
         std::println(stderr, "[LobbyContext::run] ERROR: unknown exception");
     }
+}
+
+void LobbyContext::checkNash() {
+    if (getGameState() == LobbyGameState::PRE_GAME) {
+        spawn_nash_delay.restart();
+        stay_nash_delay.restart();
+        return;
+    }
+    if (_nashAlive) {
+        if (stay_nash_delay.checkDelay()) {
+            auto& game = getLobby();
+            game.AddKillEntity(_nashE);
+
+            _nashAlive = false;
+            _nashE = 0;
+            spawn_nash_delay.restart();
+        }
+    } else {
+        if (spawn_nash_delay.checkDelay()) {
+            spawnNash();
+            _nashAlive = true;
+            stay_nash_delay.restart();
+        }
+    }
+}
+
+void LobbyContext::spawnNash() {
+    auto& game = getLobby();
+
+    ECS::Entity e = game.nextEntity(eType::CREATURES);
+
+    _nashE = e;
+    game.createEntity(e, "nash", {8192 / 2, 400});
+    game.entities_queue.emplace_back(e, "nash");
 }
 
 const std::string& LobbyContext::getCode() {
