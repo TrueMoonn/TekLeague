@@ -15,6 +15,8 @@
     #include "components/building.hpp"
     #include "components/champion.hpp"
     #include "components/gules.hpp"
+    #include "components/circle_hitbox.hpp"
+    #include "components/on_death.hpp"
     #include "components/competences/auto_attack.hpp"
     #include "components/competences/spells.hpp"
     #include "components/competences/auto_track.hpp"
@@ -37,6 +39,8 @@ static const std::vector<std::function<void(Game&)>> LOCAL_COMPONENTS = {
     &registerAttack,
     &registerAutoTrack,
     &registerSpellCasting,
+    &registerCircleHitbox,
+    &registerOnDeath,
     &registerButton,
     &registerChampion,
     &registerGold,

@@ -37,10 +37,12 @@ class Game : public te::GameTool {
     ECS::Entity nextEntity(eType type);
 
     void AddKillEntity(ECS::Entity e) {
-        removeEntity(e);
         this->_EntityToKill.push_back(e);
     };
     std::vector<ECS::Entity> getAllEntityToKill() {
+        for (auto& parse : this->_EntityToKill) {
+            std::cout << "return : " << parse << std::endl;
+        }
         return this->_EntityToKill;
     };
 

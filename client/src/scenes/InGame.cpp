@@ -22,13 +22,12 @@
 #include "my.hpp"
 #include "scenes.hpp"
 
-
 void setInGameScene(Client& game) {
     te::Scene ingame;
     ingame.systems = {{
         {"poll_event"},  // INPUT
         {"champion_movement", "minion_animation"},  // PRE UPDATE
-        {"animate"},  // UPDATE
+        {"animate", "play_sound"},  // UPDATE
         {"follow_player"},  // POST UPDATE
         {"draw", "display"}  // RENDER
     }};
