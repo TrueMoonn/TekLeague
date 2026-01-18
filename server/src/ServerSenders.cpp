@@ -69,6 +69,8 @@ void Server::sendAutomatic() {
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetScore())
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
+                    if (auto msg = ctx.tryGetGameEnd())
+                        ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetGameDuration())
                         ingame_updates.emplace_back(lobby_id, msg->serialize());
                     if (auto msg = ctx.tryGetScoreboard())

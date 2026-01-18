@@ -37,6 +37,15 @@ static bool intersects(const mat::RectF& a, const mat::RectF& b)
         a.position.y + a.size.y > b.position.y;
 }
 
+static void handleNexusKill(Game& game, const Building& building,
+    const addon::eSpec::Team& target_team)
+{
+    if (building.name == "nexus" && !game.getPendingWinningTeam().has_value()) {
+        uint8_t winningTeam = target_team.name == "blue" ? 2 : 1;
+        game.setPendingWinningTeam(winningTeam);
+    }
+}
+
 void targetedDamage(Game& game) {
     game.createSystem("targeted_damage", [&game](ECS::Registry&) {
         auto& positions = game.getComponent<addon::physic::Position2>();
@@ -80,6 +89,10 @@ void targetedDamage(Game& game) {
                             caster_stats.ad * spell.ratios[PHYSIC_DMG] +
                             caster_stats.ap * spell.ratios[MAGICAL_DMG]);
                         if (enemy_health.amount <= 0) {
+                            if (buildings.hasComponent(enemy_e)) {
+                                const auto& building = buildings.getComponent(enemy_e);
+                                handleNexusKill(game, building, enemy_team);
+                            }
                             game.AddKillEntity(enemy_e);
                         }
                     }
@@ -153,6 +166,14 @@ void targetedDamage(Game& game) {
                             st.ad * spell.ratios[PHYSIC_DMG] +
                             st.ap * spell.ratios[MAGICAL_DMG]);
                         if (target_health.amount <= 0) {
+                            if (buildings.hasComponent(tag.to_attack)) {
+                                const auto& building = buildings.getComponent(tag.to_attack);
+                                if (teams.hasComponent(tag.to_attack)) {
+                                    const auto& target_team =
+                                        teams.getComponent(tag.to_attack);
+                                    handleNexusKill(game, building, target_team);
+                                }
+                            }
                             game.AddKillEntity(tag.to_attack);
                         }
                     }

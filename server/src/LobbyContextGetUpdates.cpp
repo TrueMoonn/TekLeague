@@ -1,5 +1,7 @@
 #include <vector>
 #include <print>
+#include <optional>
+#include <cstdio>
 
 #include <Network/generated_messages.hpp>
 #include <Network/Address.hpp>
@@ -83,8 +85,7 @@ net::BUILDINGS_INIT LobbyContext::getBuildingsInit() {
             if (team.name == TEAMS[i])
                state.team = i;
         }
-        std::strncpy(state.type, building.name.data(), sizeof(state.type) - 1);
-        state.type[sizeof(state.type) - 1] = '\0';
+        std::snprintf(state.type, sizeof(state.type), "%s", building.name.c_str());
         msg.buildings.push_back(state);
     }
 
@@ -313,6 +314,15 @@ net::SCORE LobbyContext::getScore() {
     return msg;
 }
 
+net::GAME_END LobbyContext::getGameEnd() {
+    net::GAME_END msg;
+
+    auto pending = lobby.consumePendingWinningTeam();
+    msg.winning_team = pending.value_or(0);
+
+    return msg;
+}
+
 net::GAME_DURATION LobbyContext::getGameDuration() {
     net::GAME_DURATION msg;
 
@@ -408,6 +418,19 @@ std::optional<net::SCORE> LobbyContext::tryGetScore() {
         return std::nullopt;
 
     return getScore();
+}
+
+std::optional<net::GAME_END> LobbyContext::tryGetGameEnd() {
+    auto pending = lobby.consumePendingWinningTeam();
+    if (!pending.has_value())
+        return std::nullopt;
+
+    lobby.setGameState(LobbyGameState::END_GAME);
+
+    net::GAME_END msg;
+    msg.winning_team = pending.value();
+
+    return msg;
 }
 
 std::optional<net::GAME_DURATION> LobbyContext::tryGetGameDuration() {

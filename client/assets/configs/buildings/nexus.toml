@@ -1,0 +1,23 @@
+[ENTITIES.nexus_blue]
+drawable = true
+position2 = true
+
+[ENTITIES.nexus_blue.sprite]
+path = "client/assets/images/buildings/nexus_blue.png"
+size = [514, 1133]
+origin = [257, 566.5]
+scale = [600, 1200]
+layer = 10
+
+#------------------------------
+
+[ENTITIES.nexus_red]
+drawable = true
+position2 = true
+
+[ENTITIES.nexus_red.sprite]
+path = "client/assets/images/buildings/nexus_red.png"
+size = [575, 1459]
+origin = [287.5, 729.5]
+scale = [600, 1200]
+layer = 10

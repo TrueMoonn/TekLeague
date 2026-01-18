@@ -23,6 +23,7 @@
 #include "components/stats/mana.hpp"
 #include "components/stats/xp.hpp"
 #include "my.hpp"
+#include "physic/components/hitbox.hpp"
 
 void Client::handleLoggedIn(const net::LOGGED_IN& msg) {
     _client_id = msg.id;
@@ -106,6 +107,11 @@ void Client::handleGameStarting(const net::GAME_STARTING& msg) {
     setGameState(LobbyGameState::IN_GAME);
 }
 
+void Client::handleGameEnd(const net::GAME_END& msg) {
+    setGameState(LobbyGameState::END_GAME);
+    std::println("[Client] GAME END: winning team {}", static_cast<int>(msg.winning_team));
+}
+
 void Client::handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg) {
     std::println("[Client] Lobby has been destroyed");
     setCode("");
@@ -152,24 +158,45 @@ void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
 void Client::handleBuildingsInit(const net::BUILDINGS_INIT& msg) {
     auto& teams = getComponent<addon::eSpec::Team>();
     auto& positions = getComponent<addon::physic::Position2>();
+    auto& hitboxes = getComponent<addon::physic::Hitbox>();
 
     for (auto& building : msg.buildings) {
         ECS::Entity e = building.entity;
 
-        std::string tower_config;
-        if (building.team == 1) {
-            tower_config = "tower_blue";
-        } else if (building.team == 2) {
-            tower_config = "tower_red";
+        std::string prefab;
+        std::string type = building.type;
+        mat::Vector2f visualOffset{0.f, 0.f};
+
+        if (type == "nexus") {
+            if (building.team == 1) {
+                prefab = "nexus_blue";
+            } else if (building.team == 2) {
+                prefab = "nexus_red";
+            } else {
+                prefab = "nexus_blue";
+            }
+            visualOffset = {(building.team == 1 ? 100.f : (building.team == 2 ? -100.f : 0.f)), 350.f};
         } else {
-            tower_config = "tower_blue";
+            if (building.team == 1) {
+                prefab = "tower_blue";
+            } else if (building.team == 2) {
+                prefab = "tower_red";
+            } else {
+                prefab = "tower_blue";
+            }
+            visualOffset = {-103.5f, 104.f};
         }
 
-        createEntity(e, tower_config, {building.x, building.y});
+        createEntity(e, prefab, {building.x, building.y});
 
         teams.getComponent(e).name = TEAMS[building.team];
-        positions.getComponent(e).x = building.x;
-        positions.getComponent(e).y = building.y;
+        positions.getComponent(e).x = building.x + visualOffset.x;
+        positions.getComponent(e).y = building.y + visualOffset.y;
+
+        if (hitboxes.hasComponent(e)) {
+            hitboxes.getComponent(e).position.x -= visualOffset.x;
+            hitboxes.getComponent(e).position.y -= visualOffset.y;
+        }
     }
 }
 

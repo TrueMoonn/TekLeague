@@ -104,6 +104,7 @@ class Client : public Game, public te::network::GameClient {
     void handleLobbiesList(const net::LOBBIES_LIST& msg);
     void handleLobbyVisibilityChanged(const net::LOBBY_VISIBILITY_CHANGED& msg);
     void handleGameStarting(const net::GAME_STARTING& msg);
+    void handleGameEnd(const net::GAME_END& msg);
     void handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg);
     void handleNotAdmin(const net::NOT_ADMIN& msg);
     void handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg);

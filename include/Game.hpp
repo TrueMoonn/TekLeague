@@ -13,6 +13,7 @@
     #include <vector>
     #include <algorithm>
     #include <cstdint>
+    #include <optional>
 
     #include <ECS/Entity.hpp>
     #include <GameTool.hpp>
@@ -75,7 +76,42 @@ class Game : public te::GameTool {
     /**
      * @brief Set the game state
      */
-    void setGameState(LobbyGameState state) { _game_state = state; }
+    void setGameState(LobbyGameState state) {
+        _game_state = state;
+        if (_game_state == LobbyGameState::IN_GAME) {
+            _pending_winning_team.reset();
+        }
+    }
+
+    /**
+     * @brief Get pending winning team if game end was triggered
+     */
+    std::optional<uint8_t> getPendingWinningTeam() const {
+        return _pending_winning_team;
+    }
+
+    /**
+     * @brief Consume and clear pending winning team
+     */
+    std::optional<uint8_t> consumePendingWinningTeam() {
+        auto team = _pending_winning_team;
+        _pending_winning_team.reset();
+        return team;
+    }
+
+    /**
+     * @brief Set pending winning team for GAME_END broadcast
+     */
+    void setPendingWinningTeam(std::optional<uint8_t> team) {
+        _pending_winning_team = team;
+    }
+
+    /**
+     * @brief Set pending winning team for GAME_END broadcast
+     */
+    void setPendingWinningTeam(uint8_t team) {
+        _pending_winning_team = team;
+    }
 
     /**
      * @brief Check if lobby is in pre-game state
@@ -138,6 +174,7 @@ class Game : public te::GameTool {
 
     // Game state
     LobbyGameState _game_state = LobbyGameState::PRE_GAME;
+    std::optional<uint8_t> _pending_winning_team;
     bool _lobby_is_public = true;
 
     std::vector<net::PlayerListEntry> _players_in_lobby;
