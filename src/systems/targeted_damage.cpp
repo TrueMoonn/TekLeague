@@ -6,6 +6,7 @@
 */
 
 #include <cmath>
+#include <string>
 
 #include <ECS/DenseZipper.hpp>
 #include <physic/components/position.hpp>
@@ -65,7 +66,7 @@ void targetedDamage(Game& game) {
                         continue;
                     if (enemy_e == ignored)
                         continue;
-                    if (buildings.hasComponent(enemy_e))
+                    if (!isAutoAttack && buildings.hasComponent(enemy_e))
                         continue;
                     if (spells.hasComponent(enemy_e))
                         continue;
@@ -99,6 +100,8 @@ void targetedDamage(Game& game) {
                 teams.hasComponent(e)) {
 
                 const auto& projectile_team = teams.getComponent(e);
+                const bool isAutoAttack = spell.name.size() >= 3 &&
+                    spell.name.rfind("_aa") == spell.name.size() - 3;
                 bool exploded = false;
 
                 if (hitboxes.hasComponent(e)) {
@@ -109,7 +112,7 @@ void targetedDamage(Game& game) {
                         ECS::IndexedDenseZipper(positions, teams, hitboxes)) {
                         if (enemy_team.name == projectile_team.name)
                             continue;
-                        if (buildings.hasComponent(enemy_e))
+                        if (!isAutoAttack && buildings.hasComponent(enemy_e))
                             continue;
                         if (spells.hasComponent(enemy_e))
                             continue;
@@ -139,7 +142,9 @@ void targetedDamage(Game& game) {
                         continue;
                     if (healths.hasComponent(tag.to_attack) &&
                         stats.hasComponent(spell.from)) {
-                        if (buildings.hasComponent(tag.to_attack))
+                        const bool isAutoAttack = spell.name.size() >= 3 &&
+                            spell.name.rfind("_aa") == spell.name.size() - 3;
+                        if (!isAutoAttack && buildings.hasComponent(tag.to_attack))
                             continue;
                         if (spells.hasComponent(tag.to_attack))
                             continue;
