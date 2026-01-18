@@ -1,3 +1,4 @@
+#include <ostream>
 #include <unordered_map>
 #include <string>
 #include <print>
@@ -8,6 +9,7 @@
 #include <physic/components/position.hpp>
 #include <entity_spec/components/health.hpp>
 #include <interaction/components/player.hpp>
+#include <vector>
 
 #include "LobbyContext.hpp"
 #include "ECS/Entity.hpp"
@@ -35,54 +37,76 @@ void LobbyContext::SpawnCreeps() {
     if (!this->spawn_creap.checkDelay(false)) {
         return;
     }
+
     static te::Timestamp first_creep(0.f);
     static te::Timestamp second_creep((float)0.5);
     static te::Timestamp third_creep(1.f);
     static te::Timestamp fourth_creep((float)1.5);
-    static bool create_1 = false;
-    static bool create_2 = false;
-    static bool create_3 = false;
+    static std::vector<int> alr_passed_1;
+    static std::vector<int> alr_passed_2;
+    static std::vector<int> alr_passed_3;
+    static std::vector<int> alr_passed_4;
+    static bool is_passed = false;
+    if (is_passed) {
+        first_creep.toggle();
+        second_creep.toggle();
+        third_creep.toggle();
+        fourth_creep.toggle();
+        alr_passed_1.clear();
+        alr_passed_2.clear();
+        alr_passed_3.clear();
+        alr_passed_4.clear();
+        is_passed = false;
+    }
 
     for (size_t i = 0; i < CREATURES.size(); ++i) {
         const auto& [mob_name, mob_pos] = CREATURES[i];
         auto& game = getLobby();
-        std::cout << mob_name << std::endl;
-        if (first_creep.checkDelay() && !create_1) {
+        if (first_creep.checkDelay() && std::find(alr_passed_1.begin(), alr_passed_1.end(), i) == alr_passed_1.end()) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
-
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
+            std::cout << "mob spawn 1\n";
             game.entities_queue.emplace_back(e, mob_name);
-            create_1 = true;
+            alr_passed_1.push_back(i);
             std::cout << "mob spawn 1\n";
         }
-        if (second_creep.checkDelay() && !create_2) {
+        if (second_creep.checkDelay() && std::find(alr_passed_2.begin(), alr_passed_2.end(), i) == alr_passed_2.end()) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
 
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
+            std::cout << "mob spawn 2\n";
             game.entities_queue.emplace_back(e, mob_name);
-            create_2 = true;
+            alr_passed_2.push_back(i);
             std::cout << "mob spawn 2\n";
         }
-        if (third_creep.checkDelay() && !create_3) {
+        if (third_creep.checkDelay() && std::find(alr_passed_3.begin(), alr_passed_3.end(), i) == alr_passed_3.end()) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
 
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
+            std::cout << "mob spawn 3\n";
             game.entities_queue.emplace_back(e, mob_name);
-            create_3 = true;
+            alr_passed_3.push_back(i);
             std::cout << "mob spawn 3\n";
         }
-        if (fourth_creep.checkDelay()) {
+        if (fourth_creep.checkDelay() && std::find(alr_passed_4.begin(), alr_passed_4.end(), i) == alr_passed_4.end()) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
 
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
-            game.entities_queue.emplace_back(e, mob_name);
             std::cout << "mob spawn 4\n";
-            this->spawn_creap.restart();
-            create_1 = false;
-            create_2 = false;
-            create_3 = false;
+            game.entities_queue.emplace_back(e, mob_name);
+            alr_passed_4.push_back(i);
+            std::cout << "mob spawn 4\n";
+            first_creep.toggle();
+            second_creep.toggle();
+            third_creep.toggle();
+            fourth_creep.toggle();
+        }
+        if (alr_passed_4.size() == 4) {
+            is_passed = true;
         }
     }
+    if (is_passed)
+        this->spawn_creap.restart();
 }
 
 const std::string& LobbyContext::getCode() {
