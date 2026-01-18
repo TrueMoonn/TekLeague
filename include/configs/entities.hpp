@@ -18,6 +18,7 @@ static const std::vector<std::string> CONFIG_PATHS {
     "assets/configs/creaps/range_blue_creap_down.toml",
     "assets/configs/creaps/range_blue_creap_top.toml",
     "assets/configs/creaps/range_red_creap.toml",
+    "assets/configs/misc/collisions.toml",
 };
 
 static const std::vector<std::string> CLIENT_CONFIG_PATHS {

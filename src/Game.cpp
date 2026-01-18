@@ -23,9 +23,8 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
         cmpt(*this);
     for (auto& sys : LOCAL_SYSTEMS)
         sys(*this);
-    for (auto& conf : CONFIG_PATHS) {
+    for (auto& conf : CONFIG_PATHS)
         addConfig(conf);
-    }
     for (auto& map : MAP_PATHS)
         addMap(map);
 
@@ -38,6 +37,7 @@ Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
     _nextEntities[eType::CREATURES] = eField::CREATURES_BEGIN;
     _nextEntities[eType::BUILDINGS] = eField::BUILDINGS_BEGIN;
     _nextEntities[eType::PROJECTILES] = eField::PROJECTILES_BEGIN;
+    _nextEntities[eType::ONDEATH] = eField::ONDEATH_BEGIN;
 
     sub("closed", [this]() {_running = false;});
     _running = true;
@@ -77,6 +77,9 @@ ECS::Entity Game::nextEntity(eType type) {
                 break;
             case eType::PROJECTILES:
                 _nextEntities[type] = eField::PROJECTILES_BEGIN;
+                break;
+            case eType::ONDEATH:
+                _nextEntities[type] = eField::ONDEATH_BEGIN;
                 break;
         }
     }

@@ -85,3 +85,12 @@ damage_type = 0
 ratios = [1.0, 0.0]
 target = 2
 speed = 200
+
+[ENTITIES.tower_projectile.on_death]
+entity = "tower_projectiles_explosion"
+
+[ENTITIES.tower_projectiles_explosion]
+position2 = true
+
+[ENTITIES.tower_projectiles_explosion.timeout]
+duration = 2.0

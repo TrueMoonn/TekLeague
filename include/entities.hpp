@@ -18,6 +18,7 @@
     #define BUILDINGS_FIELD_SIZE 4000
     #define PROJECTILE_FIELD_SIZE 4000
     #define COLLECTIBLE_FIELD_SIZE 4000
+    #define ONDEATH_FIELD_SIZE 4000
 
 enum class eType {
     SYSTEM = 0,
@@ -28,6 +29,7 @@ enum class eType {
     CREATURES,
     BUILDINGS,
     PROJECTILES,
+    ONDEATH,
 };
 
 enum eField {
@@ -48,6 +50,8 @@ enum eField {
     PROJECTILES_END = PROJECTILES_BEGIN + PROJECTILE_FIELD_SIZE,
     COLLECTIBLES_BEGIN = BUILDINGS_END + 1,
     COLLECTIBLES_END = COLLECTIBLES_BEGIN + COLLECTIBLE_FIELD_SIZE,
+    ONDEATH_BEGIN = COLLECTIBLES_END + 1,
+    ONDEATH_END = ONDEATH_BEGIN + ONDEATH_FIELD_SIZE,
 };
 
 struct EntityFieldLink {
@@ -87,5 +91,9 @@ static const std::unordered_map<eType, EntityFieldLink> ENTITY_FIELDS {
     {eType::PROJECTILES, {
         static_cast<std::size_t>(PROJECTILES_BEGIN),
         static_cast<std::size_t>(PROJECTILES_END)
+    }},
+    {eType::ONDEATH, {
+        static_cast<std::size_t>(ONDEATH_BEGIN),
+        static_cast<std::size_t>(ONDEATH_END)
     }}
 };

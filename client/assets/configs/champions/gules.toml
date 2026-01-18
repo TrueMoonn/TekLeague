@@ -8,6 +8,9 @@ scale = [258, 430]
 origin = [193.5, 322]
 layer = 10
 
+[ENTITIES.Gules.on_death]
+entity = "dead_gules"
+
 [ENTITIES.Gules.animation]
 frames = [
     # IDLE
