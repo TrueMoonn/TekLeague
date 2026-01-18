@@ -109,37 +109,37 @@ void LobbyContext::SpawnCreeps() {
         if (first_creep.checkDelay() && std::find(alr_passed_1.begin(), alr_passed_1.end(), i) == alr_passed_1.end()) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
-            std::cout << "mob spawn 1\n";
+            //std::cout << "mob spawn 1\n";
             game.entities_queue.emplace_back(e, mob_name);
             alr_passed_1.push_back(i);
-            std::cout << "mob spawn 1\n";
+            //std::cout << "mob spawn 1\n";
         }
         if (second_creep.checkDelay() && std::find(alr_passed_2.begin(), alr_passed_2.end(), i) == alr_passed_2.end()) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
 
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
-            std::cout << "mob spawn 2\n";
+            //std::cout << "mob spawn 2\n";
             game.entities_queue.emplace_back(e, mob_name);
             alr_passed_2.push_back(i);
-            std::cout << "mob spawn 2\n";
+            //std::cout << "mob spawn 2\n";
         }
         if (third_creep.checkDelay() && std::find(alr_passed_3.begin(), alr_passed_3.end(), i) == alr_passed_3.end()) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
 
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
-            std::cout << "mob spawn 3\n";
+            //std::cout << "mob spawn 3\n";
             game.entities_queue.emplace_back(e, mob_name);
             alr_passed_3.push_back(i);
-            std::cout << "mob spawn 3\n";
+            //std::cout << "mob spawn 3\n";
         }
         if (fourth_creep.checkDelay() && std::find(alr_passed_4.begin(), alr_passed_4.end(), i) == alr_passed_4.end()) {
             ECS::Entity e = game.nextEntity(eType::CREATURES);
 
             game.createEntity(e, mob_name, {mob_pos.x, mob_pos.y});
-            std::cout << "mob spawn 4\n";
+            //std::cout << "mob spawn 4\n";
             game.entities_queue.emplace_back(e, mob_name);
             alr_passed_4.push_back(i);
-            std::cout << "mob spawn 4\n";
+            //std::cout << "mob spawn 4\n";
             first_creep.toggle();
             second_creep.toggle();
             third_creep.toggle();
