@@ -177,7 +177,7 @@ void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
     for (auto& player : msg.players) {
         ECS::Entity e = player.entity;
         createEntity(e, CHAMPIONS[player.champ], {player.x, player.y});
-        handleHealthBar(*this, e);
+        //handleHealthBar(*this, e);
         targets.getComponent(e).x = player.x;
         targets.getComponent(e).y = player.y;
         teams.getComponent(e).name = TEAMS[player.team];
