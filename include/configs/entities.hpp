@@ -37,6 +37,8 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     "client/assets/configs/ui/logo.toml",
     "client/assets/configs/ui/backgrounds.toml",
     "client/assets/configs/ui/text_input.toml",
+    /* == InGame == */
+    "client/assets/configs/hud/champion_info.toml",
     /* == Lobby == */
     "client/assets/configs/ui/lobby/book.toml",
     "client/assets/configs/ui/lobby/buttons.toml",

@@ -1,3 +1,15 @@
+[ENTITIES.goatier_pp]
+drawable = true
+position2 = true
+
+[ENTITIES.goatier_pp.sprite]
+path = "client/assets/images/champions/goatier/pp.png"
+size = [190, 189]
+scale = [80, 80]
+layer = 22
+
+# --------------------------
+
 [ENTITIES.Goatier]
 drawable = true
 

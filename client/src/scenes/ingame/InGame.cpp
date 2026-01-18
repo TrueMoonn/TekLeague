@@ -16,12 +16,12 @@
 #include <sfml/components/window.hpp>
 #include <entity_spec/components/team.hpp>
 
+#include "GameTool.hpp"
 #include "Network/generated_messages.hpp"
 #include "components/competences/target.hpp"
 #include "entities.hpp"
 #include "my.hpp"
 #include "scenes.hpp"
-
 
 void setInGameScene(Client& game) {
     te::Scene ingame;
@@ -38,18 +38,10 @@ void setInGameScene(Client& game) {
         {game.nextEntity(eType::MAP), "sumoners_rift_nash_zone"},
         {game.nextEntity(eType::MAP), "sumoners_rift_jungle"},
         {game.nextEntity(eType::MAP), "sumoners_rift_walls"},
-        // {game.nextEntity(eType::BUILDINGS), "tower_blue", {1400, 1000}},
-        // {game.nextEntity(eType::BUILDINGS), "tower_red", {6792, 1000}},
-        // {game.nextEntity(eType::BUILDINGS), "zone_left_enemy", {6792, 1000}},
     };
-
-    ingame.on_activate = [&game](){};
 
     std::size_t idx = game.addScene(ingame);
     game.subForScene<te::Keys>(idx, "key_input", [&game](te::Keys keys) {
-        if (keys[te::Key::Escape]) {
-            game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::PARAMETERS));
-        }
         if (keys[te::Key::A]) {
             net::CLIENT_INPUTS msg;
             msg.mouse_x = game.mpos.x;
