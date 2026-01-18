@@ -22,6 +22,7 @@ void setParametersScenes(Client& game);
 void setInGameScene(Client& game);
 void setChampionSelection(Client& game);
 void setHudScene(Client& game);
+void setEndGameScene(Client& game);
 
 enum class SCENES {
     MAIN = 0,
@@ -32,6 +33,7 @@ enum class SCENES {
     PARAMETERS,
     INGAME,
     HUD,
+    END_GAME,
     LIMITSCENE,
 };
 
@@ -45,4 +47,5 @@ static const std::unordered_map<SCENES,
     {SCENES::PARAMETERS, &setParametersScenes},
     {SCENES::INGAME, &setInGameScene},
     {SCENES::HUD, &setHudScene},
+    {SCENES::END_GAME, &setEndGameScene},
 };

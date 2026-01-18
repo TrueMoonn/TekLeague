@@ -23,6 +23,7 @@ add_executable(${PROJECT_NAME}
     ${GAME_CLIENT_SRC_DIR}/scenes/lobby/SelectChampion.cpp
     ${GAME_CLIENT_SRC_DIR}/scenes/ingame/InGame.cpp
     ${GAME_CLIENT_SRC_DIR}/scenes/ingame/Hud.cpp
+    ${GAME_CLIENT_SRC_DIR}/scenes/EndGame.cpp
     ${GAME_CLIENT_SRC_DIR}/scenes/Parameters.cpp
 )
 

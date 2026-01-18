@@ -8,6 +8,7 @@
 #include <print>
 #include <cstring>
 #include <string>
+#include <cctype>
 #include <unordered_map>
 
 #include <entity_spec/components/team.hpp>
@@ -22,8 +23,8 @@
 #include "components/stats/health.hpp"
 #include "components/stats/mana.hpp"
 #include "components/stats/xp.hpp"
-#include "my.hpp"
 #include "physic/components/hitbox.hpp"
+#include "my.hpp"
 
 void Client::handleLoggedIn(const net::LOGGED_IN& msg) {
     _client_id = msg.id;
@@ -109,7 +110,17 @@ void Client::handleGameStarting(const net::GAME_STARTING& msg) {
 
 void Client::handleGameEnd(const net::GAME_END& msg) {
     setGameState(LobbyGameState::END_GAME);
+    setPendingWinningTeam(msg.winning_team);
+
+    std::string winner = (msg.winning_team < TEAMS.size())
+        ? TEAMS[msg.winning_team]
+        : "Unknown";
+    if (!winner.empty())
+        winner[0] = static_cast<char>(std::toupper(winner[0]));
+    setEndGameMessage("Winner: " + winner);
+
     std::println("[Client] GAME END: winning team {}", static_cast<int>(msg.winning_team));
+    emit("game:game_end");
 }
 
 void Client::handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg) {

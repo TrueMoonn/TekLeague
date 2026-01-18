@@ -48,6 +48,8 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
     /* == Parameters == */
     "client/assets/configs/ui/parameters/background.toml",
     "client/assets/configs/ui/parameters/button.toml",
+    /* == End Game == */
+    "client/assets/configs/ui/end_game.toml",
     /* == Buildings == */
     "client/assets/configs/buildings/tower.toml",
     "client/assets/configs/buildings/nexus.toml",

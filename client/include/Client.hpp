@@ -74,6 +74,9 @@ class Client : public Game, public te::network::GameClient {
     bool isInLobby() const { return !getCode().empty(); }
     std::optional<net::PlayerListEntry> getMyInfos();
 
+    const std::string& getEndGameMessage() const { return _end_game_message; }
+    void setEndGameMessage(const std::string& msg) { _end_game_message = msg; }
+
     mat::Vector2i mpos;
     te::Timestamp inputLimit{0.08f};
 
@@ -83,6 +86,7 @@ class Client : public Game, public te::network::GameClient {
     bool _is_admin = false;
     std::vector<std::string> _cached_lobbies_list;
     net::Address _server_address;
+    std::string _end_game_message = "Game Over";
 
     void registerPacketTrackers();
 

@@ -310,7 +310,6 @@ void Client::registerMessageHandlers() {
         auto msg = net::GAME_END::deserialize(data);
 
         handleGameEnd(msg);
-        emit("game:game_end");
     });
 }
 

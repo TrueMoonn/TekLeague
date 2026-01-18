@@ -1,0 +1,60 @@
+[ENTITIES.end_popup_bg]
+drawable = true
+position2 = true
+
+    [ENTITIES.end_popup_bg.sprite]
+    path = "client/assets/images/ui/parameters/background.png"
+    size = [96, 64]
+    scale = [700, 400]
+    center = true
+    layer = 30
+
+[ENTITIES.end_popup_title]
+drawable = true
+position2 = true
+
+    [ENTITIES.end_popup_title.text]
+    string = ""
+    font = "client/assets/images/ui/main_font.otf"
+    offset = [0, 0]
+    size = 48
+    center = true
+    color = [255, 255, 255, 255]
+
+[ENTITIES.end_popup_button]
+drawable = true
+position2 = true
+clickable = true
+hoverable = true
+button = true
+
+    [ENTITIES.end_popup_button.sprite]
+    path = "client/assets/images/ui/parameters/button1.png"
+    size = [30, 31]
+    center = true
+    scale = [320, 90]
+    layer = 32
+
+    [ENTITIES.end_popup_button.hitbox]
+    top = -45
+    left = -160
+    width = 320
+    height = 90
+
+    [ENTITIES.end_popup_button.animation]
+    frames = [
+        # DEFAULT
+        [[3, 0], 1, 0.0, false],
+        # CLICKED
+        [[1, 0], 1, 0.0, false],
+        # HOVER
+        [[0, 0], 1, 0.0, false],
+    ]
+
+    [ENTITIES.end_popup_button.text]
+    string = "RETURN"
+    font = "client/assets/images/ui/main_font.otf"
+    offset = [0, 0]
+    size = 42
+    center = true
+    color = [255, 255, 255, 255]
