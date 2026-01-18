@@ -1,0 +1,36 @@
+[ENTITIES.button]
+drawable = true
+position2 = true
+clickable = true
+hoverable = true
+button = true
+
+    [ENTITIES.button.sprite]
+    path = "client/assets/images/ui/buttons/button.png"
+    size = [30, 31]
+    scale = [400, 100]
+    layer = 1
+
+    [ENTITIES.button.hitbox]
+    top = 25
+    left = 0
+    width = 400
+    height = 100
+
+    [ENTITIES.button.animation]
+    frames = [
+        # DEFAULT
+        [[3, 0], 1, 0.0, false],
+        # CLICKED
+        [[1, 0], 1, 0.0, false],
+        # HOVER
+        [[0, 0], 1, 0.0, false],
+    ]
+
+    [ENTITIES.button.text]
+    string = ""
+    font = "client/assets/images/ui/main_font.otf"
+    offset = [200, 40]
+    size = 50
+    center = true
+    color = [255, 255, 255, 255]

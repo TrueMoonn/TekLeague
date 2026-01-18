@@ -1,0 +1,46 @@
+[ENTITIES.nash]
+    position2 = true
+    clickable = true
+
+    [ENTITIES.nash.attack]
+        name = "nash_attack"
+        auto = true
+
+    [ENTITIES.nash.team]
+        name = "monster"
+
+    [ENTITIES.nash.stat_pool]
+        ad = 100
+        ap = 0
+        atk_speed = 1.0
+        armor = 20
+        atk_range = 600
+        magic_resist = 20
+        mov_speed = 0
+
+    [ENTITIES.nash.health]
+        amount = 1000
+        max = 2500
+        regen = 50
+
+    [ENTITIES.nash.hitbox]
+        top = -400
+        left = -200
+        width = 400
+        height = 800
+
+[ENTITIES.nash_attack]
+    position2 = true
+    velocity2 = true
+    target = true
+
+    [ENTITIES.nash_attack.team]
+        name = "monster"
+
+    [ENTITIES.nash_attack.spell]
+        name = "nash_attack"
+        base = 0
+        damage_type = 0
+        ratios = [1.0, 0.0]
+        target = 2
+        speed = 400

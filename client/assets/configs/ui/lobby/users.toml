@@ -1,0 +1,35 @@
+[ENTITIES.user_blue_side_lobby]
+drawable = true
+position2 = true
+
+    [ENTITIES.user_blue_side_lobby.sprite]
+    path = "client/assets/images/ui/lobby/user_blue_side.png"
+    size = [64, 20]
+    scale = [380, 100]
+    layer = 19
+
+    [ENTITIES.user_blue_side_lobby.text]
+    string = "..."
+    font = "client/assets/images/ui/main_font.otf"
+    offset = [190, 40]
+    size = 30
+    center = true
+    color = [0, 0, 0, 255]
+
+[ENTITIES.user_red_side_lobby]
+drawable = true
+position2 = true
+
+    [ENTITIES.user_red_side_lobby.sprite]
+    path = "client/assets/images/ui/lobby/user_red_side.png"
+    size = [64, 20]
+    scale = [380, 100]
+    layer = 19
+
+    [ENTITIES.user_red_side_lobby.text]
+    string = "..."
+    font = "client/assets/images/ui/main_font.otf"
+    offset = [190, 30]
+    size = 30
+    center = true
+    color = [0, 0, 0, 255]

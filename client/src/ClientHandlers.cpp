@@ -1,0 +1,287 @@
+/*
+** EPITECH PROJECT, 2025
+** TekLeague
+** File description:
+** ClientHandlers.cpp
+*/
+
+#include <print>
+#include <cstring>
+#include <string>
+#include <cctype>
+#include <unordered_map>
+
+#include <entity_spec/components/team.hpp>
+#include <interaction/components/player.hpp>
+#include <components/competences/target.hpp>
+#include <physic/components/position.hpp>
+#include <physic/components/velocity.hpp>
+#include <display/components/animation.hpp>
+
+#include "Client.hpp"
+#include "Network/generated_messages.hpp"
+#include "components/ui/game/sticky.hpp"
+#include "components/ui/game/track_stat.hpp"
+#include "components/stats/health.hpp"
+#include "components/stats/mana.hpp"
+#include "components/stats/xp.hpp"
+#include "physic/components/hitbox.hpp"
+#include "my.hpp"
+
+void Client::handleLoggedIn(const net::LOGGED_IN& msg) {
+    _client_id = msg.id;
+}
+
+void Client::handleLoggedOut(const net::LOGGED_OUT& msg) {
+    _username.clear();
+    _client_id = 0;
+}
+
+void Client::handleUsernameAlreadyTaken(
+    const net::USERNAME_ALREADY_TAKEN& msg) {
+    _username.clear();
+}
+
+void Client::handleLobbyCreated(const net::LOBBY_CREATED& msg) {
+    setCode(std::string(msg.lobby_code, 6));
+    _is_admin = true;
+}
+
+void Client::handleLobbyJoined(const net::LOBBY_JOINED& msg) {
+}
+
+void Client::handleBadLobbyCode(const net::BAD_LOBBY_CODE& msg) {
+    setCode("");
+}
+
+void Client::handleLobbyFull(const net::LOBBY_FULL& msg) {
+    setCode("");
+}
+
+void Client::handlePlayersList(const net::PLAYERS_LIST& msg) {
+    setPlayers(msg.players);
+
+    _is_admin = false;
+    for (const auto& player : getPlayers()) {
+        if (player.id == _client_id && player.is_admin != 0) {
+            _is_admin = true;
+            break;
+        }
+    }
+}
+
+void Client::handleLobbiesList(const net::LOBBIES_LIST& msg) {
+    _cached_lobbies_list = msg.lobby_codes;
+}
+
+void Client::handleLobbyVisibilityChanged(
+    const net::LOBBY_VISIBILITY_CHANGED& msg) {
+    setPublic(msg.is_public != 0);
+}
+
+void Client::handleGameStarting(const net::GAME_STARTING& msg) {
+    setGameState(LobbyGameState::IN_GAME);
+}
+
+void Client::handleGameEnd(const net::GAME_END& msg) {
+    setGameState(LobbyGameState::END_GAME);
+    setPendingWinningTeam(msg.winning_team);
+
+    std::string winner = (msg.winning_team < TEAMS.size())
+        ? TEAMS[msg.winning_team]
+        : "Unknown";
+    if (!winner.empty())
+        winner[0] = static_cast<char>(std::toupper(winner[0]));
+    setEndGameMessage("Winner: " + winner);
+
+    emit("game:game_end");
+}
+
+void Client::handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg) {
+    setCode("");
+    _is_admin = false;
+    clearPlayers();
+    setGameState(LobbyGameState::PRE_GAME);
+}
+
+void Client::handleNotAdmin(const net::NOT_ADMIN& msg) {
+    (void)msg;
+}
+
+void Client::handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg) {
+    (void)msg;
+}
+
+void Client::handleTeamFull(const net::TEAM_FULL& msg) {
+    (void)msg;
+}
+
+void Client::handlePing() {
+    sendPong();
+}
+
+void Client::handlePong() {
+    // TODO(PIERRE): si ca fait longtemps = deco
+}
+
+void handleHealthBar(Game &game, ECS::Entity targetId) {
+    auto& health = game.getComponent<Health>();
+    auto& sticky = game.getComponent<Sticky>();
+    auto& trackstat = game.getComponent<TrackStat>();
+
+    std::cerr << "Entering health bar" << std::endl;
+    if (!health.hasComponent(targetId))
+        return;
+    std::cerr << "Creating health bar" << std::endl;
+    auto barId = game.nextEntity(eType::HUD);
+    game.createEntity(barId, "health_bar");
+    if (!sticky.hasComponent(barId) || !trackstat.hasComponent(barId))
+        return;
+    std::cerr << "Computing health bar" << std::endl;
+    sticky.getComponent(barId).id = targetId;
+    trackstat.getComponent(barId).id = targetId;
+}
+
+void Client::handlePlayersInit(const net::PLAYERS_INIT& msg) {
+    auto& targets = getComponent<Target>();
+    auto& teams = getComponent<addon::eSpec::Team>();
+    for (auto& player : msg.players) {
+        ECS::Entity e = player.entity;
+        createEntity(e, CHAMPIONS[player.champ], {player.x, player.y});
+        //handleHealthBar(*this, e);
+        targets.getComponent(e).x = player.x;
+        targets.getComponent(e).y = player.y;
+        teams.getComponent(e).name = TEAMS[player.team];
+        if (player.id == getClientId()) {
+            createComponent<addon::intact::Player>(e);
+        }
+    }
+}
+
+void Client::handleBuildingsInit(const net::BUILDINGS_INIT& msg) {
+    auto& teams = getComponent<addon::eSpec::Team>();
+    auto& positions = getComponent<addon::physic::Position2>();
+    auto& hitboxes = getComponent<addon::physic::Hitbox>();
+
+    for (auto& building : msg.buildings) {
+        ECS::Entity e = building.entity;
+
+        std::string prefab;
+        std::string type = building.type;
+        mat::Vector2f visualOffset{0.f, 0.f};
+
+        if (type == "nexus") {
+            if (building.team == 1) {
+                prefab = "nexus_blue";
+            } else if (building.team == 2) {
+                prefab = "nexus_red";
+            } else {
+                prefab = "nexus_blue";
+            }
+            visualOffset = {(building.team == 1 ? 100.f : (building.team == 2 ? -100.f : 0.f)), 350.f};
+        } else {
+            if (building.team == 1) {
+                prefab = "tower_blue";
+            } else if (building.team == 2) {
+                prefab = "tower_red";
+            } else {
+                prefab = "tower_blue";
+            }
+            visualOffset = {-103.5f, 104.f};
+        }
+
+        createEntity(e, prefab, {building.x, building.y});
+        //handleHealthBar(*this, e);
+
+        teams.getComponent(e).name = TEAMS[building.team];
+        positions.getComponent(e).x = building.x + visualOffset.x;
+        positions.getComponent(e).y = building.y + visualOffset.y;
+
+        if (hitboxes.hasComponent(e)) {
+            hitboxes.getComponent(e).position.x -= visualOffset.x;
+            hitboxes.getComponent(e).position.y -= visualOffset.y;
+        }
+    }
+}
+
+void Client::handlePlayersUpdate(const net::PLAYERS_UPDATES& msg) {
+    auto& pos = getComponent<addon::physic::Position2>();
+    auto& vels = getComponent<addon::physic::Velocity2>();
+    auto& targets = getComponent<Target>();
+    auto& healths = getComponent<Health>();
+    auto& xps = getComponent<Xp>();
+    auto& manas = getComponent<Mana>();
+
+    for (auto& player : msg.players) {
+        ECS::Entity e = player.entity;
+        targets.getComponent(e).x = player.direction_x;
+        targets.getComponent(e).y = player.direction_y;
+        vels.getComponent(e).x = player.vel_x;
+        vels.getComponent(e).y = player.vel_y;
+        pos.getComponent(e).x = player.x;
+        pos.getComponent(e).y = player.y;
+        healths.getComponent(e).amount = player.hp;
+        xps.getComponent(e).amount = player.level;
+        manas.getComponent(e).amount = player.mana;
+    }
+}
+
+void Client::handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg) {
+    auto& positions = getComponent<addon::physic::Position2>();
+
+    for (auto& entity : msg.projectiles) {
+        if (!positions.hasComponent(entity.entity))
+            continue;
+        positions.getComponent(entity.entity).x = entity.x;
+        positions.getComponent(entity.entity).y = entity.y;
+    }
+}
+
+void Client::handleSpellCast(const net::SPELL_CAST& msg) {
+    (void)msg;
+}
+
+void Client::handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg) {
+    auto& healths = getComponent<Health>();
+
+    for (auto& building : msg.buildings) {
+        ECS::Entity e = building.entity;
+        if (healths.hasComponent(e)) {
+            healths.getComponent(e).amount = building.hp;
+        }
+    }
+}
+
+void Client::handleCreaturesUpdate(const net::CREATURES_UPDATES& msg) {
+    auto& healths = getComponent<Health>();
+    auto& positions = getComponent<addon::physic::Position2>();
+    auto& velocitys = getComponent<addon::physic::Velocity2>();
+
+    for (auto& creatures : msg.creatures) {
+        ECS::Entity e = creatures.entity;
+        if (healths.hasComponent(e)) {
+            healths.getComponent(e).amount = creatures.hp;
+        }
+        if (positions.hasComponent(e)) {
+            positions.getComponent(e).x = creatures.x;
+            positions.getComponent(e).y = creatures.y;
+        }
+        if (velocitys.hasComponent(e)) {
+            velocitys.getComponent(e).x = creatures.vel_x;
+            velocitys.getComponent(e).y = creatures.vel_y;
+        }
+    }
+}
+
+void Client::handleEntitiesCreated(const net::ENTITIES_CREATED& msg) {
+    for (auto& entity : msg.entities) {
+        createEntity(entity.entity, entity.type, {entity.x, entity.y});
+        //handleHealthBar(*this, entity.entity);
+    }
+}
+
+void Client::handleEntitiesDestroyed(const net::ENTITIES_DESTROYED& msg) {
+    for (auto& entity : msg.entities) {
+        removeEntity(entity);
+    }
+}

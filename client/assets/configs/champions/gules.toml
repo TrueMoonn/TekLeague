@@ -1,0 +1,91 @@
+[ENTITIES.gules_pp]
+drawable = true
+position2 = true
+
+[ENTITIES.gules_pp.sprite]
+path = "client/assets/images/champions/gules/pp.png"
+size = [264, 279]
+scale = [80, 80]
+layer = 22
+
+# --------------------------
+
+[ENTITIES.Gules]
+drawable = true
+
+[ENTITIES.Gules.sprite]
+path = "client/assets/images/champions/gules/Gules.png"
+size = [387, 644]
+scale = [258, 430]
+origin = [193.5, 322]
+layer = 10
+
+[ENTITIES.Gules.on_death]
+entity = "dead_gules"
+
+[ENTITIES.Gules.animation]
+frames = [
+    # IDLE
+    [[0, 0], 5, 0.4, true],
+
+    # MOVEMENT
+    [[0, 1], 5, 0.2, true],
+    [[0, 2], 4, 0.2, true],
+    [[0, 3], 4, 0.2, true],
+    [[0, 4], 4, 0.2, true],
+    [[0, 5], 4, 0.2, true],
+
+    # AUTO ATTACK
+    [[0, 6], 5, 0.2, false],
+    [[0, 7], 5, 0.2, false],
+    [[0, 8], 4, 0.2, false],
+    [[0, 9], 5, 0.2, false],
+    [[0, 10], 4, 0.2, false],
+
+    # SPELL 1
+    [[0, 11], 5, 0.2, false],
+    [[0, 12], 4, 0.2, false],
+    [[0, 13], 4, 0.2, false],
+    [[0, 14], 5, 0.2, false],
+    [[0, 15], 5, 0.2, false],
+
+    # SPELL 2
+    [[0, 16], 4, 0.2, false],
+    [[0, 17], 4, 0.2, false],
+    [[0, 18], 4, 0.2, false],
+    [[0, 19], 4, 0.2, false],
+    [[0, 20], 4, 0.2, false],
+
+    # DEATH
+    [[0, 21], 5, 0.4, false],
+]
+
+# --------------------------
+
+[ENTITIES.gules_aa]
+drawable = true
+
+[ENTITIES.gules_aa.sprite]
+path = "client/assets/images/buildings/tower_projectile.png"
+size = [16, 16]
+origin = [8, 8]
+layer = 10
+
+[ENTITIES.gules_aa.animation]
+frames = [
+    [[0, 0], 3, 0.4, true]
+]
+
+# --------------------------
+
+[ENTITIES.gules_ball]
+drawable = true
+
+[ENTITIES.gules_ball.sprite]
+path = "client/assets/images/champions/gules/Orianna_Ball.png"
+size = [644, 644]
+scale = [50, 50]
+origin = [193.5, 322]
+layer = 10
+
+# -----------------------------

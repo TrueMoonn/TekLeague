@@ -1,0 +1,12 @@
+[ENTITIES.client_window]
+    [ENTITIES.client_window.window]
+    name = "TekLeague client"
+    framelimit = 30
+    size = [1280, 720]
+
+[ENTITIES.ig_window]
+    [ENTITIES.ig_window.window]
+        name = "TekLeague"
+        framelimit = 60
+        size = [1920, 1080]
+        fullscreen = true

@@ -1,0 +1,72 @@
+[ENTITIES.tower_blue]
+drawable = true
+
+[ENTITIES.tower_blue.sprite]
+path = "client/assets/images/buildings/tower_blue_top.png"
+size = [514, 1133]
+origin = [257, 566.5]
+scale = [171, 378]
+layer = 10
+
+#------------------------------
+
+[ENTITIES.tower_red]
+drawable = true
+
+[ENTITIES.tower_red.sprite]
+path = "client/assets/images/buildings/tower_red_top.png"
+size = [575, 1459]
+origin = [287.5, 729.5]
+center = true
+scale = [171, 378]
+layer = 10
+
+#------------------------------
+
+[ENTITIES.tower_projectile]
+drawable = true
+
+[ENTITIES.tower_projectile.sprite]
+path = "client/assets/images/buildings/tower_projectile.png"
+size = [16, 16]
+origin = [8, 8]
+layer = 10
+
+[ENTITIES.tower_projectile.animation]
+frames = [
+    [[0, 0], 3, 0.4, true]
+]
+
+[ENTITIES.tower_projectiles_explosion]
+drawable = true
+
+[ENTITIES.tower_projectiles_explosion.sprite]
+path = "client/assets/images/buildings/boom.png"
+center = true
+size = [128, 128]
+scale = [256, 256]
+layer = 11
+
+[ENTITIES.tower_projectiles_explosion.animation]
+frames = [
+    [[0, 0], 10, 0.2, false]
+]
+
+[ENTITIES.tower_projectiles_explosion.sound]
+path = "client/assets/audio/boom.mp3"
+play = true
+
+#------------------------------
+
+[ENTITIES.tower_zone]
+drawable = true
+position2 = true
+
+[ENTITIES.tower_zone.sprite]
+path = "client/assets/images/buildings/red_circle.png"
+size = [311, 200]
+scale = [400, 400]
+origin = [156, 100]
+layer = 10
+
+#------------------------------

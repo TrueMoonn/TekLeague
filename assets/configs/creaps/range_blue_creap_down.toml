@@ -1,0 +1,44 @@
+[ENTITIES.range_blue_creap_down]
+position2 = true
+target = true
+clickable = true
+
+[ENTITIES.range_blue_creap_down.velocity2]
+x = 0
+y = 0
+
+[ENTITIES.range_blue_creap_down.team]
+name = "blue"
+
+[ENTITIES.range_blue_creap_down.minions]
+name = "range_blue"
+
+[ENTITIES.range_blue_creap_down.health]
+amount = 1
+max = 200
+regen = 3
+
+[ENTITIES.range_blue_creap_down.mana]
+amount = 1
+max = 200
+regen = 3
+
+[ENTITIES.range_blue_creap_down.stat_pool]
+ad = 3
+ap = 0
+atk_speed = 3
+atk_range = 50
+cdr = 0
+armor = 34
+magic_resist = 25
+mov_speed = 200
+
+[ENTITIES.range_blue_creap_down.attack]
+name = "tower_projectile"
+auto = true
+
+[ENTITIES.range_blue_creap_down.minion_route]
+direction1 = [2000, 3150]
+direction2 = [4096, 2900]
+direction3 = [6192, 3150]
+direction4 = [6792, 2800]

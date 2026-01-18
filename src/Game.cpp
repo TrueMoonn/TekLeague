@@ -5,6 +5,8 @@
 ** Game.cpp
 */
 
+#include <string>
+
 #include <ECS/Entity.hpp>
 
 #include "configs/entities.hpp"
@@ -13,8 +15,10 @@
 #include "entities.hpp"
 #include "Game.hpp"
 
-Game::Game() : _framelimit(FRAME_LIMIT) {
-    loadPlugins();
+Game::Game(const std::string& ppath) : _framelimit(FRAME_LIMIT) {
+    std::memset(teams, 0, sizeof(teams));
+
+    loadPlugins(ppath);
     std::srand(std::time(0));
 
     for (auto& cmpt : LOCAL_COMPONENTS)
@@ -26,32 +30,84 @@ Game::Game() : _framelimit(FRAME_LIMIT) {
     for (auto& map : MAP_PATHS)
         addMap(map);
 
+    // Initialize entity ID ranges
     _nextEntities[eType::SYSTEM] = eField::SYSTEM_F;
     _nextEntities[eType::CHAMPION] = eField::CHAMPION_BEGIN;
     _nextEntities[eType::MENU] = eField::MENU_BEGIN;
     _nextEntities[eType::HUD] = eField::HUD_BEGIN;
-    _nextEntities[eType::WEAPON] = eField::WEAPON_BEGIN;
     _nextEntities[eType::MAP] = eField::MAP_BEGIN;
-    _nextEntities[eType::MOB] = eField::MOB_BEGIN;
-    _nextEntities[eType::XP] = eField::XP_BEGIN;
+    _nextEntities[eType::CREATURES] = eField::CREATURES_BEGIN;
+    _nextEntities[eType::BUILDINGS] = eField::BUILDINGS_BEGIN;
+    _nextEntities[eType::PROJECTILES] = eField::PROJECTILES_BEGIN;
+    _nextEntities[eType::ONDEATH] = eField::ONDEATH_BEGIN;
 
     sub("closed", [this]() {_running = false;});
     _running = true;
-    createEntity(nextEntity(eType::SYSTEM), "ig_window");
+}
+
+Game::Game(uint32_t max_players, const std::string& code,
+    const std::string& ppath)
+    : Game(ppath) {
+    _max_players = max_players;
+    _code = code;
 }
 
 ECS::Entity Game::nextEntity(eType type) {
-    if (_nextEntities.at(type) >= ENTITY_FIELDS.at(type).max) {
-        _nextEntities.at(type) = ENTITY_FIELDS.at(type).min;
-    } else {
-        _nextEntities.at(type) += 1;
+    // Initialiser la clé si elle n'existe pas
+    if (_nextEntities.find(type) == _nextEntities.end()) {
+        // Initialiser selon le type
+        switch (type) {
+            case eType::SYSTEM:
+                _nextEntities[type] = eField::SYSTEM_F;
+                break;
+            case eType::CHAMPION:
+                _nextEntities[type] = eField::CHAMPION_BEGIN;
+                break;
+            case eType::MENU:
+                _nextEntities[type] = eField::MENU_BEGIN;
+                break;
+            case eType::HUD:
+                _nextEntities[type] = eField::HUD_BEGIN;
+                break;
+            case eType::MAP:
+                _nextEntities[type] = eField::MAP_BEGIN;
+                break;
+            case eType::CREATURES:
+                _nextEntities[type] = eField::CREATURES_BEGIN;
+                break;
+            case eType::BUILDINGS:
+                _nextEntities[type] = eField::BUILDINGS_BEGIN;
+                break;
+            case eType::PROJECTILES:
+                _nextEntities[type] = eField::PROJECTILES_BEGIN;
+                break;
+            case eType::ONDEATH:
+                _nextEntities[type] = eField::ONDEATH_BEGIN;
+                break;
+        }
     }
-    return _nextEntities.at(type);
+
+    if (_nextEntities[type] >= ENTITY_FIELDS.at(type).max) {
+        _nextEntities[type] = ENTITY_FIELDS.at(type).min;
+    } else {
+        _nextEntities[type] += 1;
+    }
+    return _nextEntities[type];
 }
 
 void Game::run() {
-    while (_running) {
-        if (_framelimit.checkDelay())
-            runSystems();
-    }
+    if (_framelimit.checkDelay())
+        runSystems();
+}
+
+const std::string& Game::getCode() const {
+    return _code;
+}
+
+void Game::setCode(const std::string& new_code) {
+    _code = new_code;
+}
+
+uint32_t Game::getMaxPlayers() const {
+    return _max_players;
 }

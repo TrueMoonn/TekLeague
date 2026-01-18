@@ -1,0 +1,25 @@
+[ENTITIES.text_input]
+drawable = true
+position2 = true
+clickable = true
+focus = true
+
+[ENTITIES.text_input.sprite]
+path = "client/assets/images/ui/buttons/banner.png"
+size = [64, 20]
+scale = [400, 80]
+layer = 20
+
+[ENTITIES.text_input.hitbox]
+top = 10
+left = 0
+width = 400
+height = 80
+
+[ENTITIES.text_input.text]
+string = ""
+font = "client/assets/images/ui/main_font.otf"
+offset = [200, 40]
+size = 30
+center = true
+color = [0, 0, 0, 255]

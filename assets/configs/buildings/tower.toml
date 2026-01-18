@@ -1,0 +1,96 @@
+[ENTITIES.tower_blue]
+position2 = true
+clickable = true
+
+[ENTITIES.tower_blue.attack]
+name = "tower_projectile"
+auto = true
+
+[ENTITIES.tower_blue.team]
+name = "blue"
+
+[ENTITIES.tower_blue.building]
+name = "tower"
+
+[ENTITIES.tower_blue.stat_pool]
+ad = 50
+ap = 0
+atk_speed = 1.0
+armor = 20
+atk_range = 400
+magic_resist = 20
+mov_speed = 300
+
+[ENTITIES.tower_blue.health]
+amount = 100
+max = 100
+regen = 3
+
+[ENTITIES.tower_blue.hitbox]
+top = -85
+left = -189
+width = 171
+height = 378
+
+#------------------------------
+
+[ENTITIES.tower_red]
+position2 = true
+clickable = true
+
+[ENTITIES.tower_red.attack]
+name = "tower_projectile"
+auto = true
+
+[ENTITIES.tower_red.team]
+name = "red"
+
+[ENTITIES.tower_red.building]
+name = "tower"
+
+[ENTITIES.tower_red.stat_pool]
+ad = 50
+ap = 0
+atk_speed = 1.0
+armor = 20
+atk_range = 200
+magic_resist = 20
+mov_speed = 300
+
+[ENTITIES.tower_red.health]
+amount = 5000
+max = 5000
+regen = 3
+
+[ENTITIES.tower_red.hitbox]
+top = -85
+left = -189
+width = 171
+height = 378
+
+#------------------------------
+
+[ENTITIES.tower_projectile]
+position2 = true
+velocity2 = true
+target = true
+
+[ENTITIES.tower_projectile.team]
+name = ""
+
+[ENTITIES.tower_projectile.spell]
+name = "tower_projectile"
+base = 0
+damage_type = 0
+ratios = [1.0, 0.0]
+target = 2
+speed = 200
+
+[ENTITIES.tower_projectile.on_death]
+entity = "tower_projectiles_explosion"
+
+[ENTITIES.tower_projectiles_explosion]
+position2 = true
+
+[ENTITIES.tower_projectiles_explosion.timeout]
+duration = 2.0

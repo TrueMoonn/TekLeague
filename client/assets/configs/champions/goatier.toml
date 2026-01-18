@@ -1,0 +1,94 @@
+[ENTITIES.goatier_pp]
+drawable = true
+position2 = true
+
+[ENTITIES.goatier_pp.sprite]
+path = "client/assets/images/champions/goatier/pp.png"
+size = [190, 189]
+scale = [80, 80]
+layer = 22
+
+# --------------------------
+
+[ENTITIES.Goatier]
+drawable = true
+
+[ENTITIES.Goatier.champion]
+name = "Goatier"
+
+[ENTITIES.Goatier.sprite]
+path = "client/assets/images/champions/goatier/Goatier.png"
+size = [386, 646]
+scale = [258, 430]
+origin = [193.5, 420]
+layer = 10
+
+[ENTITIES.Goatier.animation]
+frames = [
+    # IDLE
+    [[0, 0], 5, 0.4, true],
+
+    # MOVEMENT
+    [[0, 1], 4, 0.1, true],
+    [[0, 2], 4, 0.1, true],
+    [[0, 3], 4, 0.1, true],
+    [[0, 4], 4, 0.1, true],
+    [[0, 5], 4, 0.1, true],
+
+    # AUTO ATTACK
+    [[0, 6], 5, 0.2, false],
+    [[0, 7], 5, 0.2, false],
+    [[0, 8], 5, 0.2, false],
+    [[0, 9], 5, 0.2, false],
+    [[0, 10], 5, 0.2, false],
+
+    # SPELL 1
+    [[0, 11], 8, 0.2, false],
+    [[0, 12], 8, 0.2, false],
+    [[0, 13], 8, 0.2, false],
+    [[0, 14], 8, 0.2, false],
+    [[0, 15], 8, 0.2, false],
+
+    # SPELL 2
+    [[0, 16], 5, 0.2, false],
+    [[0, 17], 5, 0.2, false],
+    [[0, 18], 4, 0.2, false],
+    [[0, 19], 4, 0.2, false],
+    [[0, 20], 4, 0.2, false],
+
+    # DEATH
+    [[0, 21], 6, 0.4, false]
+]
+
+# --------------------------
+
+[ENTITIES.goatier_aa]
+drawable = true
+
+[ENTITIES.goatier_aa.sprite]
+path = "client/assets/images/buildings/tower_projectile.png"
+size = [16, 16]
+origin = [8, 8]
+layer = 10
+
+[ENTITIES.goatier_aa.animation]
+frames = [
+    [[0, 0], 3, 0.4, true]
+]
+
+# --------------------------
+
+[ENTITIES.goatier_spell1]
+drawable = true
+
+[ENTITIES.goatier_spell1.sprite]
+path = "client/assets/images/champions/goatier/zoe_spell-removebg-preview.png"
+size = [500, 500]
+scale = [64, 64]
+origin = [250, 250]
+layer = 10
+
+[ENTITIES.goatier_spell1.animation]
+frames = [
+    [[0, 0], 1, 1.0, true]
+]

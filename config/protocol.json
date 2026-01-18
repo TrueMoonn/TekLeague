@@ -1,0 +1,479 @@
+{
+  "endianness": "big",
+  "preambule": {
+    "active": true,
+    "characters": "\\x00\\x00\\x00\\x00"
+  },
+  "packet_length": {
+    "active": true,
+    "length": 4
+  },
+  "datetime": {
+    "active": false
+  },
+  "end_of_packet": {
+    "active": false
+  },
+
+  "structs": {
+    "CodeTimestamp": {
+      "fields": [
+        { "name": "code", "type": "uint8" },
+        { "name": "timestamp", "type": "uint32" }
+      ]
+    },
+    "PlayerListEntry": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "is_admin", "type": "uint8" },
+        { "name": "team", "type": "uint8" },
+        { "name": "champion", "type": "uint8" },
+        { "name": "username", "type": "string", "max_length": 32 }
+      ]
+    },
+    "PlayerInit": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "entity", "type": "uint32" },
+        { "name": "team", "type": "uint8" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "champ", "type": "uint8" }
+      ]
+    },
+    "BuildingInit": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "team", "type": "uint8" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "type", "type": "string", "max_length": 16 }
+      ]
+    },
+    "TeamScore": {
+      "fields": [
+        { "name": "team_kills", "type": "uint32" },
+        { "name": "tower_taken", "type": "uint32" },
+        { "name": "major_mobs_killed", "type": "uint32" }
+      ]
+    },
+    "ScoreboardEntry": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "player_kills", "type": "uint32" },
+        { "name": "player_deaths", "type": "uint32" },
+        { "name": "player_assists", "type": "uint32" }
+      ]
+    },
+    "PlayerUpdate": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "vel_x", "type": "float" },
+        { "name": "vel_y", "type": "float" },
+        { "name": "direction_x", "type": "float" },
+        { "name": "direction_y", "type": "float" },
+        { "name": "hp", "type": "uint32" },
+        { "name": "mana", "type": "uint32" },
+        { "name": "level", "type": "uint8" },
+        {
+          "name": "effects",
+          "type": "fixed_array",
+          "element_type": "uint8",
+          "max_size": 16
+        }
+      ]
+    },
+    "BuildingsUpdate": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "hp", "type": "uint32" }
+      ]
+    },
+    "CreatureUpdate": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "vel_x", "type": "float" },
+        { "name": "vel_y", "type": "float" },
+        { "name": "hp", "type": "uint32" }
+      ]
+    },
+    "EntitiesCreated": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" },
+        { "name": "type", "type": "string", "max_length": 32 }
+      ]
+    },
+    "ProjectileUpdate": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" }
+      ]
+    },
+    "CollectibleUpdate": {
+      "fields": [
+        { "name": "id", "type": "uint32" },
+        { "name": "x", "type": "float" },
+        { "name": "y", "type": "float" }
+      ]
+    },
+    "InventoryUpdate": {
+      "fields": [
+        { "name": "playerid", "type": "uint32" },
+        {
+          "name": "items",
+          "type": "fixed_array",
+          "element_type": "uint32",
+          "max_size": 6
+        },
+        { "name": "gold", "type": "uint32" }
+      ]
+    },
+    "StatsUpdate": {
+      "fields": [
+        { "name": "playerid", "type": "uint32" },
+        { "name": "ad", "type": "uint32" },
+        { "name": "ap", "type": "uint32" },
+        { "name": "armor", "type": "uint32" },
+        { "name": "resist", "type": "uint32" },
+        { "name": "cdr_mov_speed", "type": "uint32" },
+        { "name": "atk_speed", "type": "uint32" },
+        { "name": "range", "type": "uint32" }
+      ]
+    },
+    "SpellCast": {
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "spell_slot", "type": "uint8" }
+      ]
+    }
+  },
+
+  "messages": {
+    "CONNECTED": {
+      "id": 1,
+      "fields": [
+        {
+          "name": "entries",
+          "type": "dynamic_array",
+          "element_type": "CodeTimestamp"
+        }
+      ]
+    },
+    "DISCONNEXION": {
+      "id": 2,
+      "fields": []
+    },
+    "ERROR_TOO_MANY_CLIENTS": {
+      "id": 3,
+      "fields": []
+    },
+    "PACKET_LOSS": {
+      "id": 4,
+      "fields": [{ "name": "code", "type": "uint8" }]
+    },
+    "I_MISSED_SOMETHING": {
+      "id": 5,
+      "fields": []
+    },
+    "PING": {
+      "id": 6,
+      "fields": []
+    },
+    "PONG": {
+      "id": 7,
+      "fields": []
+    },
+    "LOGIN": {
+      "id": 20,
+      "fields": [{ "name": "username", "type": "string", "max_length": 32 }]
+    },
+    "LOGOUT": {
+      "id": 21,
+      "fields": []
+    },
+    "LOGGED_IN": {
+      "id": 22,
+      "fields": [{ "name": "id", "type": "uint32" }]
+    },
+    "LOGGED_OUT": {
+      "id": 23,
+      "fields": [{ "name": "id", "type": "uint32" }]
+    },
+    "SPELL_CAST": {
+      "id": 90,
+      "fields": [
+        { "name": "entity", "type": "uint32" },
+        { "name": "spell_slot", "type": "uint8" }
+      ]
+    },
+    "USERNAME_ALREADY_TAKEN": {
+      "id": 25,
+      "fields": []
+    },
+    "JOIN_LOBBY": {
+      "id": 30,
+      "fields": [{ "name": "lobby_code", "type": "string", "max_length": 6 }]
+    },
+    "LOBBY_JOINED": {
+      "id": 31,
+      "fields": [{ "name": "id", "type": "uint32" }]
+    },
+    "CREATE_LOBBY": {
+      "id": 32,
+      "fields": []
+    },
+    "LOBBY_CREATED": {
+      "id": 33,
+      "fields": [{ "name": "lobby_code", "type": "string", "max_length": 6 }]
+    },
+    "GET_ALL_PUBLIC_LOBBIES": {
+      "id": 34,
+      "fields": []
+    },
+    "LOBBIES_LIST": {
+      "id": 35,
+      "fields": [
+        {
+          "name": "lobby_codes",
+          "type": "dynamic_array",
+          "element_type": "string"
+        }
+      ]
+    },
+    "ADMIN_START_GAME": {
+      "id": 36,
+      "fields": []
+    },
+    "GAME_STARTING": {
+      "id": 37,
+      "fields": []
+    },
+    "PLAYERS_LIST": {
+      "id": 38,
+      "fields": [
+        {
+          "name": "players",
+          "type": "dynamic_array",
+          "element_type": "PlayerListEntry"
+        }
+      ]
+    },
+    "LOBBY_VISIBILITY_CHANGED": {
+      "id": 39,
+      "fields": [{ "name": "is_public", "type": "uint8" }]
+    },
+    "LEAVE_LOBBY": {
+      "id": 40,
+      "fields": []
+    },
+    "WANT_THIS_TEAM": {
+      "id": 41,
+      "fields": [{ "name": "team", "type": "uint8" }]
+    },
+    "LOBBY_DESTROYED": {
+      "id": 42,
+      "fields": []
+    },
+    "LOBBY_FULL": {
+      "id": 43,
+      "fields": []
+    },
+    "BAD_LOBBY_CODE": {
+      "id": 44,
+      "fields": []
+    },
+    "NOT_ADMIN": {
+      "id": 45,
+      "fields": []
+    },
+    "TOGGLE_LOBBY_PRIVATE_PUBLIC": {
+      "id": 46,
+      "fields": []
+    },
+    "TEAM_FULL": {
+      "id": 47,
+      "fields": []
+    },
+    "PLAYERS_NOT_IN_TEAM": {
+      "id": 48,
+      "fields": []
+    },
+    "SELECT_CHAMPION": {
+      "id": 49,
+      "fields": [
+        {
+          "name": "champion",
+          "type": "uint8"
+        }
+      ]
+    },
+    "CLIENT_INPUTS": {
+      "id": 50,
+      "fields": [
+        { "name": "actions", "type": "uint8" },
+        { "name": "mouse_x", "type": "float" },
+        { "name": "mouse_y", "type": "float" },
+        { "name": "target", "type": "uint32" }
+      ]
+    },
+    "PLAYERS_INIT": {
+      "id": 51,
+      "fields": [
+        {
+          "name": "players",
+          "type": "dynamic_array",
+          "element_type": "PlayerInit"
+        }
+      ]
+    },
+    "BUILDINGS_INIT": {
+      "id": 52,
+      "fields": [
+        {
+          "name": "buildings",
+          "type": "dynamic_array",
+          "element_type": "BuildingInit"
+        }
+      ]
+    },
+    "ENTITIES_CREATED": {
+      "id": 53,
+      "fields": [
+        {
+          "name": "entities",
+          "type": "dynamic_array",
+          "element_type": "EntitiesCreated"
+        }
+      ]
+    },
+    "ENTITIES_DESTROYED": {
+      "id": 54,
+      "fields": [
+        {
+          "name": "entities",
+          "type": "dynamic_array",
+          "element_type": "uint32"
+        }
+      ]
+    },
+    "PLAYERS_UPDATES": {
+      "id": 61,
+      "fields": [
+        {
+          "name": "players",
+          "type": "dynamic_array",
+          "element_type": "PlayerUpdate"
+        }
+      ]
+    },
+    "BUILDINGS_UPDATES": {
+      "id": 62,
+      "fields": [
+        {
+          "name": "buildings",
+          "type": "dynamic_array",
+          "element_type": "BuildingsUpdate"
+        }
+      ]
+    },
+    "CREATURES_UPDATES": {
+      "id": 63,
+      "fields": [
+        {
+          "name": "creatures",
+          "type": "dynamic_array",
+          "element_type": "CreatureUpdate"
+        }
+      ]
+    },
+    "PROJECTILES_UPDATES": {
+      "id": 64,
+      "fields": [
+        {
+          "name": "projectiles",
+          "type": "dynamic_array",
+          "element_type": "ProjectileUpdate"
+        }
+      ]
+    },
+    "COLLECTIBLES_UPDATES": {
+      "id": 65,
+      "fields": [
+        {
+          "name": "collectibles",
+          "type": "dynamic_array",
+          "element_type": "CollectibleUpdate"
+        }
+      ]
+    },
+    "INVENTORIES_UPDATES": {
+      "id": 66,
+      "fields": [
+        {
+          "name": "inventories",
+          "type": "dynamic_array",
+          "element_type": "InventoryUpdate"
+        }
+      ]
+    },
+    "STATS_UPDATES": {
+      "id": 67,
+      "fields": [
+        {
+          "name": "stats",
+          "type": "dynamic_array",
+          "element_type": "StatsUpdate"
+        }
+      ]
+    },
+    "SCORE": {
+      "id": 70,
+      "fields": [
+        { "name": "team_count", "type": "uint8" },
+        {
+          "name": "teams",
+          "type": "fixed_array",
+          "element_type": "TeamScore",
+          "max_size": 2
+        }
+      ]
+    },
+    "GAME_DURATION": {
+      "id": 71,
+      "fields": [{ "name": "duration", "type": "uint32" }]
+    },
+    "SCOREBOARD": {
+      "id": 72,
+      "fields": [
+        {
+          "name": "entries",
+          "type": "dynamic_array",
+          "element_type": "ScoreboardEntry"
+        }
+      ]
+    },
+    "PLAYER_DEAD": {
+      "id": 80,
+      "fields": []
+    },
+    "ADMIN_PAUSE_GAME": {
+      "id": 87,
+      "fields": []
+    },
+    "ADMIN_GAME_PAUSED": {
+      "id": 88,
+      "fields": []
+    },
+    "GAME_END": {
+      "id": 89,
+      "fields": [{ "name": "winning_team", "type": "uint8" }]
+    }
+  }
+}
