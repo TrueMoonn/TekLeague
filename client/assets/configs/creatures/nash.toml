@@ -1,0 +1,14 @@
+[ENTITIES.nash]
+    drawable = true
+
+    [ENTITIES.nash.sprite]
+        path = "client/assets/images/mobs/nash/idle.png"
+        size = [446, 401]
+        scale = [1115, 1002]
+        center = true
+        layer = 10
+
+    [ENTITIES.nash.animation]
+        frames = [
+            [[0, 0], 33, 0.1, true]
+        ]
