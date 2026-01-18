@@ -23,7 +23,6 @@
 
 std::optional<std::reference_wrapper<Server>> g_server;
 
-// Signal handler for SIGINT and SIGTERM
 void signalHandler(int signal) {
     const char* msg = nullptr;
     if (signal == SIGINT) {
@@ -83,7 +82,6 @@ int main(int ac, char **av) {
     }
 
     g_server.reset();
-    std::println("[SERVER] Server stopped cleanly. All destructors called.");
     std::println("[SERVER] Resources freed properly. Goodbye!");
     return 0;
 }

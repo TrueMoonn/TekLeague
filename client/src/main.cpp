@@ -60,8 +60,6 @@ int main(int ac, char **av) {
     game.createEntity(game.nextEntity(eType::SYSTEM), "ig_window");
 
     game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::MAIN));
-    std::print("Server IP: {}\n", server_ip);
-    std::print("Server Port: {}\n\n", server_port);
 
     try {
         game.connectToServer(server_ip, server_port);
@@ -73,7 +71,6 @@ int main(int ac, char **av) {
         return 1;
     }
 
-    std::print("[CLIENT] Starting game loop...\n");
 
     try {
         while (g_running.load() && game.isRunning()) {

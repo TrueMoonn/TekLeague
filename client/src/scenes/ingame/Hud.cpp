@@ -15,7 +15,6 @@
 #include "scenes/ingame.hpp"
 
 void setHudScene(Client& game) {
-    std::cout << "createScene\n";
     te::Scene hud;
     hud.systems = {{
         {"poll_event"},  // INPUT

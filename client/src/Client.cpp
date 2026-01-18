@@ -43,15 +43,11 @@ Client::~Client() {
 }
 
 void Client::connectToServer(const std::string& ip, uint16_t port) {
-    std::print("[+] Connecting to {}:{}...\n", ip, port);
-
     if (!te::network::GameClient::connectToServer(ip, port)) {
         throw std::runtime_error("Failed to connect to server");
     }
 
     _server_address = net::Address(ip, port);
-
-    std::print("[Y] Connected to server!\n\n");
 }
 
 void Client::disconnect() {

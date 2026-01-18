@@ -360,9 +360,6 @@ void Server::handleLeaveLobby(const std::vector<uint8_t>& data,
 
 void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data,
     const net::Address& sender) {
-    std::println("[Server] handleToggleLobbyVisibility: Request from {}:{}",
-        sender.getIP(), sender.getPort());
-
     auto client_opt = getClient(sender);
     if (!client_opt)
         return;
@@ -374,7 +371,6 @@ void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data,
     uint32_t lobby_id = client.lobby_id;
 
     if (!isAdmin(sender, lobby_id)) {
-        std::println("[Server] handleToggleLobbyVisibility: User is not admin");
         sendNotAdmin(sender);
         return;
     }
@@ -390,9 +386,6 @@ void Server::handleToggleLobbyVisibility(const std::vector<uint8_t>& data,
             is_public = true;
         }
     }
-
-    std::println("[Server] handleToggleLobbyVisibility: Lobby {} is now {}",
-                 lobby_id, (is_public ? "PUBLIC" : "PRIVATE"));
     sendLobbyVisibilityChanged(lobby_id, is_public);
 }
 
@@ -525,8 +518,6 @@ void Server::handleWantThisTeam(const std::vector<uint8_t>& data,
 
 void Server::handleAdminPauseGame(
     const std::vector<uint8_t>& data, const net::Address& sender) {
-    std::println("[Server] handleAdminPauseGame: Request from {}:{}",
-        sender.getIP(), sender.getPort());
 
     auto client_opt = getClient(sender);
     if (!client_opt)
@@ -539,7 +530,6 @@ void Server::handleAdminPauseGame(
     uint32_t lobby_id = client.lobby_id;
 
     if (!isAdmin(sender, lobby_id)) {
-        std::println("[Server] handleAdminPauseGame: User is not admin");
         sendNotAdmin(sender);
         return;
     }
@@ -547,34 +537,24 @@ void Server::handleAdminPauseGame(
     // TODO(Pierre): Toggle pause state in lobby
     // lobbies.at(lobby_id).getLobby().togglePause();
 
-    std::println("[Server] handleAdminPauseGame: Toggling pause for lobby {}",
-        lobby_id);
     sendAdminGamePaused(lobby_id);
 }
 
 void Server::handleAdminEndGame(const std::vector<uint8_t>& data,
     const net::Address& sender) {
-    std::println("[Server] handleAdminEndGame: Request from {}:{}",
-        sender.getIP(), sender.getPort());
-
     auto client_opt = getClient(sender);
     if (!client_opt) {
-        std::println("[Server] handleAdminEndGame: Client not found");
         return;
     }
 
     auto& client = client_opt->get();
     if (!client.in_lobby) {
-        std::println("[Server] handleAdminEndGame: Client not in lobby");
         return;
     }
 
     uint32_t lobby_id = client.lobby_id;
-    std::println("[Server] handleAdminEndGame: Client {} is in lobby {}",
-        client.id, lobby_id);
 
     if (!isAdmin(sender, lobby_id)) {
-        std::println("[Server] handleAdminEndGame: User is not admin");
         sendNotAdmin(sender);
         return;
     }
@@ -584,16 +564,9 @@ void Server::handleAdminEndGame(const std::vector<uint8_t>& data,
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         if (lobbies.find(lobby_id) != lobbies.end()) {
             lobbies.at(lobby_id).setGameState(LobbyGameState::END_GAME);
-            std::println(
-            "[Server] handleAdminEndGame: Lobby {} state changed to END_GAME",
-            lobby_id);
         }
     }
-
-    std::println("[Server] handleAdminEndGame: Ending game for lobby {}",
-        lobby_id);
     sendGameEnded(lobby_id);
-    std::println("[Server] handleAdminEndGame: sendGameEnded completed");
 }
 
 void Server::handlePacketLoss(const std::vector<uint8_t>& data,
