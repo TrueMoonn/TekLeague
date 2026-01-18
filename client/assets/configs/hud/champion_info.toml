@@ -1,0 +1,85 @@
+[ENTITIES.main_hud]
+drawable = true
+position2 = true
+
+[ENTITIES.main_hud.sprite]
+path = "client/assets/images/ui/hud/main_bar.png"
+size = [446, 54]
+scale = [800, 150]
+layer = 15
+
+# ------------------------
+
+[ENTITIES.hud_bar]
+drawable = true
+position2 = true
+
+[ENTITIES.hud_bar.sprite]
+path = "client/assets/images/ui/hud/bar.png"
+size = [147, 12]
+scale = [500, 20]
+layer = 16
+
+[ENTITIES.hud_bar.text]
+string = ""
+font = "client/assets/images/ui/main_font.otf"
+offset = [250, 5]
+size = 15
+center = true
+color = [255, 255, 255, 255]
+
+# ------------------------
+
+[ENTITIES.hud_bar_mana]
+drawable = true
+position2 = true
+
+[ENTITIES.hud_bar_mana.sprite]
+path = "client/assets/images/blue.png"
+size = [32, 32]
+scale = [490, 10]
+layer = 17
+
+# ------------------------
+
+[ENTITIES.hud_bar_hp]
+drawable = true
+position2 = true
+
+[ENTITIES.hud_bar_hp.sprite]
+path = "client/assets/images/green.png"
+size = [32, 32]
+scale = [490, 10]
+layer = 17
+
+# ------------------------
+
+[ENTITIES.hud_champion_name]
+drawable = true
+position2 = true
+
+[ENTITIES.hud_champion_name.sprite]
+path = "client/assets/images/ui/hud/champion_name.png"
+size = [102, 29]
+scale = [102, 29]
+layer = 16
+
+[ENTITIES.hud_champion_name.text]
+string = ""
+font = "client/assets/images/ui/main_font.otf"
+offset = [50, 10]
+size = 20
+center = true
+color = [255, 255, 255, 255]
+
+# ------------------------
+
+[ENTITIES.hud_champion_pp]
+drawable = true
+position2 = true
+
+[ENTITIES.hud_champion_pp.sprite]
+path = "client/assets/images/ui/hud/champion_pp.png"
+size = [90, 90]
+scale = [100, 100]
+layer = 16

@@ -87,6 +87,8 @@ void setInLobbyScene(Client& game) {
 
     inlobby.on_deactivate = [&game]() {
         game.removeEntity(LOBBY_LAUNCH_GAME);
+        for (std::size_t i = 0; i < 6; ++i)
+            game.removeEntity(LOBBY_SELECT_CHAMP_PP + i);
     };
 
     std::size_t idx = game.addScene(inlobby);
@@ -97,6 +99,7 @@ void setInLobbyScene(Client& game) {
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::MAIN));
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
+        game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::HUD));
         game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
     });
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
