@@ -123,8 +123,6 @@ void targetedDamage(Game& game) {
                     }
                 }
 
-
-
                 if (exploded)
                     continue;
             }
