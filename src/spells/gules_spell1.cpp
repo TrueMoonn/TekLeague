@@ -52,10 +52,14 @@ void gulesSpell1(Game& game, ECS::Entity e, const mat::Vector2f& mpos) {
     auto& ball_pos = positions.getComponent(gball_idx);
     float dist =
         std::sqrt(std::pow(mpos.x - ball_pos.x, 2) + std::pow(mpos.y - ball_pos.y, 2));
+    auto& caster_mana = manas.getComponent(e);
     if ((dist > spell_info.range) ||
-        manas.getComponent(e).amount < spell_info.mana_cost) {
+        caster_mana.amount < static_cast<int>(spell_info.mana_cost)) {
         return;
     }
+    caster_mana.amount -= static_cast<int>(spell_info.mana_cost);
+    if (caster_mana.amount < 0)
+        caster_mana.amount = 0;
     spells.getComponent(gball_idx).arrived = false;
     targets.getComponent(gball_idx).x = mpos.x;
     targets.getComponent(gball_idx).y = mpos.y;

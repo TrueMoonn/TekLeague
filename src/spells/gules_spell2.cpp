@@ -35,8 +35,13 @@ void gulesSpell2(Game& game, ECS::Entity e, const mat::Vector2f&) {
 
     if (!spell_info.cooldown.checkDelay())
         return;
-    if (manas.getComponent(e).amount < spell_info.mana_cost)
+    auto& caster_mana = manas.getComponent(e);
+    if (caster_mana.amount < static_cast<int>(spell_info.mana_cost))
         return;
+
+    caster_mana.amount -= static_cast<int>(spell_info.mana_cost);
+    if (caster_mana.amount < 0)
+        caster_mana.amount = 0;
 
     const auto& caster_pos = positions.getComponent(e);
     targets.getComponent(gball_idx).x = caster_pos.x;

@@ -62,10 +62,14 @@ void goatierSpell1(Game& game, ECS::Entity caster, const mat::Vector2f& mpos)
         it->second = spell_info.cooldown;
     }
 
-    if (manas.getComponent(caster).amount < spell_info.mana_cost) {
+    auto& caster_mana = manas.getComponent(caster);
+    if (caster_mana.amount < static_cast<int>(spell_info.mana_cost)) {
         game.AddKillEntity(projectile);
         return;
     }
+    caster_mana.amount -= static_cast<int>(spell_info.mana_cost);
+    if (caster_mana.amount < 0)
+        caster_mana.amount = 0;
 
     const auto& caster_pos = positions.getComponent(caster);
     mat::Vector2f dest = clampToRange(
