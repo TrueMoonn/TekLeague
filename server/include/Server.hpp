@@ -181,6 +181,7 @@ class Server : public te::network::GameServer {
     void sendGameEnded(uint32_t lobby_id);
     void sendPlayersInit(uint32_t lobby_id);
     void sendBuildingsInit(uint32_t lobby_id);
+    void sendSpellCast(uint32_t lobby_id, uint32_t entity, uint8_t spell_slot);
 
     ////// Lobby State Queries //////
 

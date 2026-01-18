@@ -9,28 +9,25 @@
     [ENTITIES.nash.team]
         name = "monster"
 
-    [ENTITIES.nash.building]
-        name = "tower"
-
     [ENTITIES.nash.stat_pool]
         ad = 200
         ap = 0
         atk_speed = 1.0
         armor = 20
-        atk_range = 100
+        atk_range = 300
         magic_resist = 20
         mov_speed = 0
 
     [ENTITIES.nash.health]
-        amount = 10000
-        max = 15000
+        amount = 10
+        max = 50
         regen = 50
 
     [ENTITIES.nash.hitbox]
-        top = -85
-        left = -189
-        width = 171
-        height = 378
+        top = -200
+        left = -400
+        width = 400
+        height = 800
 
 [ENTITIES.nash_attack]
     position2 = true

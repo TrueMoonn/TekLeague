@@ -13,8 +13,9 @@
 #include <sfml/components/drawable.hpp>
 
 #include "GameTool.hpp"
-#include "Network/generated_messages.hpp"
 #include "components/ui/button.hpp"
+#include "maths/Vector.hpp"
+#include "physic/components/position.hpp"
 #include "scenes/lobby.hpp"
 #include "scenes.hpp"
 
@@ -38,26 +39,23 @@ static void updateLobbyInfos(Client &game) {
     for (std::size_t i = 0; i < 6; ++i) {
         texts.getComponent(
             i + LOBBY_USER_BLUE_1).setString("...");
+        game.removeEntity(LOBBY_SELECT_CHAMP_PP + i);
     }
     for (std::size_t i = 0; i < players.size(); ++i) {
         if (players[i].team == 1 && i < 3) {
             texts.getComponent(
                 blue + LOBBY_USER_BLUE_1).setString(players[i].username);
+            game.createEntity(LOBBY_SELECT_CHAMP_PP + blue,
+                CHAMPION_PP[players[i].champion], {570.f, 410.f + (110.f * blue)});
             blue += 1;
         } else if (players[i].team == 2 && i < 3) {
             texts.getComponent(
                 red + LOBBY_USER_RED_1).setString(players[i].username);
+            game.createEntity(LOBBY_SELECT_CHAMP_PP + red + 3,
+                CHAMPION_PP[players[i].champion], {1276.f, 405.f + (110.f * red)});
             red += 1;
         }
     }
-    // if (red == 3 && clics.hasComponent(LOBBY_SELECT_TEAM_RED))
-    //     clics.removeComponent(LOBBY_SELECT_TEAM_RED);
-    // else if (!clics.hasComponent(LOBBY_SELECT_TEAM_RED))
-    //     game.createComponent<addon::intact::Clickable>(LOBBY_SELECT_TEAM_RED);
-    // if (blue == 3 && clics.hasComponent(LOBBY_SELECT_TEAM_BLUE))
-    //     clics.removeComponent(LOBBY_SELECT_TEAM_BLUE);
-    // else if (!clics.hasComponent(LOBBY_SELECT_TEAM_BLUE))
-    //     game.createComponent<addon::intact::Clickable>(LOBBY_SELECT_TEAM_BLUE);
 }
 
 void setInLobbyScene(Client& game) {
@@ -89,6 +87,8 @@ void setInLobbyScene(Client& game) {
 
     inlobby.on_deactivate = [&game]() {
         game.removeEntity(LOBBY_LAUNCH_GAME);
+        for (std::size_t i = 0; i < 6; ++i)
+            game.removeEntity(LOBBY_SELECT_CHAMP_PP + i);
     };
 
     std::size_t idx = game.addScene(inlobby);
@@ -99,6 +99,7 @@ void setInLobbyScene(Client& game) {
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::MAIN));
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::LOBBY));
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::IN_LOBBY));
+        game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::HUD));
         game.updateScene(te::sStatus::ACTIVATE, SCAST(SCENES::INGAME));
     });
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {

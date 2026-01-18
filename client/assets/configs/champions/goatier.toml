@@ -1,3 +1,15 @@
+[ENTITIES.goatier_pp]
+drawable = true
+position2 = true
+
+[ENTITIES.goatier_pp.sprite]
+path = "client/assets/images/champions/goatier/pp.png"
+size = [190, 189]
+scale = [80, 80]
+layer = 22
+
+# --------------------------
+
 [ENTITIES.Goatier]
 drawable = true
 
@@ -62,4 +74,21 @@ layer = 10
 [ENTITIES.goatier_aa.animation]
 frames = [
     [[0, 0], 3, 0.4, true]
+]
+
+# --------------------------
+
+[ENTITIES.goatier_spell1]
+drawable = true
+
+[ENTITIES.goatier_spell1.sprite]
+path = "client/assets/images/champions/goatier/zoe_spell-removebg-preview.png"
+size = [500, 500]
+scale = [64, 64]
+origin = [250, 250]
+layer = 10
+
+[ENTITIES.goatier_spell1.animation]
+frames = [
+    [[0, 0], 1, 1.0, true]
 ]

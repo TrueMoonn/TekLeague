@@ -8,12 +8,14 @@
 #include <print>
 #include <cstring>
 #include <string>
+#include <unordered_map>
 
 #include <entity_spec/components/team.hpp>
 #include <interaction/components/player.hpp>
 #include <components/competences/target.hpp>
 #include <physic/components/position.hpp>
 #include <physic/components/velocity.hpp>
+#include <display/components/animation.hpp>
 
 #include "Client.hpp"
 #include "Network/generated_messages.hpp"
@@ -202,6 +204,10 @@ void Client::handleProjectilesUpdate(const net::PROJECTILES_UPDATES& msg) {
         positions.getComponent(entity.entity).x = entity.x;
         positions.getComponent(entity.entity).y = entity.y;
     }
+}
+
+void Client::handleSpellCast(const net::SPELL_CAST& msg) {
+    (void)msg;
 }
 
 void Client::handleBuildingsUpdate(const net::BUILDINGS_UPDATES& msg) {

@@ -18,17 +18,13 @@
     #define RED_POS_X 8192 - 750
     #define RED_POS_Y 1800
 
-    #define NB_CHAMPIONS 8
+    #define NB_CHAMPIONS 4
 
 static const std::array<std::string, NB_CHAMPIONS> CHAMPIONS = {
     "Gules",
     "Goatier",
     "Ttheodore",
     "Croly",
-    "",
-    "",
-    "",
-    "",
 };
 
     #define NB_TEAMS 3
