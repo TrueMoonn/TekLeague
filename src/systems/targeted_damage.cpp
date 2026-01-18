@@ -50,7 +50,7 @@ void targetedDamage(Game& game) {
 
         auto explodeAt = [&](ECS::Entity proj,
             const addon::physic::Position2& pos, Spell& spell,
-            ECS::Entity ignored = 0) {
+            bool isAutoAttack, ECS::Entity ignored = 0) {
             if (spell.persistent && spell.arrived)
                 return;
             if (!stats.hasComponent(spell.from) || !teams.hasComponent(proj))
@@ -95,13 +95,14 @@ void targetedDamage(Game& game) {
         for (auto&& [e, pos, spell, tag] :
             ECS::IndexedDenseZipper(positions, spells, targets)) {
 
+            const bool isAutoAttack = spell.name.size() >= 3 &&
+                spell.name.rfind("_aa") == spell.name.size() - 3;
+
             // Collision-triggered AoE using hitboxes
             if (!spell.persistent && spell.aoe_radius > 0.0f &&
                 teams.hasComponent(e)) {
 
                 const auto& projectile_team = teams.getComponent(e);
-                const bool isAutoAttack = spell.name.size() >= 3 &&
-                    spell.name.rfind("_aa") == spell.name.size() - 3;
                 bool exploded = false;
 
                 if (hitboxes.hasComponent(e)) {
@@ -119,7 +120,7 @@ void targetedDamage(Game& game) {
 
                         mat::RectF enemy_rect = rectFrom(enemy_pos, enemy_hit);
                         if (intersects(proj_rect, enemy_rect)) {
-                            explodeAt(e, pos, spell, enemy_e);
+                            explodeAt(e, pos, spell, isAutoAttack, enemy_e);
                             exploded = true;
                             break;
                         }
@@ -142,8 +143,6 @@ void targetedDamage(Game& game) {
                         continue;
                     if (healths.hasComponent(tag.to_attack) &&
                         stats.hasComponent(spell.from)) {
-                        const bool isAutoAttack = spell.name.size() >= 3 &&
-                            spell.name.rfind("_aa") == spell.name.size() - 3;
                         if (!isAutoAttack && buildings.hasComponent(tag.to_attack))
                             continue;
                         if (spells.hasComponent(tag.to_attack))
@@ -157,7 +156,7 @@ void targetedDamage(Game& game) {
                             game.AddKillEntity(tag.to_attack);
                         }
                     }
-                    explodeAt(e, pos, spell, tag.to_attack);
+                    explodeAt(e, pos, spell, isAutoAttack, tag.to_attack);
                 }
             }
 
@@ -167,7 +166,7 @@ void targetedDamage(Game& game) {
                     std::pow(tag.y - pos.y, 2));
 
                 if (dist_to_target < 30) {
-                    explodeAt(e, pos, spell);
+                    explodeAt(e, pos, spell, isAutoAttack);
                 }
             }
         }
