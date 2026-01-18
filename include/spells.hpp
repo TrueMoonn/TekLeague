@@ -18,15 +18,18 @@ enum class SpellId {
     NONE = 0,
     GULES_1,
     GULES_2,
+    GOATIER_1,
 };
 
 void noSpell(Game&, ECS::Entity, const mat::Vector2f&);
 void gulesSpell1(Game&, ECS::Entity, const mat::Vector2f&);
 void gulesSpell2(Game&, ECS::Entity, const mat::Vector2f&);
+void goatierSpell1(Game&, ECS::Entity, const mat::Vector2f&);
 
 static const std::unordered_map<SpellId,
     std::function<void(Game&, ECS::Entity, const mat::Vector2f&)>> SPELLS = {
     {SpellId::NONE, &noSpell},
     {SpellId::GULES_1, &gulesSpell1},
     {SpellId::GULES_2, &gulesSpell2},
+    {SpellId::GOATIER_1, &goatierSpell1},
 };

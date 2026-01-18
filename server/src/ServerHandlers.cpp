@@ -457,6 +457,13 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
         auto& game = lobby_ctx.getLobby();
         auto e = lobby_ctx.getPlayerEntity(client.id);
 
+        if (e == 0)
+            return;
+
+        if (!game.getComponent<Target>().hasComponent(e) ||
+            !game.getComponent<Spells>().hasComponent(e))
+            return;
+
         if (msg.actions == static_cast<uint8_t>(ActionIG::MOVEMENT)) {
             auto& target = game.getComponent<Target>();
             target.getComponent(e).x = msg.mouse_x;
