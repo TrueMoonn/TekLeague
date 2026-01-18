@@ -25,17 +25,18 @@ void minionsMovement(Game &game) {
        auto& targets = game.getComponent<Target>();
        auto& vels = game.getComponent<addon::physic::Velocity2>();
 
-       for (auto&& [minion, toStop, dir, pos, vel] :
-           ECS::DenseZipper(minions, pos_minions, targets, posis, vels)) {
+       for (auto&& [e, minion, toStop, dir, pos, vel] :
+           ECS::IndexedDenseZipper(minions, pos_minions, targets, posis, vels)) {
                if (std::abs(toStop.Positions.front().x - pos.x) < 20 &&
                    std::abs(toStop.Positions.front().y - pos.y) < 20)
                 toStop.Positions.pop();
                if (toStop.Positions.empty() || toStop.Positions.front().x > 10000 || toStop.Positions.front().x < 0) {
+                   // game.AddKillEntity(e);
+                   // l'erreur est la, les minions envoie un projectile je sais pas pk et ca fait crash l'entièreté du jeu
                    return;
                }
                dir.x = toStop.Positions.front().x;
                dir.y = toStop.Positions.front().y;
-               std::cout << dir.x << " " << dir.y << std::endl;
            }
     }, false);
 }
