@@ -16,7 +16,6 @@ void autoAttacks(Game& game);
 void trackTarget(Game& game);
 void killAllEntity(Game &game);
 void dealDamage(Game &game);
-void updateSticky(Game& game);
 void targetedDamage(Game &game);
 void minionsMovement(Game &game);
 void spawnDeathEntity(Game &game);
@@ -28,7 +27,6 @@ static const std::vector<std::function<void(Game&)>> LOCAL_SYSTEMS = {
     &autoAttacks,
     &trackTarget,
     &dealDamage,
-    &updateSticky,
     &targetedDamage,
     &minionsMovement,
     &spawnDeathEntity,

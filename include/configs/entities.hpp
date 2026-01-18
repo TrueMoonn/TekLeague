@@ -33,6 +33,7 @@ static const std::vector<std::string> CLIENT_CONFIG_PATHS {
 
     /* === UI === */
     "client/assets/configs/ui/buttons.toml",
+    "client/assets/configs/ui/health_bar.toml",
     "client/assets/configs/ui/logo.toml",
     "client/assets/configs/ui/backgrounds.toml",
     "client/assets/configs/ui/text_input.toml",

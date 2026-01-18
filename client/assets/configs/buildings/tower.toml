@@ -4,7 +4,8 @@ drawable = true
 [ENTITIES.tower_blue.sprite]
 path = "client/assets/images/buildings/tower_blue_top.png"
 size = [514, 1133]
-origin = [257, 1133]
+center = true
+# origin = [257, 1133]
 scale = [171, 378]
 layer = 10
 
@@ -16,7 +17,8 @@ drawable = true
 [ENTITIES.tower_red.sprite]
 path = "client/assets/images/buildings/tower_red_top.png"
 size = [575, 1459]
-origin = [287.5, 1459]
+center = true
+# origin = [287.5, 1459]
 scale = [171, 378]
 layer = 10
 

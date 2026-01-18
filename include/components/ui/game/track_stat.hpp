@@ -11,7 +11,9 @@
 
 struct TrackStat {
     TrackStat(std::string name) : name(name) {}
+
     std::string name;
+    ECS::Entity id = 0;
 };
 
 void registerTrackStat(Game& game);

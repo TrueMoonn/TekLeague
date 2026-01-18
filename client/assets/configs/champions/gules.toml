@@ -77,35 +77,3 @@ origin = [193.5, 322]
 layer = 10
 
 # -----------------------------
-
-[ENTITIES.Gules_health]
-position2 = true
-drawable = true
-
-[ENTITIES.Gules_health.sticky]
-offset = [0, -60]
-
-[ENTITIES.Gules_health.sprite]
-path = "client/assets/images/ui/game/health.png"
-size = [349, 56]
-scale = [116, 19]
-origin = [175, 25]
-layer = 11
-
-[ENTITIES.Gules_health.animation]
-frames = [
-    [[0, 10], 1, 0.4, false],
-    [[0, 9], 1, 0.4, false],
-    [[0, 8], 1, 0.4, false],
-    [[0, 7], 1, 0.4, false],
-    [[0, 6], 1, 0.4, false],
-    [[0, 5], 1, 0.4, false],
-    [[0, 4], 1, 0.4, false],
-    [[0, 3], 1, 0.4, false],
-    [[0, 2], 1, 0.4, false],
-    [[0, 1], 1, 0.4, false],
-    [[0, 0], 1, 0.4, false],
-]
-
-[ENTITIES.Gules_health.track_stat]
-stat = "health"

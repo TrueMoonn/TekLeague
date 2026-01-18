@@ -97,7 +97,6 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/systems/handle_timeout.cpp
     ${GAME_SRC_DIR}/systems/spawn_death_entity.cpp
     ${GAME_SRC_DIR}/systems/kill_all_entity.cpp
-    ${GAME_SRC_DIR}/systems/updateSticky.cpp
     ${GAME_SRC_DIR}/systems/minions_mov.cpp
     ${GAME_SRC_DIR}/systems/targeted_damage.cpp
 )
