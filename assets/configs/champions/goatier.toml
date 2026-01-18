@@ -46,7 +46,7 @@ magic_resist = 25
 mov_speed = 1000
 
 [ENTITIES.Goatier.spells]
-indexs = [0, 0]
+indexs = [3, 0]
 
 # --------------------
 
@@ -68,3 +68,33 @@ cast_time = 1.0
 target = 0
 mana_cost = 0
 speed = 500
+
+# --------------------
+
+[ENTITIES.goatier_spell1]
+position2 = true
+velocity2 = true
+target = true
+
+[ENTITIES.goatier_spell1.team]
+name = ""
+
+[ENTITIES.goatier_spell1.spell]
+name = "goatier_spell1"
+base = 600
+damage_type = 1
+ratios = [0.0, 0.6]
+cooldown = 6.0
+cast_time = 0.0
+target = 0
+mana_cost = 40
+speed = 800
+range = 800
+aoe_radius = 120.0
+persistent = false
+
+[ENTITIES.goatier_spell1.hitbox]
+top = 0
+left = 0
+width = 50
+height = 50

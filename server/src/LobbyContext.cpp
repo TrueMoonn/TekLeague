@@ -25,7 +25,13 @@ LobbyContext::LobbyContext(uint32_t max_players, const std::string& code)
 }
 
 void LobbyContext::run() {
-    lobby.run();
+    try {
+        lobby.run();
+    } catch (const std::exception& e) {
+        std::println(stderr, "[LobbyContext::run] ERROR: {}", e.what());
+    } catch (...) {
+        std::println(stderr, "[LobbyContext::run] ERROR: unknown exception");
+    }
 }
 
 const std::string& LobbyContext::getCode() {
@@ -100,6 +106,8 @@ void LobbyContext::createPlayersEntities() {
 
 ECS::Entity LobbyContext::getPlayerEntity(uint32_t client_id) const {
     auto it = _player_entities.find(client_id);
+    if (it == _player_entities.end())
+        return 0;
     return it->second;
 }
 
