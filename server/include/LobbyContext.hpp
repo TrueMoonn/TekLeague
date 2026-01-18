@@ -160,6 +160,12 @@ class LobbyContext {
     std::optional<net::SCORE> tryGetScore();
 
     /**
+     * @brief Try to get game end if triggered
+     * @return std::optional containing the message if ready, std::nullopt otherwise
+     */
+    std::optional<net::GAME_END> tryGetGameEnd();
+
+    /**
      * @brief Try to get game duration if the timestamp delay has passed
      * @return std::optional containing the message if ready, std::nullopt otherwise
      */
@@ -367,6 +373,12 @@ class LobbyContext {
      * @return The constructed message
      */
     net::SCORE getScore();
+
+    /**
+     * @brief Build the GAME_END message from the lobby's state
+     * @return The constructed message
+     */
+    net::GAME_END getGameEnd();
 
     /**
      * @brief Build the STATS_UPDATES message from the lobby's registry

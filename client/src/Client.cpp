@@ -304,6 +304,14 @@ void Client::registerMessageHandlers() {
         handleAdminGamePaused(msg);
         emit("lobby:game_paused");
     });
+
+    registerPacketHandler(89, [this](const std::vector<uint8_t>& data) {
+        std::println("[Client] Received GAME_END packet");
+        auto msg = net::GAME_END::deserialize(data);
+
+        handleGameEnd(msg);
+        emit("game:game_end");
+    });
 }
 
 std::optional<net::PlayerListEntry> Client::getMyInfos() {

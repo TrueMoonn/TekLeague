@@ -1,0 +1,61 @@
+[ENTITIES.nexus_blue]
+position2 = true
+clickable = true
+
+[ENTITIES.nexus_blue.team]
+name = "blue"
+
+[ENTITIES.nexus_blue.building]
+name = "nexus"
+
+[ENTITIES.nexus_blue.stat_pool]
+ad = 0
+ap = 0
+atk_speed = 0
+armor = 50
+atk_range = 0
+magic_resist = 50
+mov_speed = 0
+
+[ENTITIES.nexus_blue.health]
+amount = 100
+max = 100
+regen = 10
+
+[ENTITIES.nexus_blue.hitbox]
+top = -150
+left = -150
+width = 300
+height = 300
+
+#------------------------------
+
+[ENTITIES.nexus_red]
+position2 = true
+clickable = true
+
+[ENTITIES.nexus_red.team]
+name = "red"
+
+[ENTITIES.nexus_red.building]
+name = "nexus"
+
+[ENTITIES.nexus_red.stat_pool]
+ad = 0
+ap = 0
+atk_speed = 0
+armor = 50
+atk_range = 0
+magic_resist = 50
+mov_speed = 0
+
+[ENTITIES.nexus_red.health]
+amount = 100
+max = 100
+regen = 10
+
+[ENTITIES.nexus_red.hitbox]
+top = -150
+left = -150
+width = 300
+height = 300
