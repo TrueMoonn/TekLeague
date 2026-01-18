@@ -15,7 +15,6 @@
 #include <sfml/components/window.hpp>
 #include <physic/components/position.hpp>
 
-#include "ECS/DenseZipper.hpp"
 #include "my.hpp"
 #include "scenes/end_game.hpp"
 #include "scenes.hpp"
@@ -79,25 +78,18 @@ void setEndGameScene(Client& game) {
         win->setView(win->getDefaultView());
         const auto center = win->getView().getCenter();
 
-        std::vector<ECS::Entity> to_remove_draws;
-        for (auto &&[e, _] : ECS::IndexedDenseZipper(draws)) {
-            if (draws.hasComponent(e) &&
-                e != END_POPUP_BG && e != END_POPUP_TITLE && e != END_POPUP_BUTTON) {
-                to_remove_draws.push_back(e);
-            }
-        }
-        for (auto e : to_remove_draws)
-            draws.removeComponent(e);
+        for (ECS::Entity e = 0; e < ONDEATH_END; ++e) {
+            if (e == END_POPUP_BG || e == END_POPUP_TITLE || e == END_POPUP_BUTTON)
+                continue;
 
-        std::vector<ECS::Entity> to_remove_texts;
-        for (auto &&[e, _] : ECS::IndexedDenseZipper(texts)) {
-            if (texts.hasComponent(e) &&
-                e != END_POPUP_BG && e != END_POPUP_TITLE && e != END_POPUP_BUTTON) {
-                to_remove_texts.push_back(e);
+            if (draws.hasComponent(e))
+                draws.getComponent(e).drawable = 0;
+
+            if (texts.hasComponent(e)) {
+                auto &txt = texts.getComponent(e);
+                txt.setString("");
             }
         }
-        for (auto e : to_remove_texts)
-            texts.removeComponent(e);
 
         if (positions.hasComponent(END_POPUP_BG)) {
             positions.getComponent(END_POPUP_BG).x = center.x;
@@ -112,7 +104,6 @@ void setEndGameScene(Client& game) {
             positions.getComponent(END_POPUP_BUTTON).y = center.y + 120.f;
         }
 
-        // Update texts
         if (texts.hasComponent(END_POPUP_TITLE)) {
             texts.getComponent(END_POPUP_TITLE).setString(
                 game.getEndGameMessage());

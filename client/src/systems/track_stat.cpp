@@ -25,8 +25,13 @@ void trackStats(Game& game) {
         auto& mana = game.getComponent<Mana>();
         auto& animation = game.getComponent<addon::display::Animation>();
 
-        for (auto&& [id, anim, track]
-            : ECS::IndexedDenseZipper(animation, trackstat)) {
+        for (ECS::Entity id = 0; id < ONDEATH_END; ++id) {
+            if (!animation.hasComponent(id) || !trackstat.hasComponent(id))
+                continue;
+            
+            auto& anim = animation.getComponent(id);
+            auto& track = trackstat.getComponent(id);
+            
             if (track.id == 0)
                 continue;
 

@@ -30,8 +30,15 @@ void buttonStates(Client& client) {
         auto& hovers = client.getComponent<addon::intact::Hoverable>();
         auto& clicks = client.getComponent<addon::intact::Clickable>();
 
-        for (auto&& [_, anim, hover, click] :
-            ECS::DenseZipper(buttons, anims, hovers, clicks)) {
+        for (ECS::Entity e = 0; e < ONDEATH_END; ++e) {
+            if (!buttons.hasComponent(e) || !anims.hasComponent(e) || 
+                !hovers.hasComponent(e) || !clicks.hasComponent(e))
+                continue;
+            
+            auto& anim = anims.getComponent(e);
+            auto& hover = hovers.getComponent(e);
+            auto& click = clicks.getComponent(e);
+            
             if (click.clicked) changeButtonState(anim, bStatus::CLICKED);
             else if (hover.hovered) changeButtonState(anim, bStatus::HOVERED);
             else changeButtonState(anim, bStatus::DEFAULT);

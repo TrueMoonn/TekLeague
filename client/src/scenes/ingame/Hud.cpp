@@ -38,7 +38,10 @@ void setHudScene(Client& game) {
         auto& texts = game.getComponent<addon::sfml::Text>();
         auto& players = game.getComponent<addon::intact::Player>();
         auto& champs = game.getComponent<Champion>();
-        for (auto&& [_, champ] : ECS::DenseZipper(players, champs)) {
+        for (ECS::Entity e = 0; e < ONDEATH_END; ++e) {
+            if (!players.hasComponent(e) || !champs.hasComponent(e))
+                continue;
+            auto& champ = champs.getComponent(e);
             texts.getComponent(CHAMP_NAME).setString(champ.name);
             game.createEntity(CHAMP_ACTUAL_PP, CHAMP_NAMES_PP.at(champ.name));
         }

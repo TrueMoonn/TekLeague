@@ -88,7 +88,11 @@ void setMainScene(Client& game) {
         auto &text = game.getComponent<addon::sfml::Text>();
         auto &focuss = game.getComponent<addon::sfml::Focus>();
 
-        for (auto&& [txt, focus] : ECS::DenseZipper(text, focuss)) {
+        for (ECS::Entity e = 0; e < ONDEATH_END; ++e) {
+            if (!text.hasComponent(e) || !focuss.hasComponent(e))
+                continue;
+            auto& txt = text.getComponent(e);
+            auto& focus = focuss.getComponent(e);
             if (!focus.focus)
                 continue;
             std::string str = txt.getString();

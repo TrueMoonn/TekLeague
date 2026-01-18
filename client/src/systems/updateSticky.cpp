@@ -20,7 +20,13 @@ void updateSticky(Game& game) {
         auto& stickys = game.getComponent<Sticky>();
         auto& positions = game.getComponent<addon::physic::Position2>();
 
-        for (auto&& [e, sticky, position] : ECS::IndexedDenseZipper(stickys, positions)) {
+        for (ECS::Entity e = 0; e < ONDEATH_END; ++e) {
+            if (!stickys.hasComponent(e) || !positions.hasComponent(e))
+                continue;
+            
+            auto& sticky = stickys.getComponent(e);
+            auto& position = positions.getComponent(e);
+            
             if (sticky.id == 0 || !positions.hasComponent(sticky.id))
                 continue;
             auto &pos = positions.getComponent(sticky.id);

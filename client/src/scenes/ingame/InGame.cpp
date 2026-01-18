@@ -62,7 +62,10 @@ void setInGameScene(Client& game) {
             .getComponent(static_cast<std::size_t>(SYSTEM_F)).win->getSize();
         auto& posis = game.getComponent<addon::physic::Position2>();
         auto& players = game.getComponent<addon::intact::Player>();
-        for (auto&& [_, pos] : ECS::DenseZipper(players, posis)) {
+        for (ECS::Entity e = 0; e < ONDEATH_END; ++e) {
+            if (!players.hasComponent(e) || !posis.hasComponent(e))
+                continue;
+            auto& pos = posis.getComponent(e);
             game.mpos.x = pos.x - (winSize.x / 2.f) + mouse.position.x;
             game.mpos.y = pos.y - (winSize.y / 2.f) + mouse.position.y;
         }
@@ -85,8 +88,10 @@ void setInGameScene(Client& game) {
         auto& teams = game.getComponent<addon::eSpec::Team>();
         auto& targets = game.getComponent<Target>();
         if (teams.hasComponent(e)) {
-            for (auto&& [_, team, tag] :
-                ECS::DenseZipper(players, teams, targets)) {
+            for (ECS::Entity pe = 0; pe < ONDEATH_END; ++pe) {
+                if (!players.hasComponent(pe) || !teams.hasComponent(pe) || !targets.hasComponent(pe))
+                    continue;
+                auto& team = teams.getComponent(pe);
                 if (team.name != teams.getComponent(e).name) {
                     net::CLIENT_INPUTS msg;
                     msg.mouse_x = game.mpos.x;
