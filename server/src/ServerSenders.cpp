@@ -166,24 +166,16 @@ void Server::sendLobbiesListUnsafe() {
             sendTo(address, serialized);
         }
     }
-
-    std::println("[Server::sendLobbiesListUnsafe] Sent to all non-lobby "
-        "clients ({} lobbies)", msg.lobby_codes.size());
 }
 
 void Server::sendGameStarting(uint32_t lobby_id) {
-    std::println(
-        "[Server] sendGameStarting: Broadcasting GAME_STARTING to lobby {}",
-        lobby_id);
     net::GAME_STARTING msg;
     auto serialized = msg.serialize();
     broadcastToLobby(lobby_id, serialized);
-    std::println("[Server] sendGameStarting: Broadcast complete");
 }
 
 void Server::sendPlayersListUnsafe(uint32_t lobby_id) {
     if (lobbies.find(lobby_id) == lobbies.end()) {
-        std::println("[Server::sendPlayersListUnsafe] Lobby not found");
         return;
     }
 
@@ -205,21 +197,14 @@ void Server::sendPlayersListUnsafe(uint32_t lobby_id) {
         }
     }
 
-    std::println(
-        "[Server::sendPlayersListUnsafe] Broadcasting to lobby with {} players",
-        msg.players.size());
     broadcastToLobbyUnsafe(lobby_id, msg.serialize());
     lobbies.at(lobby_id).getLobby().setPlayers(msg.players);
 }
 
 void Server::sendPlayersList(uint32_t lobby_id) {
-    std::println("[Server::sendPlayersList] Entering for lobby {}", lobby_id);
     std::lock_guard<std::mutex> lock(lobbies_mutex);
-    std::println("[Server::sendPlayersList] Lock acquired");
 
     sendPlayersListUnsafe(lobby_id);
-
-    std::println("[Server::sendPlayersList] Completed");
 }
 
 void Server::sendLobbyVisibilityChanged(uint32_t lobby_id, bool is_public) {
@@ -271,14 +256,10 @@ void Server::sendAdminGamePaused(uint32_t lobby_id) {
 }
 
 void Server::sendGameEnded(uint32_t lobby_id) {
-    std::println(
-        "[Server] sendGameEnded: Broadcasting GAME_END to lobby {}",
-        lobby_id);
     net::GAME_END msg;
     msg.winning_team = 0;  // TODO(x): Determine winning team
     auto serialized = msg.serialize();
     broadcastToLobby(lobby_id, serialized);
-    std::println("[Server] sendGameEnded: Broadcast complete");
 }
 
 void Server::sendPlayersInit(uint32_t lobby_id) {

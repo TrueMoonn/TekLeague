@@ -31,9 +31,6 @@ Server::Server(uint16_t port, const std::string& protocol) :
     setPacketsHandlers();
 
     setClientDisconnectCallback([this](const net::Address& client) {
-        std::println("[Server] Client disconnected or timed out: {}:{}",
-            client.getIP(), client.getPort());
-
         std::vector<uint8_t> empty_data;
         handleDisconnection(empty_data, client);
     });
@@ -78,18 +75,10 @@ uint32_t Server::createLobby(uint32_t max_clients, const net::Address& admin) {
     std::string code = generateUniqueLobbyCode();
     uint32_t lobby_id = next_lobby_id++;
 
-    std::println(
-        "[Server::createLobby] Creating lobby {} with code {} for admin {}:{}",
-                 lobby_id, code, admin.getIP(), admin.getPort());
-
     lobby_codes[code] = lobby_id;
     lobbies.try_emplace(lobby_id, max_clients, code);
     lobby_admins[lobby_id] = admin;
     public_lobbies.insert(lobby_id);  // Default to public
-
-    std::println(
-        "[Server::createLobby] Lobby created successfully. Total lobbies: {}",
-        lobbies.size());
 
     return lobby_id;
 }
@@ -128,8 +117,6 @@ void Server::broadcastToLobby(uint32_t lobby_id,
 void Server::broadcastToLobbyUnsafe(
     uint32_t lobby_id, const std::vector<uint8_t>& data) {
     if (lobbies.find(lobby_id) == lobbies.end()) {
-        std::println("[Server] broadcastToLobby: Lobby {} not found!",
-            lobby_id);
         return;
     }
 
@@ -178,15 +165,11 @@ std::string Server::generateUniqueLobbyCode() {
 }
 
 void Server::run() {
-    std::println("[Server::run] Starting main loop");
-    int loop_count = 0;
     te::Timestamp bandwidthCheck = te::Timestamp(1.0f / 1.0f);
 
     try {
         while (isRunning() && _should_run.load()) {
             if (!_should_run.load()) {
-                std::println(
-                    "[Server::run] Shutdown signal received, exiting loop");
                 break;
             }
 
@@ -225,20 +208,15 @@ void Server::run() {
 
             // Small sleep to avoid burning CPU
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            loop_count++;
         }
     } catch (const std::exception& e) {
         std::println(stderr,
             "[Server::run] FATAL ERROR in main loop: {}", e.what());
         throw;
     }
-
-    std::println("[Server::run] Exited main loop after {} iterations",
-        loop_count);
 }
 
 void Server::stop() {
-    std::println("[Server] Stopping server...");
     _should_run.store(false);
     stopGameServer();
 }

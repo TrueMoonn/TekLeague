@@ -109,8 +109,6 @@ void Server::handleDisconnection(const std::vector<uint8_t>& data,
     }
 
     clients.erase(sender);
-    std::println(
-        "[Server::handleDisconnection] Client removed from clients map");
 }
 
 void Server::handlePing(const std::vector<uint8_t>& data,
@@ -238,18 +236,12 @@ void Server::handleJoinLobby(const std::vector<uint8_t>& data,
 
 void Server::handleCreateLobby(const std::vector<uint8_t>& data,
     const net::Address& sender) {
-    std::println("[Server::handleCreateLobby] Request from {}:{}",
-        sender.getIP(), sender.getPort());
-
     auto client_opt = getClient(sender);
     if (!client_opt) {
-        std::println("[Server::handleCreateLobby] Client not found");
         return;
     }
 
     auto& client = client_opt->get();
-    std::println("[Server::handleCreateLobby] Client {} ({}) creating lobby",
-        client.id, client.username);
 
     uint32_t lobby_id = createLobby(6, sender);
 
@@ -267,12 +259,8 @@ void Server::handleCreateLobby(const std::vector<uint8_t>& data,
         lobby_code = lobby_ctx.getCode();
     }
 
-    std::println("[Server::handleCreateLobby] Sending LOBBY_CREATED...");
     sendLobbyCreated(sender, lobby_code);
-    std::println("[Server::handleCreateLobby] Sending PLAYERS_LIST...");
     sendPlayersList(lobby_id);
-    std::println("[Server::handleCreateLobby] Completed for lobby {}",
-        lobby_id);
 }
 
 void Server::handleGetAllPublicLobbies(const std::vector<uint8_t>& data,
@@ -282,57 +270,37 @@ void Server::handleGetAllPublicLobbies(const std::vector<uint8_t>& data,
 
 void Server::handleAdminStartGame(const std::vector<uint8_t>& data,
     const net::Address& sender) {
-    std::println("[Server] handleAdminStartGame: Request from {}:{}",
-        sender.getIP(), sender.getPort());
-
     auto client_opt = getClient(sender);
     if (!client_opt) {
-        std::println("[Server] handleAdminStartGame: Client not found");
         return;
     }
 
     auto& client = client_opt->get();
     if (!client.in_lobby) {
-        std::println("[Server] handleAdminStartGame: Client not in lobby");
         return;
     }
 
     uint32_t lobby_id = client.lobby_id;
-    std::println("[Server] handleAdminStartGame: Client {} is in lobby {}",
-        client.id, lobby_id);
 
     if (!isAdmin(sender, lobby_id)) {
-        std::println("[Server] handleAdminStartGame: User is not admin");
         sendNotAdmin(sender);
         return;
     }
-
-    std::println("[Server] handleAdminStartGame: Starting game for lobby {}",
-        lobby_id);
 
     {
         std::lock_guard<std::mutex> lock(lobbies_mutex);
         if (lobbies.find(lobby_id) != lobbies.end()) {
             for (auto& player : lobbies.at(lobby_id).getLobby().getPlayers()) {
                 if (player.team == 0) {
-                    std::print("[Server] handleAdminStartGame: ");
-                    std::println("Players in lobby {} are not in team",
-                        lobby_id);
                     sendPlayersNotInTeam(sender);
                     return;
                 }
             }
             lobbies.at(lobby_id).setGameState(LobbyGameState::IN_GAME);
-            std::println(
-            "[Server] handleAdminStartGame: Lobby {} state changed to IN_GAME",
-            lobby_id);
         }
     }
 
     sendGameStarting(lobby_id);
-    std::println("[Server] handleAdminStartGame: sendGameStarting completed");
-
-    // TODO(Pierre): Initialize game state in lobby
     // lobbies.at(lobby_id).getLobby().startGame();
     lobbies.at(lobby_id).createPlayersEntities();
     lobbies.at(lobby_id).createOtherEntities();
@@ -370,9 +338,6 @@ void Server::handleLeaveLobby(const std::vector<uint8_t>& data,
         }
 
         if (lobby_is_empty) {
-            std::println(
-                "[Server] handleLeaveLobby: Lobby {} is now empty, cleaning up",
-                lobby_id);
             std::string code = lobby_ctx.getCode();
             lobby_codes.erase(code);
             lobby_admins.erase(lobby_id);
@@ -514,29 +479,20 @@ void Server::handleClientInput(const std::vector<uint8_t>& data,
 
 void Server::handleWantThisTeam(const std::vector<uint8_t>& data,
     const net::Address& sender) {
-    std::println("[Server] handleWantThisTeam: Request from {}:{}",
-        sender.getIP(), sender.getPort());
-
     auto client_opt = getClient(sender);
     if (!client_opt) {
-        std::println("[Server] handleWantThisTeam: Client not found");
         return;
     }
 
     auto& client = client_opt->get();
     if (!client.in_lobby) {
-        std::println("[Server] handleWantThisTeam: Client not in lobby");
         return;
     }
 
     net::WANT_THIS_TEAM msg = net::WANT_THIS_TEAM::deserialize(data);
     uint8_t requested_team = msg.team;
 
-    std::println("[Server] handleWantThisTeam: Client {} wants team {}",
-        client.id, static_cast<int>(requested_team));
-
     if (requested_team != 1 && requested_team != 2) {
-        std::println("[Server] handleWantThisTeam: Invalid team number");
         return;
     }
 
@@ -558,15 +514,11 @@ void Server::handleWantThisTeam(const std::vector<uint8_t>& data,
     }
 
     if (team_count >= 3) {
-        std::println("[Server] handleWantThisTeam: Team {} is full",
-            static_cast<int>(requested_team));
         sendTeamFull(sender);
         return;
     }
 
     client.team = requested_team;
-    std::println("[Server] handleWantThisTeam: Client {} assigned to team {}",
-        client.id, static_cast<int>(requested_team));
 
     sendPlayersList(lobby_id);
 }
@@ -648,18 +600,13 @@ void Server::handlePacketLoss(const std::vector<uint8_t>& data,
     const net::Address& sender) {
     net::PACKET_LOSS msg = net::PACKET_LOSS::deserialize(data);
 
-    std::println("[Server] handlePacketLoss: Request from {}:{}",
-        sender.getIP(), sender.getPort());
-
     auto client_opt = getClient(sender);
     if (!client_opt) {
-        std::println("[Server] handlePacketLoss: Client not found");
         return;
     }
 
     auto& client = client_opt->get();
     if (!client.in_lobby) {
-        std::println("[Server] handlePacketLoss: Client not in lobby");
         return;
     }
 
@@ -678,8 +625,6 @@ void Server::handlePacketLoss(const std::vector<uint8_t>& data,
     }
 
     if (claimedData.empty()) {
-        std::println("[Server] handlePacketLoss: No data found for code {}",
-            msg.code);
         return;
     }
 

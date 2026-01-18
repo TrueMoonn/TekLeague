@@ -71,7 +71,6 @@ void setEndGameScene(Client& game) {
     });
 
     end_scene.on_activate = [&game]() {
-        std::println("[END_GAME] on_activate triggered");
         auto& texts = game.getComponent<addon::sfml::Text>();
         auto& positions = game.getComponent<addon::physic::Position2>();
         auto& draws = game.getComponent<addon::sfml::Drawable>();

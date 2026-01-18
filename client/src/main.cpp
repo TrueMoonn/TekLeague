@@ -90,7 +90,6 @@ int main(int ac, char **av) {
         return 1;
     }
 
-    std::println("[CLIENT] Client stopped cleanly. All destructors called.");
     std::println("[CLIENT] Resources freed properly. Goodbye!");
 
     return 0;

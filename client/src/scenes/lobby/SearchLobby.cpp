@@ -78,10 +78,10 @@ void setSearchLobbyScene(Client& game) {
         game.updateScene(te::sStatus::DEACTIVATE, SCAST(SCENES::SEARCH_LOBBY));
     });
     game.subForScene(idx, "lobby:bad_code", [&game]() {
-        std::println("[SearchLobby] Error: Invalid lobby code!");
+        // std::println("[SearchLobby] Error: Invalid lobby code!");
     });
     game.subForScene(idx, "lobby:full", [&game]() {
-        std::println("[SearchLobby] Error: Lobby is full!");
+        // std::println("[SearchLobby] Error: Lobby is full!");
     });
     game.subForScene<ECS::Entity>(idx, "clicked", [&game](ECS::Entity e) {
         if (e >= SEARCH_LOBBY_LIST && e < SEARCH_LOBBY_LIST + 4) {

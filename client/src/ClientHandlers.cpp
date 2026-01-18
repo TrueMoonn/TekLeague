@@ -30,45 +30,36 @@
 
 void Client::handleLoggedIn(const net::LOGGED_IN& msg) {
     _client_id = msg.id;
-    std::println("[Client] Logged in with ID: {}", _client_id);
 }
 
 void Client::handleLoggedOut(const net::LOGGED_OUT& msg) {
-    std::println("[Client] Logged out");
     _username.clear();
     _client_id = 0;
 }
 
 void Client::handleUsernameAlreadyTaken(
     const net::USERNAME_ALREADY_TAKEN& msg) {
-    std::println("[Client] Username already taken");
     _username.clear();
 }
 
 void Client::handleLobbyCreated(const net::LOBBY_CREATED& msg) {
     setCode(std::string(msg.lobby_code, 6));
     _is_admin = true;
-    std::println("[Client] Lobby created: {} (admin)", getCode());
 }
 
 void Client::handleLobbyJoined(const net::LOBBY_JOINED& msg) {
-    std::println("[Client] Successfully joined lobby: {}", getCode());
 }
 
 void Client::handleBadLobbyCode(const net::BAD_LOBBY_CODE& msg) {
-    std::println("[Client] Invalid lobby code");
     setCode("");
 }
 
 void Client::handleLobbyFull(const net::LOBBY_FULL& msg) {
-    std::println("[Client] Lobby is full");
     setCode("");
 }
 
 void Client::handlePlayersList(const net::PLAYERS_LIST& msg) {
     setPlayers(msg.players);
-    std::println("[Client] Players list updated ({} players)",
-        getPlayers().size());
 
     _is_admin = false;
     for (const auto& player : getPlayers()) {
@@ -77,36 +68,18 @@ void Client::handlePlayersList(const net::PLAYERS_LIST& msg) {
             break;
         }
     }
-
-    for (size_t i = 0; i < getPlayers().size(); ++i) {
-        const auto& player = getPlayers()[i];
-        std::string name(player.username, strnlen(player.username, 32));
-        std::println("  [{}] ID={} Team={} Username='{}'{}{}", i, player.id,
-                static_cast<int>(player.team), name,
-                (player.id == _client_id ? " [ME]" : ""),
-                (player.is_admin != 0 ? " [ADMIN]" : ""));
-    }
 }
 
 void Client::handleLobbiesList(const net::LOBBIES_LIST& msg) {
     _cached_lobbies_list = msg.lobby_codes;
-    std::println("[Client] Received lobbies list ({} lobbies)",
-        _cached_lobbies_list.size());
-
-    for (const auto& code : _cached_lobbies_list) {
-        std::println("  - {}", code);
-    }
 }
 
 void Client::handleLobbyVisibilityChanged(
     const net::LOBBY_VISIBILITY_CHANGED& msg) {
     setPublic(msg.is_public != 0);
-    std::println("[Client] Lobby visibility changed to: {}",
-            (isPublic() ? "PUBLIC" : "PRIVATE"));
 }
 
 void Client::handleGameStarting(const net::GAME_STARTING& msg) {
-    std::println("[Client] GAME STARTING!");
     setGameState(LobbyGameState::IN_GAME);
 }
 
@@ -121,12 +94,10 @@ void Client::handleGameEnd(const net::GAME_END& msg) {
         winner[0] = static_cast<char>(std::toupper(winner[0]));
     setEndGameMessage("Winner: " + winner);
 
-    std::println("[Client] GAME END: winning team {}", static_cast<int>(msg.winning_team));
     emit("game:game_end");
 }
 
 void Client::handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg) {
-    std::println("[Client] Lobby has been destroyed");
     setCode("");
     _is_admin = false;
     clearPlayers();
@@ -134,15 +105,15 @@ void Client::handleLobbyDestroyed(const net::LOBBY_DESTROYED& msg) {
 }
 
 void Client::handleNotAdmin(const net::NOT_ADMIN& msg) {
-    std::println("[Client] You don't have admin permissions");
+    (void)msg;
 }
 
 void Client::handleAdminGamePaused(const net::ADMIN_GAME_PAUSED& msg) {
-    std::println("[Client] Game paused/resumed");
+    (void)msg;
 }
 
 void Client::handleTeamFull(const net::TEAM_FULL& msg) {
-    std::println("[Client] Team is full");
+    (void)msg;
 }
 
 void Client::handlePing() {
