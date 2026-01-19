@@ -21,5 +21,5 @@ void handleTimeout(Game &game)
             if (to.delta.checkDelay(false))
                 game.AddKillEntity(e);
         }
-    });
+    }, false);
 }

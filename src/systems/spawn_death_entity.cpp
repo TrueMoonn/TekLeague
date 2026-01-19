@@ -37,5 +37,5 @@ void spawnDeathEntity(Game &game) {
                 game.entities_queue.emplace_back(next_e, od.name);
             }
         }
-    });
+    }, false);
 }

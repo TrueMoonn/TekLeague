@@ -12,15 +12,16 @@
 
     #include "Game.hpp"
 
-void autoAttacks(Game& game);
-void trackTarget(Game& game);
-void killAllEntity(Game &game);
-void dealDamage(Game &game);
-void targetedDamage(Game &game);
-void minionsMovement(Game &game);
-void spawnDeathEntity(Game &game);
-void handleTimeout(Game &game);
-void circlePushback(Game &game);
+void autoAttacks(Game&);
+void trackTarget(Game&);
+void killAllEntity(Game&);
+void dealDamage(Game&);
+void targetedDamage(Game&);
+void minionsMovement(Game&);
+void spawnDeathEntity(Game&);
+void handleTimeout(Game&);
+void circlePushback(Game&);
+void regeneration(Game&);
 
 
 static const std::vector<std::function<void(Game&)>> LOCAL_SYSTEMS = {
@@ -33,4 +34,5 @@ static const std::vector<std::function<void(Game&)>> LOCAL_SYSTEMS = {
     &handleTimeout,
     &circlePushback,
     &killAllEntity,
+    &regeneration,
 };

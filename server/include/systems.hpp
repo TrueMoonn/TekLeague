@@ -20,4 +20,5 @@ static const std::vector<std::string> SERVER_SYSTEMS = {
     "targeted_damage",
     "handle_timeout",
     "spawn_death_entity",
+    "regeneration",
 };

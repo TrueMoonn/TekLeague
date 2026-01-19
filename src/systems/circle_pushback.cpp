@@ -43,7 +43,7 @@ void circlePushback(Game &game) {
                 pos2.y = pos1.y + disp.y * mindist;
             }
         }
-    });
+    }, false);
 }
 
 /*
