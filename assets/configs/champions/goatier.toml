@@ -9,6 +9,10 @@ name = "Goatier"
 name = "goatier_aa"
 auto = false
 
+[ENTITIES.Goatier.circle_hitbox]
+radius = 20
+pushback = true
+
 [ENTITIES.Goatier.team]
 name = ""
 

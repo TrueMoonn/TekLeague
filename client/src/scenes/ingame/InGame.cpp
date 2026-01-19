@@ -16,7 +16,6 @@
 #include <sfml/components/window.hpp>
 #include <entity_spec/components/team.hpp>
 
-#include "GameTool.hpp"
 #include "Network/generated_messages.hpp"
 #include "components/competences/target.hpp"
 #include "entities.hpp"
@@ -30,7 +29,7 @@ void setInGameScene(Client& game) {
         {"champion_movement", "update_sticky", "minion_animation", "track_stat"},  // PRE UPDATE
         {"animate", "play_sound"},  // UPDATE
         {"follow_player"},  // POST UPDATE
-        {"draw", "display"}  // RENDER
+        {"draw", "draw_text", "display"}  // RENDER
     }};
 
     ingame.entities = {

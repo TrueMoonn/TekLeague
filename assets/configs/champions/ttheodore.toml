@@ -1,6 +1,7 @@
 [ENTITIES.Ttheodore]
 position2 = true
 target = true
+movable = true
 
 [ENTITIES.Ttheodore.champion]
 name = "Ttheodore"
@@ -8,6 +9,10 @@ name = "Ttheodore"
 [ENTITIES.Ttheodore.attack]
 name = "ttheodore_aa"
 auto = false
+
+[ENTITIES.Ttheodore.circle_hitbox]
+radius = 20
+pushback = true
 
 [ENTITIES.Ttheodore.team]
 name = ""

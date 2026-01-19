@@ -9,6 +9,10 @@ name = "Croly"
 name = "croly_aa"
 auto = false
 
+[ENTITIES.Croly.circle_hitbox]
+radius = 20
+pushback = true
+
 [ENTITIES.Croly.team]
 name = ""
 

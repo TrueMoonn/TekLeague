@@ -2,6 +2,7 @@
     position2 = true
     clickable = true
 
+
     [ENTITIES.nash.attack]
         name = "nash_attack"
         auto = true
