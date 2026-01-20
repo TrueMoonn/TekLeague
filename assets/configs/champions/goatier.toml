@@ -21,14 +21,14 @@ x = 0
 y = 0
 
 [ENTITIES.Goatier.health]
-amount = 600
-max = 600
+amount = 500
+max = 500
 regen = 3
 
 [ENTITIES.Goatier.mana]
-amount = 300
-max = 300
-regen = 3
+amount = 420
+max = 420
+regen = 5
 
 [ENTITIES.Goatier.xp]
 amount = 0
@@ -40,14 +40,14 @@ width = 144.3
 height = 192.3
 
 [ENTITIES.Goatier.stat_pool]
-ad = 67
+ad = 58
 ap = 0
-atk_speed = 1.5
+atk_speed = 1.6
 atk_range = 350
 cdr = 0
 armor = 34
 magic_resist = 25
-mov_speed = 1000
+mov_speed = 330
 
 [ENTITIES.Goatier.spells]
 indexs = [3, 4]
@@ -67,11 +67,9 @@ name = "goatier_aa"
 base = 0
 damage_type = 0
 ratios = [1.0, 0.0]
-cooldown = 2.0
 cast_time = 1.0
-target = 0
-mana_cost = 0
-speed = 350
+target = 2
+speed = 450
 
 # --------------------
 
@@ -85,11 +83,11 @@ name = ""
 
 [ENTITIES.goatier_spell1.spell]
 name = "goatier_spell1"
-base = 600
+base = 100
 damage_type = 1
 ratios = [0.0, 0.6]
 cooldown = 6.0
-cast_time = 0.0
+cast_time = 1.0
 target = 0
 mana_cost = 40
 speed = 800
@@ -114,14 +112,7 @@ name = ""
 
 [ENTITIES.goatier_spell2.spell]
 name = "goatier_spell2"
-base = 0
-damage_type = 0
-ratios = [0.0, 0.0]
-cooldown = 8.0
-cast_time = 0.0
+cooldown = 10.0
 target = 0
-mana_cost = 40
-speed = 0
+mana_cost = 80
 range = 600
-aoe_radius = 0.0
-persistent = false
