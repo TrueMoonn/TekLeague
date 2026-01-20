@@ -21,14 +21,14 @@ x = 0
 y = 0
 
 [ENTITIES.Croly.health]
-amount = 600
-max = 600
+amount = 1000
+max = 1000
 regen = 3
 
 [ENTITIES.Croly.mana]
 amount = 300
 max = 300
-regen = 3
+regen = 2
 
 [ENTITIES.Croly.xp]
 amount = 0
@@ -40,10 +40,10 @@ width = 144.3
 height = 192.3
 
 [ENTITIES.Croly.stat_pool]
-ad = 67
+ad = 74
 ap = 0
-atk_speed = 1.5
-atk_range = 350
+atk_speed = 1.2
+atk_range = 120
 cdr = 0
 armor = 34
 magic_resist = 25
@@ -67,8 +67,6 @@ name = "croly_aa"
 base = 0
 damage_type = 0
 ratios = [1.0, 0.0]
-cooldown = 2.0
 cast_time = 1.0
-target = 0
-mana_cost = 0
-speed = 500
+target = 2
+speed = 1000

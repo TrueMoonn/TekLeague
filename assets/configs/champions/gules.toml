@@ -27,8 +27,8 @@ max = 600
 regen = 3
 
 [ENTITIES.Gules.mana]
-amount = 300
-max = 300
+amount = 500
+max = 500
 regen = 3
 
 [ENTITIES.Gules.xp]
@@ -41,14 +41,14 @@ width = 258
 height = 430
 
 [ENTITIES.Gules.stat_pool]
-ad = 67
+ad = 55
 ap = 0
-atk_speed = 1.5
-atk_range = 350
+atk_speed = 1.4
+atk_range = 300
 cdr = 0
 armor = 34
 magic_resist = 25
-mov_speed = 350
+mov_speed = 320
 
 [ENTITIES.Gules.spells]
 indexs = [1, 2]
@@ -68,10 +68,8 @@ name = "gules_aa"
 base = 0
 damage_type = 0
 ratios = [1.0, 0.0]
-cooldown = 2.0
 cast_time = 1.0
 target = 0
-mana_cost = 0
 speed = 500
 
 # --------------------
@@ -88,12 +86,11 @@ name = "gules1"
 base = 100
 damage_type = 1
 ratios = [0.0, 0.4]
-cooldown = 1.0
-cast_time = 0.0
+cooldown = 4.0
 target = 0
 mana_cost = 40
-speed = 500
-range = 500
+speed = 700
+range = 600
 aoe_radius = 100.0
 persistent = true
 
