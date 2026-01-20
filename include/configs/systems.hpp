@@ -22,7 +22,7 @@ void spawnDeathEntity(Game&);
 void handleTimeout(Game&);
 void circlePushback(Game&);
 void regeneration(Game&);
-
+void fountainInteractions(Game&);
 
 static const std::vector<std::function<void(Game&)>> LOCAL_SYSTEMS = {
     &autoAttacks,
@@ -35,4 +35,5 @@ static const std::vector<std::function<void(Game&)>> LOCAL_SYSTEMS = {
     &circlePushback,
     &killAllEntity,
     &regeneration,
+    &fountainInteractions,
 };

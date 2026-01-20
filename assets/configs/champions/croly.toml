@@ -47,7 +47,7 @@ atk_range = 350
 cdr = 0
 armor = 34
 magic_resist = 25
-mov_speed = 1000
+mov_speed = 350
 
 [ENTITIES.Croly.spells]
 indexs = [0, 0]

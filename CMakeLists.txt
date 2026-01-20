@@ -103,6 +103,7 @@ add_library(${PROJECT_NAME} STATIC
     ${GAME_SRC_DIR}/systems/minions_mov.cpp
     ${GAME_SRC_DIR}/systems/targeted_damage.cpp
     ${GAME_SRC_DIR}/systems/regen.cpp
+    ${GAME_SRC_DIR}/systems/fontain.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

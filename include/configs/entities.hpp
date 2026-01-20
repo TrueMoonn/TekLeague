@@ -18,6 +18,7 @@ static const std::vector<std::string> CONFIG_PATHS {
     "assets/configs/champions/ttheodore.toml",
     //
     "assets/configs/buildings/tower.toml",
+    "assets/configs/buildings/fontain.toml",
     "assets/configs/buildings/nexus.toml",
     "assets/configs/creatures/nash.toml",
     "assets/configs/creaps/range_blue_creap_down.toml",

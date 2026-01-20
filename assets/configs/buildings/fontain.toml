@@ -1,0 +1,19 @@
+[ENTITIES.fontain_blue]
+position2 = true
+
+[ENTITIES.fontain_blue.building]
+name = "fontain"
+
+[ENTITIES.fontain_blue.team]
+name = "blue"
+
+# --------------------------
+
+[ENTITIES.fontain_red]
+position2 = true
+
+[ENTITIES.fontain_red.building]
+name = "fontain"
+
+[ENTITIES.fontain_red.team]
+name = "red"

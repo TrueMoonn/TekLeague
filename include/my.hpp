@@ -44,7 +44,7 @@ enum class ActionIG {
     SHOP,
 };
 
-#define NB_BUILDINGS 8
+#define NB_BUILDINGS 10
 
 static const std::array<std::pair<std::string,
     mat::Vector2f>, NB_BUILDINGS> BUILDINGS = {{
@@ -56,8 +56,10 @@ static const std::array<std::pair<std::string,
     {"tower_red", mat::Vector2f(7092.0f, 1800.0f)},
     {"tower_red", mat::Vector2f(6792.0f, 2400.0f)},
 
-    {"nexus_blue", mat::Vector2f(BLUE_POS_X - 200.0f, BLUE_POS_Y)},
-    {"nexus_red", mat::Vector2f(RED_POS_X + 500.0f, RED_POS_Y)}
+    {"nexus_blue", mat::Vector2f(BLUE_POS_X + 800.0f, BLUE_POS_Y)},
+    {"nexus_red", mat::Vector2f(RED_POS_X - 500.0f, RED_POS_Y)},
+    {"fontain_blue", mat::Vector2f(BLUE_POS_X - 200.f, BLUE_POS_Y)},
+    {"fontain_red", mat::Vector2f(RED_POS_X + 200.f, RED_POS_Y)},
 }};
 
   #define NB_CREATURES 4
