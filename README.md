@@ -68,16 +68,8 @@ TekLeague is inspired by **League of Legends**, but is developed as an education
 * ECS design
 * Modular plugins
 
----
-
-## Authors
-
-TekLeague is developed as a team project for learning and experimentation.
-
-
----
 
 ## Disclaimer
 
-This project is **not affiliated with Riot Games**.
-League of Legends is a registered trademark of Riot Games, Inc.
+This project is **not affiliated with Rito Games**.
+League of Legends is a registered trademark of Rito Games, Inc.
